@@ -31,4 +31,8 @@ public class CommonJsonException extends RuntimeException {
 	public JSONObject getResultJson() {
 		return resultJson;
 	}
+
+
+
+
 }

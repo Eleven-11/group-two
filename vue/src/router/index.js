@@ -61,5 +61,52 @@ export const asyncRouterMap = [
       },
     ]
   },
+  {
+    path: '/module',
+    component: Layout,
+    redirect: '/module/',
+    name: '',
+    meta: {title: '系统信息管理', icon: 'table'},
+    children: [
+      {
+        path: '',
+        name: '模块管理',
+        component: _import('module/module'),
+        meta: {title: '模块管理', icon: 'user'},
+        menu: 'user'
+      },
+      {
+        path: 'ModuleInformation',
+        name: '模板信息管理',
+        component: _import('module/ModuleInformation'),
+        meta: {title: '模板信息管理', icon: 'user'},
+        menu: 'ModuleInformation'
+      },
+    ]
+  },
+
+  {
+    path: '/platform',
+    component: Layout,
+    redirect: '/platform/',
+    name: '',
+    meta: {title: '平台管理', icon: 'table'},
+    children: [
+      {
+        path: '',
+        name: '帖子类别管理',
+        component: _import('platform/PostCategories'),
+        meta: {title: '帖子类别管理', icon: 'user'},
+        menu: 'PostCategories'
+      },
+      {
+        path: 'ModuleInformation',
+        name: '帖子标签管理',
+        component: _import('platform/BusinessSubway'),
+        meta: {title: '帖子标签管理', icon: 'user'},
+        menu: 'BusinessSubway'
+      },
+    ]
+  },
   {path: '*', redirect: '/404', hidden: true}
 ]

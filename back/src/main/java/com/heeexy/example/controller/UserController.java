@@ -28,7 +28,9 @@ public class UserController {
 	@GetMapping("/list")
 	public JSONObject listUser(HttpServletRequest request) {
 		return userService.listUser(CommonUtil.request2Json(request));
+
 	}
+
 
 	@RequiresPermissions("user:add")
 	@PostMapping("/addUser")
@@ -75,6 +77,7 @@ public class UserController {
 	@PostMapping("/addRole")
 	public JSONObject addRole(@RequestBody JSONObject requestJson) {
 		CommonUtil.hasAllRequired(requestJson, "roleName,permissions");
+
 		return userService.addRole(requestJson);
 	}
 
