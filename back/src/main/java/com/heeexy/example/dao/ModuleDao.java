@@ -19,7 +19,7 @@ public interface ModuleDao {
     /**
      * 删除模块
      */
-//    int removeModuleName(JSONObject jsonObject);
+    int removeModuleDisplay(JSONObject jsonObject);
 
     /**
      * 修改模块

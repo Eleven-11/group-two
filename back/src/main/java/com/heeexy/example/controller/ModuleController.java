@@ -49,6 +49,16 @@ public class ModuleController {
         CommonUtil.hasAllRequired(requestJson, " moduleName");
         return moduleService.updateModuleName(requestJson);
     }
+
+    /**
+     * 删除角色
+     */
+//    @RequiresPermissions("role:delete")
+    @PostMapping("/removeModuleDisplay")
+    public JSONObject removeModuleDisplay(@RequestBody JSONObject requestJson) {
+//        CommonUtil.hasAllRequired(requestJson, "moduleID");
+        return moduleService.removeModuleDisplay(requestJson);
+    }
     /**
      * 查询所有的模块
      * 在添加/修改模块的时候要使用此方法

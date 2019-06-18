@@ -7,6 +7,7 @@ import com.heeexy.example.util.CommonUtil;
 import com.heeexy.example.util.constants.ErrorEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,16 +36,17 @@ public class ModuleServicelmpl implements ModuleService {
         return CommonUtil.successJson();
     }
 
+
     /**
      * 删除模块
      */
-//    @Transactional(rollbackFor = Exception.class)
-//    @SuppressWarnings("unchecked")
-//    @Override
-//    public JSONObject removeModule(JSONObject jsonObject) {
-//        moduleDao.removeModuleName( jsonObject );
-//        return  CommonUtil.successJson();
-//    }
+    @Transactional(rollbackFor = Exception.class)
+    @SuppressWarnings("unchecked")
+    @Override
+    public JSONObject removeModuleDisplay(JSONObject jsonObject) {
+        moduleDao.removeModuleDisplay( jsonObject );
+        return  CommonUtil.successJson();
+    }
 
     /**
      * 修改模块

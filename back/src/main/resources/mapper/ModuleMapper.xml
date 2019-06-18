@@ -12,6 +12,7 @@
         <id column="moduleId" property="moduleId"/>
         <result column="moduleName" property="moduleName"/>
         <result column="createTime" property="createTime"/>
+        <result column="display" property="display"/>
         <result column="updateTime" property="updateTime"/>
         <result column="moduleContent" property="moduleContent"/>
     </resultMap>
@@ -24,6 +25,7 @@
         DATE_FORMAT(create_time, '%Y.%m.%d %T') createTime,
         DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
         from cqy_module
+        where display = 1
     </select>
 <!--增/改后查询全部-->
     <select id="getAllModule" resultType="com.alibaba.fastjson.JSONObject">
@@ -34,11 +36,12 @@
         create_time createTime,
         update_time updateTime
         from cqy_module
+        where display = 1
     </select>
     <!--新增-->
     <insert id="addModule" useGeneratedKeys="true" keyProperty="moduleId">
-        INSERT into cqy_module(module_name,module_content)
-        values (#{moduleName},#{moduleContent})
+        INSERT into cqy_module(module_name,module_content,display)
+        values (#{moduleName},#{moduleContent},1)
     </insert>
     <!--修改-->
     <update id="updateModuleName">
@@ -46,14 +49,22 @@
         set
         module_name = #{moduleName},
         module_content = #{moduleContent}
-        where module_ID= #{moduleId}
+        where module_ID= #{moduleId} and display = 1
     </update>
 
+    <!--删除-->
+     <update id="removeModuleDisplay">
+        update cqy_module
+        set
+        display = 0
+        where module_ID= #{moduleId}
+     </update>
     <!--查询模块名是否存在-->
     <select id="queryExistModuleName" resultType="int">
         select count(0)
         from cqy_module
         where module_name= #{moduleName}
     </select>
+
 
 </mapper>

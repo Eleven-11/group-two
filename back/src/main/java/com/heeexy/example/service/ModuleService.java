@@ -19,7 +19,7 @@ public interface ModuleService {
     /**
      * 删除模块
      */
-//    JSONObject removeModule(JSONObject jsonObject);
+    JSONObject removeModuleDisplay(JSONObject jsonObject);
 
     /**
      * 修改模块

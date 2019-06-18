@@ -19,13 +19,13 @@
       <el-table-column align="center" label="模板内容" prop="moduleContent" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" width="170"></el-table-column>
       <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170"></el-table-column>
-      <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
+      <el-table-column align="center" label="管理" width="320" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
-          <el-button type="danger" icon="edit" @click="showSend(scope.$index)">发送所有人</el-button>
-          <!--<el-button type="danger" icon="delete" v-if="scope.row.userId!=userId "-->
-                     <!--@click="removeUser(scope.$index)">删除-->
-          <!--</el-button>-->
+          <el-button type="primary" icon="edit" @click="showSend(scope.$index)">发送所有人</el-button>
+          <el-button type="danger" icon="delete" v-if="scope.row.userId!=userId "
+                     @click="removeUser(scope.$index)">删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -76,12 +76,13 @@
         dialogFormVisible: false,
         textMap: {
           update: '编辑',
-          create: '新建用户'
+          create: '新建模块'
         },
         tempUser: {
           moduleId:'',
           moduleName: '',
-          moduleContent:''
+          moduleContent:'',
+          display:''
         }
       }
     },
@@ -184,6 +185,26 @@
             onClose: () => {
               _vue.getList();
             }
+          })
+        })
+      },
+      removeUser($index) {
+        let _vue = this;
+        this.$confirm('确定删除此模块?', '提示', {
+          confirmButtonText: '确定',
+          showCancelButton: false,
+          type: 'warning'
+        }).then(() => {
+          let user = _vue.list[$index];
+          user.display = 0;
+          _vue.api({
+            url: "/module/removeModuleDisplay",
+            method: "post",
+            data: user
+          }).then(() => {
+            _vue.getList()
+          }).catch(() => {
+            _vue.$message.error("删除失败")
           })
         })
       },
