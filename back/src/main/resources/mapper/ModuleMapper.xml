@@ -13,12 +13,14 @@
         <result column="moduleName" property="moduleName"/>
         <result column="createTime" property="createTime"/>
         <result column="updateTime" property="updateTime"/>
+        <result column="moduleContent" property="moduleContent"/>
     </resultMap>
 <!--查询全部-->
     <select id="listModule" resultMap="moduleMap">
         select
         module_ID moduleId,
         module_name moduleName,
+        module_content moduleContent,
         DATE_FORMAT(create_time, '%Y.%m.%d %T') createTime,
         DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
         from cqy_module
@@ -28,20 +30,22 @@
         select
         module_ID moduleId,
         module_name moduleName,
+        module_content moduleContent,
         create_time createTime,
         update_time updateTime
         from cqy_module
     </select>
     <!--新增-->
     <insert id="addModule" useGeneratedKeys="true" keyProperty="moduleId">
-        INSERT into cqy_module(module_name)
-        values (#{moduleName})
+        INSERT into cqy_module(module_name,module_content)
+        values (#{moduleName},#{moduleContent})
     </insert>
     <!--修改-->
     <update id="updateModuleName">
         update cqy_module
         set
-        module_name = #{moduleName}
+        module_name = #{moduleName},
+        module_content = #{moduleContent}
         where module_ID= #{moduleId}
     </update>
 

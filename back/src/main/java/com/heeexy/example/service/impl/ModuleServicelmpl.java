@@ -7,7 +7,6 @@ import com.heeexy.example.util.CommonUtil;
 import com.heeexy.example.util.constants.ErrorEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -52,10 +51,6 @@ public class ModuleServicelmpl implements ModuleService {
      */
     @Override
     public JSONObject updateModuleName(JSONObject jsonObject) {
-        int exist = moduleDao.queryExistModuleName( jsonObject );
-        if( exist > 0 ){
-            return CommonUtil.errorJson(ErrorEnum.E_10009);
-        }
         moduleDao.updateModuleName( jsonObject );
         return CommonUtil.successJson();
     }

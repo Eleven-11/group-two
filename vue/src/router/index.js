@@ -77,9 +77,9 @@ export const asyncRouterMap = [
       },
       {
         path: 'ModuleInformation',
-        name: '模板信息管理',
+        name: '信息管理',
         component: _import('module/ModuleInformation'),
-        meta: {title: '模板信息管理', icon: 'user'},
+        meta: {title: '信息管理', icon: 'user'},
         menu: 'ModuleInformation'
       },
     ]

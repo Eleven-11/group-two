@@ -15,13 +15,14 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="板块编号" prop="moduleId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="板块名" prop="moduleName" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="模板内容" prop="moduleContent" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" width="170"></el-table-column>
       <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170"></el-table-column>
       <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
+          <el-button type="danger" icon="edit" @click="showSend(scope.$index)">发送所有人</el-button>
           <!--<el-button type="danger" icon="delete" v-if="scope.row.userId!=userId "-->
                      <!--@click="removeUser(scope.$index)">删除-->
           <!--</el-button>-->
@@ -42,6 +43,10 @@
                style='width: 300px; margin-left:50px;'>
         <el-form-item label="板块名" >
           <el-input type="text" v-model="tempUser.moduleName">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="板块内容" >
+          <el-input type="text" v-model="tempUser.moduleContent">
           </el-input>
         </el-form-item>
       </el-form>
@@ -75,7 +80,8 @@
         },
         tempUser: {
           moduleId:'',
-          moduleName: ''
+          moduleName: '',
+          moduleContent:''
         }
       }
     },
@@ -135,6 +141,7 @@
         //显示新增对话框
         this.tempUser.moduleId= "";
         this.tempUser.moduleName = "";
+        this.tempUser.moduleContent= "";
         this.dialogStatus = "create"
         this.dialogFormVisible = true
       },
@@ -142,6 +149,7 @@
         let module = this.list[$index];
         this.tempUser.moduleId = module.moduleId;
         this.tempUser.moduleName = module.moduleName;
+        this.tempUser.moduleContent = module.moduleContent;
         this.dialogStatus = "update"
         this.dialogFormVisible = true
       },
