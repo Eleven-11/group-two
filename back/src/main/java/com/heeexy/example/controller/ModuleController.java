@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author: 陈强勇
- * @description:模块相关controller
+ * @author: chenqiangyong
+ * @description:模板相关controller
  * @date: 2019/6/18 9:03
  */
 @RestController
@@ -36,7 +36,7 @@ public class ModuleController {
 //    @RequiresPermissions("module:add")
     @PostMapping("addModule")
     public JSONObject addModule(@RequestBody JSONObject requestJson){
-        CommonUtil.hasAllRequired(requestJson, "moduleName");
+        CommonUtil.hasAllRequired(requestJson, "moduleName,moduleContent");
         return moduleService.addModule(requestJson);
     }
 
@@ -46,8 +46,8 @@ public class ModuleController {
 //    @RequiresPermissions("module:update")
     @PostMapping("/updateModule")
     public JSONObject updateModule(@RequestBody JSONObject requestJson){
-        CommonUtil.hasAllRequired(requestJson, " moduleName");
-        return moduleService.updateModuleName(requestJson);
+        CommonUtil.hasAllRequired(requestJson, " moduleName,moduleContent");
+        return moduleService.updateModule(requestJson);
     }
 
     /**

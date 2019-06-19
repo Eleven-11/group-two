@@ -42,6 +42,10 @@ public interface ModuleDao {
     int queryExistModuleName(JSONObject jsonObject);
 
     /**
+     * 校验模块的隐藏值
+     */
+    int queryExistModuleDisplay(JSONObject jsonObject);
+    /**
      * 查询所有的模块
      * 在添加/修改模块的时候要使用此方法
      */

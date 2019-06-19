@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import java.util.List;
 
 /**
- * @author: 陈强勇
+ * @author: chenqiangyong
  * @description:模块/增删改查
  * @date: 2019/6/18 9:03
  */
@@ -24,9 +24,7 @@ public interface ModuleService {
     /**
      * 修改模块
      */
-    JSONObject updateModuleName(JSONObject jsonObject);
-
-
+    JSONObject updateModule(JSONObject jsonObject);
 
     /**
      * 查询模块列表

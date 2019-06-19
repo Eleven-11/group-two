@@ -28,9 +28,12 @@ public class ModuleServicelmpl implements ModuleService {
      */
     @Override
     public JSONObject addModule(JSONObject jsonObject) {
-        int exist = moduleDao.queryExistModuleName( jsonObject );
+        int exist = moduleDao.queryExistModuleName(jsonObject);
         if( exist > 0 ){
-            return CommonUtil.errorJson(ErrorEnum.E_10009);
+            int i = moduleDao.queryExistModuleDisplay(jsonObject);
+            if(i==1){
+                return CommonUtil.errorJson(ErrorEnum.E_10009);
+            }
         }
         moduleDao.addModule( jsonObject );
         return CommonUtil.successJson();
@@ -52,7 +55,7 @@ public class ModuleServicelmpl implements ModuleService {
      * 修改模块
      */
     @Override
-    public JSONObject updateModuleName(JSONObject jsonObject) {
+    public JSONObject updateModule(JSONObject jsonObject) {
         moduleDao.updateModuleName( jsonObject );
         return CommonUtil.successJson();
     }

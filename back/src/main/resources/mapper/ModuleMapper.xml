@@ -65,6 +65,11 @@
         from cqy_module
         where module_name= #{moduleName}
     </select>
-
+    <!--查询隐藏值-->
+    <select id="queryExistModuleDisplay" resultType="int">
+        select display
+        from cqy_module
+        where module_name= #{moduleName}
+    </select>
 
 </mapper>
