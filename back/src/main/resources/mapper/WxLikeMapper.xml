@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.WxLikeDao">
+
+
+    <!--添加用户点赞帖子-->
+    <insert id="addByLike" parameterType="com.alibaba.fastjson.JSONObject">
+        insert  into  fly_like values (#{onUserId},#{postId},#{userId},1,#{createTime});
+    </insert>
+
+    <!--网页查找用户点赞帖子列表-->
+    <select id="getLikeByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select post_id from fly_like where onuser_id=#{onUserId} and state = 1;
+    </select>
+
+    <!--查找用户是否已点赞该帖子信息-->
+    <select id="getLikeUserPost" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select  user_id userId,onuser_id onUserId,like_state likeState from fly_like
+        where onuser_id =#{onUserId} and post_id =#{postId};
+    </select>
+    <!--修改帖子用户点赞状态-->
+    <update id="updateLikeByUserId" parameterType="com.alibaba.fastjson.JSONObject">
+        update fly_like set like_state =#{likeState} where onuser_id = #{onUserId} and post_id =#{postId};
+    </update>
+</mapper>

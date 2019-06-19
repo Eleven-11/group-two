@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.WxBrowserDao">
+
+    <!--添加某个浏览记录-->
+    <insert id="addBrowsePost" parameterType="com.alibaba.fastjson.JSONObject">
+
+        insert into  fly_browse (onuser_id, post_id, update_time) values(#{onUserId},#{postId},now());
+    </insert>
+<!--查找某个用户的浏览记录-->
+    <select id="getBrowsePost" parameterType="com.alibaba.fastjson.JSONObject">
+        select post_id postId from fly_browse where onuser_id =#{onUserId};
+    </select>
+    <!--查找该用户是否有该帖子的浏览记录-->
+    <select id="getBrowsePostByPostId" parameterType="com.alibaba.fastjson.JSONObject">
+        select post_id postId from fly_browse where onuser_id =#{onUserId} and post_id = #{postId};
+    </select>
+    <!--修改该用户的浏览帖子记录的时间-->
+    <update id="updateBrowse" parameterType="com.alibaba.fastjson.JSONObject">
+        update fly_browse set update_time =now() where onuser_id =#{onUserId}
+    </update>
+</mapper>
