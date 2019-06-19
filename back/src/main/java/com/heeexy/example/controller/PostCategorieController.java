@@ -25,7 +25,7 @@ public class PostCategorieController {
      */
 //   @RequiresPermissions( "postcategorie:list" )
     @GetMapping("/list")
-    public JSONObject listModule(HttpServletRequest request){
+    public JSONObject listPostCategorie(HttpServletRequest request){
         return postCategorieService.listPostCategorie( CommonUtil.request2Json(request));
     }
     /**

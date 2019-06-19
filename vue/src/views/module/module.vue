@@ -45,7 +45,7 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="tempUser" label-position="left" label-width="80px"
                style='width: 300px; margin-left:50px;'>
-        <el-form-item label="板块名" >
+        <el-form-item label="板块名" required v-if="dialogStatus=='create'">
           <el-input type="text" v-model="tempUser.moduleName">
           </el-input>
         </el-form-item>

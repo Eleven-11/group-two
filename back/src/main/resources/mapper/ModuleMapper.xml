@@ -6,6 +6,7 @@
     <select id="countModule" resultType="Integer">
         select count(0)
         from cqy_module u
+         where display = 1
     </select>
 
     <resultMap id="moduleMap" type="com.heeexy.example.util.model.One2Many">
@@ -63,7 +64,7 @@
     <select id="queryExistModuleName" resultType="int">
         select count(0)
         from cqy_module
-        where module_name= #{moduleName}
+        where module_name= #{moduleName} and display = 1
     </select>
     <!--查询隐藏值-->
     <select id="queryExistModuleDisplay" resultType="int">

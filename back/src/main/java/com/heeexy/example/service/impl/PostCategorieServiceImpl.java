@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * @author: chenqiangyong
- * @description:
+ * @description:模块/增删改查的实现
  * @date: 2019/6/18
  * @vevsion
  */
@@ -38,7 +38,7 @@ public class PostCategorieServiceImpl implements PostCategorieService {
         return CommonUtil.successJson();
     }
     /**
-     * 删除帖子类别
+     * 修改帖子类别状态
      */
     @Transactional(rollbackFor = Exception.class)
     @SuppressWarnings("unchecked")

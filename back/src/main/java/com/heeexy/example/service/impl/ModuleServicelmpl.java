@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * @author: chenqiangyong
- * @description:
+ * @description:模块/增删改查的实现
  * @date: 2019/6/18
  * @vevsion
  */

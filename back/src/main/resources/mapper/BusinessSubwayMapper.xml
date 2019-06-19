@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.BusinessSubwayDao">
+    <!--计数-->
+    <select id="countBusinessSubway" resultType="Integer">
+        select count(0)
+        from cqy_business_subway
+        where display = 1
+    </select>
+
+    <resultMap id="BusinessSubwayMap" type="com.heeexy.example.util.model.One2Many">
+        <id column="businessSubwayId" property="businessSubwayId"/>
+        <result column="businessSubwayName" property="businessSubwayName"/>
+        <result column="superiorId" property="superiorId"/>
+        <result column="display" property="display"/>
+        <result column="updateTime" property="updateTime"/>
+        <result column="moduleContent" property="moduleContent"/>
+    </resultMap>
+    <!--查询列表-->
+    <select id="listBusinessSubway" resultMap="BusinessSubwayMap">
+        select
+        business_subway_id businessSubwayId,
+        business_subway_name businessSubwayName,
+        Superior_id superiorId,
+        DATE_FORMAT(create_time, '%Y.%m.%d %T') createTime,
+        DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
+        from cqy_business_subway
+        <where>
+            <if test="input != null and input != ''">
+                business_subway_name LIKE CONCAT(CONCAT('%',#{input}),'%')
+                and
+            </if>
+             display = 1
+        </where>
+    </select>
+
+    <!--增/改后查询全部-->
+    <select id="getAllBusinessSubway" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        business_subway_id businessSubwayId,
+        business_subway_name businessSubwayName,
+        Superior_id superiorId,
+        create_time createTime,
+        update_time updateTime
+        from cqy_business_subway
+        where display = 1
+    </select>
+    <!--新增-->
+    <insert id="addBusinessSubway" useGeneratedKeys="true" keyProperty="moduleId">
+        INSERT into cqy_business_subway(business_subway_name,Superior_id,display)
+        values (#{businessSubwayName},#{superiorId},1)
+    </insert>
+    <!--修改-->
+    <update id="updateBusinessSubway">
+        update cqy_business_subway
+        set
+        business_subway_name = #{businessSubwayName},
+        Superior_id = #{superiorId}
+        where business_subway_id= #{businessSubwayId} and display = 1
+    </update>
+    <!--删除-->
+    <update id="updateBusinessSubwayDisplay">
+        update cqy_business_subway
+        set
+        display = 0
+        where business_subway_id= #{businessSubwayId}
+     </update>
+
+    <!--查询校标签名是否已存在-->
+    <select id="queryExistBusinessSubwayName" resultType="int">
+        select count(0)
+        from cqy_business_subway
+        where business_subway_name=#{businessSubwayName} and display = 1
+    </select>
+    <!--查询隐藏值-->
+    <select id="queryExistBusinessSubwayDisplay" resultType="int">
+        select display
+        from cqy_business_subway
+        where business_subway_name=#{businessSubwayName}
+    </select>
+
+
+    <!--查询帖子标签的上级id,根据名-->
+    <select id="queryExistBusinessSubwayByName">
+        select Superior_id
+        from   cqy_business_subway
+        where  business_subway_name=#{businessSubwayName}
+    </select>
+     <!--查询帖子标签的名,根据id-->
+    <select id="queryExistBusinessSubwayById" resultType="int">
+        select business_subway_name
+        from   cqy_business_subway
+        where  business_subway_id=#{businessSubwayId}
+    </select>
+</mapper>

@@ -54,7 +54,6 @@
         </el-form-item>
       </el-form>
 
-
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button v-if="dialogStatus=='create'" type="success" @click="createUser">创 建</el-button>

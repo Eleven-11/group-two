@@ -6,6 +6,7 @@
     <select id="countPostCategorie" resultType="Integer">
         select count(0)
         from cqy_post_categories
+         where display = 1
     </select>
 
     <resultMap id="PostCategorieMap" type="com.heeexy.example.util.model.One2Many">
@@ -62,7 +63,7 @@
     <select id="queryExistPostCategorieName" resultType="int">
         select count(0)
         from cqy_post_categories
-        where categories_name= #{categoriesName}
+        where categories_name= #{categoriesName} and display = 1
     </select>
     <!--查询隐藏值-->
     <select id="queryExistCategorieDisplay" resultType="int">
