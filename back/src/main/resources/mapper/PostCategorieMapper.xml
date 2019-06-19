@@ -71,4 +71,10 @@
         from cqy_post_categories
         where categories_name= #{categoriesName}
     </select>
+    <!--查询校模块名是否已存在（不包含自己）-->
+    <select id="queryExistPostCategorieNameTwo" resultType="int">
+        select count(0)
+        from cqy_post_categories
+        where categories_name= #{categoriesName} and display = 1 and categories_id != #{categoriesId}
+    </select>
 </mapper>

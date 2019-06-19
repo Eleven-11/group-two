@@ -39,7 +39,10 @@ public interface PostCategorieDao {
      * 校验帖子类别名是否已存在
      */
     int queryExistPostCategorieName(JSONObject jsonObject);
-
+    /**
+     * 校验帖子类别名是否已存在（不包含自己）
+     */
+    int queryExistPostCategorieNameTwo(JSONObject jsonObject);
     /**
      * 查询帖子类别的隐藏值
      */

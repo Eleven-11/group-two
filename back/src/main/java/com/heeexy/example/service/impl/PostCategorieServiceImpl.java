@@ -54,6 +54,10 @@ public class PostCategorieServiceImpl implements PostCategorieService {
      */
     @Override
     public JSONObject updatePostCategorie(JSONObject jsonObject) {
+        int exist = postCategorieDao.queryExistPostCategorieNameTwo( jsonObject );
+        if( exist== 1 ){
+            return CommonUtil.errorJson(ErrorEnum.E_10009);
+        }
         postCategorieDao.updatePostCategorie(jsonObject);
         return CommonUtil.successJson();
     }
