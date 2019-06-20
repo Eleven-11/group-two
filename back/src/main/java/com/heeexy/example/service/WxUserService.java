@@ -20,6 +20,8 @@ public interface WxUserService {
     JSONObject getMaxNumber(JSONObject jsonObject);
     //增加用户
     JSONObject addByUser(JSONObject jsonObject);
+    //添加游客用户
+    JSONObject addGuestUser(JSONObject jsonObject);
     //修改虚假粉丝数和封禁状态
     JSONObject updateFansfById(JSONObject jsonObject);
 

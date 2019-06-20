@@ -5,6 +5,7 @@ import com.heeexy.example.dao.WxLikeDao;
 import com.heeexy.example.service.WxLikeService;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -14,24 +15,37 @@ import java.util.List;
  * @ Description：
  * @ Version: 1.0
  */
-
+@Service
 public class WxLikeServiceImpl implements WxLikeService {
     @Autowired
     private WxLikeDao wxLikeDao;
 
     /*用户添加点赞记录*/
     @Override
-    public JSONObject addByLike(JSONObject jsonObject) {
-        wxLikeDao.addByLike(jsonObject);
+    public JSONObject addLike(JSONObject jsonObject) {
+        wxLikeDao.addLike(jsonObject);
         return CommonUtil.successJson();
     }
-    /*获取用户点赞列表*/
+
+
+    /*网页获取用户点赞列表*/
     @Override
     public JSONObject getLikeByUserId(JSONObject jsonObject) {
         List<JSONObject> likeByUserId = wxLikeDao.getLikeByUserId(jsonObject);
 
         return CommonUtil.successPage(likeByUserId);
     }
+
+    @Override
+    public JSONObject getLikeList(JSONObject jsonObject) {
+        //后台数据展示
+        CommonUtil.fillPageParam(jsonObject);
+        List<JSONObject> list = wxLikeDao.getLikeList(jsonObject);
+        int count = wxLikeDao.countPostLike(jsonObject);
+
+        return CommonUtil.successPage(jsonObject, list, count);
+    }
+
     /*查找用户是否对该帖子有点赞记录*/
     @Override
     public JSONObject getLikeUserPost(JSONObject jsonObject) {

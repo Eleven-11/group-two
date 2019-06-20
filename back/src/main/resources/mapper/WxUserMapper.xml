@@ -8,13 +8,18 @@
        select
          user_id  userId,user_name userName, user_photo userPhoto,
       user_sex  userSex,user_fans userFans,user_fans_f userFansf,
-      guest guest, user_state userState,DATE_FORMAT(first_time, '%Y.%m.%d %T') firstTime
+      guest guest, user_state userState,DATE_FORMAT(first_time, '%Y.%m.%d %T') firstTime,DATE_FORMAT(update_time, '%Y.%m.%d %T')  updateTime
         from  fly_user where user_id = (select max(user_id) from fly_user)
     </select>
-    <!--增加用户-->
+    <!--增加普通用户-->
     <insert id="addByUser" parameterType="com.alibaba.fastjson.JSONObject">
-    insert  into  fly_user (user_name, user_photo, user_sex, user_fans, user_fans_f, guest, user_state, first_time)
-    values (#{userName},#{userPhoto},#{userSex},0,0,0,0,now());
+    insert  into  fly_user (user_uuid userUuid,user_name, user_photo, user_sex, user_fans, user_fans_f, guest, user_state)
+    values (#{userUuid},#{userName},#{userPhoto},#{userSex},0,0,0,0);
+    </insert>
+    <!--增加游客用户-->
+    <insert id="addGuestUser" parameterType="com.alibaba.fastjson.JSONObject">
+    insert  into  fly_user (user_uuid userUuid,user_name, user_photo, user_sex, user_fans, user_fans_f, guest, user_state)
+    values (#{userUuid},#{userName},#{userPhoto},#{userSex},0,0,1,0);
     </insert>
     <!--修改虚假粉丝数和用户封禁状态-->
     <update id="updateFansfById" parameterType="com.alibaba.fastjson.JSONObject" >
@@ -32,14 +37,18 @@
     <!--查找所有用户-->
     <select id="getListUser" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
       select
-      user_id  userId,user_name userName, user_photo userPhoto,
-      user_sex  userSex,user_fans userFans,user_fans_f userFansf,
-      guest guest, user_state userState,DATE_FORMAT(first_time, '%Y.%m.%d %T') firstTime
-      from  fly_user
+      t1.user_id  userId,t1.user_uuid userUuid,t1.user_name userName,t1.user_photo userPhoto,
+      t1.user_sex  userSex,t1.user_fans userFans,t1.user_fans_f userFansf,
+      t1.guest guest, t2.close_name userState,DATE_FORMAT(first_time, '%Y.%m.%d %T') firstTime,DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
+      from  fly_user t1,fly_userstate t2
+
         <where>
+            t1.user_state =t2.close_id
             <if test="userName != null and userName != ''">
-               user_name LIKE CONCAT(CONCAT('%',#{userName}),'%')
+              and user_name LIKE CONCAT(CONCAT('%',#{userName}),'%')
+
             </if>
+            and t1.user_id > 1
         </where>
        LIMIT #{offSet}, #{pageRow};
     </select>

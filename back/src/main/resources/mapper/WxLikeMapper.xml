@@ -5,22 +5,37 @@
 
 
     <!--添加用户点赞帖子-->
-    <insert id="addByLike" parameterType="com.alibaba.fastjson.JSONObject">
-        insert  into  fly_like values (#{onUserId},#{postId},#{userId},1,#{createTime});
+    <insert id="addLike" parameterType="com.alibaba.fastjson.JSONObject">
+        insert  into  fly_like (onuser_id, post_id, user_id, like_state) values (#{onUserId},#{postId},#{userId},1);
     </insert>
 
-    <!--网页查找用户点赞帖子列表-->
+    <!--网页查找单个用户点赞帖子列表-->
     <select id="getLikeByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-        select post_id from fly_like where onuser_id=#{onUserId} and state = 1;
+
+        select * from fly_like
+        where post_id in ( select post_id from fly_like where onuser_id=#{onUserId} and state = 1;)
+
+       
+    </select>
+    <!--后台每个用户点赞帖子记录-->
+    <select id="getLikeList" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+
+        select like_id likeId, onuser_id onUserId,post_id postId,user_id userId,like_state likeState,DATE_FORMAT(create_time, '%Y.%m.%d %T')  createTime,DATE_FORMAT(update_time, '%Y.%m.%d %T')  updateTime
+        from fly_like
+
+    </select>
+    <!--后台每个用户点赞帖子列表计算-->
+    <select id="countPostLike" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select count(0) from fly_like
     </select>
 
     <!--查找用户是否已点赞该帖子信息-->
     <select id="getLikeUserPost" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-        select  user_id userId,onuser_id onUserId,like_state likeState from fly_like
+        select like_id likeId, onuser_id onUserId,like_state likeState from fly_like
         where onuser_id =#{onUserId} and post_id =#{postId};
     </select>
     <!--修改帖子用户点赞状态-->
     <update id="updateLikeByUserId" parameterType="com.alibaba.fastjson.JSONObject">
-        update fly_like set like_state =#{likeState} where onuser_id = #{onUserId} and post_id =#{postId};
+        update fly_like set like_state =#{likeState} where like_id = #{likeId};
     </update>
 </mapper>

@@ -16,7 +16,13 @@
         <span v-text="getIndex(scope.$index)"> </span>
       </template>
     </el-table-column>
-    <el-table-column align="center" label="用户头像" prop="userPhoto" style="width: 60px;"></el-table-column>
+    <el-table-column align="center" label="用户UUID" prop="userUuid" style="width: 60px;"></el-table-column>
+    <el-table-column label="头像" width="100">
+      <template slot-scope="scope">
+        <img :src="scope.row.userPhoto" width="80" height="80" class="head_pic"/>
+      </template>
+    </el-table-column>
+   <!-- <el-table-column align="center" label="用户头像" prop="userPhoto" style="width: 60px;"></el-table-column>-->
     <el-table-column align="center" label="用户名" prop="userName" style="width: 60px;"></el-table-column>
     <el-table-column align="center" label="性别" prop="userSex" style="width: 60px;"></el-table-column>
     <el-table-column align="center" label="粉丝数" prop="userFans" style="width: 60px;"></el-table-column>
@@ -24,6 +30,7 @@
     <el-table-column align="center" label="游客角色" prop="guest" style="width: 60px;"></el-table-column>
     <el-table-column align="center" label="封禁状态" prop="userState" style="width: 60px;"></el-table-column>
     <el-table-column align="center" label="授权时间" prop="firstTime" style="width: 60px;"></el-table-column>
+    <el-table-column align="center" label="更新时间" prop="updateTime" style="width: 60px;"></el-table-column>
     <el-table-column align="center" label="管理" width="220">
       <template slot-scope="scope">
         <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
@@ -101,6 +108,7 @@
           update: '编辑',
         },
         tempUser: {
+          userUuid:'',
           userName: '',
           userPhoto: '',
           userSex: '',

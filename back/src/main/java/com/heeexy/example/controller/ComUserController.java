@@ -1,8 +1,7 @@
 package com.heeexy.example.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.heeexy.example.service.WxFansService;
-import com.heeexy.example.service.WxUserService;
+import com.heeexy.example.service.*;
 import com.heeexy.example.util.CommonUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +22,12 @@ public class ComUserController {
     private WxUserService wxUserService;
     @Autowired
     private WxFansService wxFansService;
+    @Autowired
+    private WxLikeService wxLikeService;
+    @Autowired
+    private WxBrowserService wxBrowserService;
+    @Autowired
+    private WxMyPostService wxMyPostService;
     /*展示用户列表*/
     @GetMapping("/listUser")
     public JSONObject getListUser( HttpServletRequest request) {
@@ -35,10 +40,34 @@ public class ComUserController {
 
         return wxFansService.getListFans(CommonUtil.request2Json(request));
     }
-    //添加用户
+    /*展示用户点赞列表*/
+    @GetMapping("/listUserLike")
+    public JSONObject getListUserLike(HttpServletRequest request) {
+
+        return wxLikeService.getLikeList(CommonUtil.request2Json(request));
+    }
+    /*展示用户浏览记录列表*/
+    @GetMapping("/listUserBrowse")
+    public JSONObject getListUserBrowse(HttpServletRequest request) {
+
+        return wxBrowserService.getBrowseList(CommonUtil.request2Json(request));
+    }
+    /*展示用户帖子列表*/
+    @GetMapping("/listUserPost")
+    public JSONObject getListUserPost(HttpServletRequest request) {
+
+        return wxMyPostService.getMyPostList(CommonUtil.request2Json(request));
+    }
+    //添加普通用户
     @PostMapping("/addUser")
     public JSONObject addUser(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "userName,userPhoto,userSex,");
+        CommonUtil.hasAllRequired(requestJson, "userName,userPhoto,userSex");
+        return wxUserService.addByUser(requestJson);
+    }
+    //添加普通用户
+    @PostMapping("/addGuestUser")
+    public JSONObject addGuestUser(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "userName,userPhoto,userSex");
         return wxUserService.addByUser(requestJson);
     }
     //修改用户粉丝数或封禁状态

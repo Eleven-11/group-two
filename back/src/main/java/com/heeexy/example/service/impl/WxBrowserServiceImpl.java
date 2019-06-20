@@ -18,19 +18,12 @@ import java.util.List;
 @Service
 public class WxBrowserServiceImpl implements WxBrowserService {
     @Autowired
-    WxBrowserDao wxBrowserDao;
+    private WxBrowserDao wxBrowserDao;
     //添加浏览记录
     @Override
     public JSONObject addBrowsePost(JSONObject jsonObject) {
          wxBrowserDao.addBrowsePost(jsonObject);
         return CommonUtil.successJson();
-    }
-//获取用户浏览帖子记录
-    @Override
-    public JSONObject getBrowsePost(JSONObject jsonObject) {
-
-        List<JSONObject> browsePost = wxBrowserDao.getBrowsePost(jsonObject);
-        return CommonUtil.successPage(browsePost);
     }
 //查找该用户是否存在该帖子的浏览记录
     @Override
@@ -43,5 +36,23 @@ public class WxBrowserServiceImpl implements WxBrowserService {
     public JSONObject updateBrowse(JSONObject jsonObject) {
         wxBrowserDao.updateBrowse(jsonObject);
         return CommonUtil.successJson();
+    }
+
+    @Override
+    public JSONObject getBrowseList(JSONObject jsonObject) {
+        //后台浏览记录数据
+        CommonUtil.fillPageParam(jsonObject);
+        List<JSONObject> list = wxBrowserDao.getBrowseList(jsonObject);
+        int count = wxBrowserDao.countBrowse(jsonObject);
+
+        return CommonUtil.successPage(jsonObject, list, count);
+    }
+
+    @Override
+    public JSONObject getBrowseByUser(JSONObject jsonObject) {
+        //前台用户浏览记录
+        List<JSONObject> browseByUser = wxBrowserDao.getBrowseByUser(jsonObject);
+
+       return CommonUtil.successPage(browseByUser);
     }
 }

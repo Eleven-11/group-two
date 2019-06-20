@@ -13,10 +13,13 @@ import java.util.List;
 public interface WxBrowserService {
     //添加浏览记录
     JSONObject addBrowsePost(JSONObject jsonObject);
-    //查找某个用户的浏览记录
-    JSONObject getBrowsePost(JSONObject jsonObject);
+
     //查找该用户是否有该帖子的浏览记录
     JSONObject getBrowsePostByPostId(JSONObject jsonObject);
     //修改该用户的浏览帖子记录的时间
     JSONObject updateBrowse(JSONObject jsonObject);
+    //后台显示浏览记录表
+    JSONObject getBrowseList(JSONObject jsonObject);
+    //前台显示当前用户浏览记录
+    JSONObject getBrowseByUser(JSONObject jsonObject);
 }

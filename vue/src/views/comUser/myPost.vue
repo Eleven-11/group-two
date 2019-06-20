@@ -1,25 +1,37 @@
 <template>
   <div class="app-container">
-    <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
-              highlight-current-row>
+<el-row>
+  <el-col>
+    <el-button type="primary" icon="delete" :disabled="this.checkBoxData.length===0"
+               @click="deletePost(checkBoxData)">选择删除
+    </el-button>
+  </el-col>
+</el-row>
+    <el-table :data="list" v-loading.body="listLoading"  @selection-change="changeFun" element-loading-text="拼命加载中" border fit
+              highlight-current-row >
+      <el-table-column type="selection"></el-table-column>
       <el-table-column align="center" label="序号"  style="width: 60px;">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
+
       <el-table-column align="center" label="用户ID" prop="onUserId" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="被关注者用户ID" prop="userId" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="关注状态" prop="state" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="帖子ID" prop="postId" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="帖子状态" prop="myPostState" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="更新时间" prop="updateTime" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
-          <el-button type="danger" icon="delete" v-if="scope.row.fansId!=fansId "
-                     @click="removeUser(scope.$index)">修改
+          <el-button type="danger" icon="delete" v-if="scope.row.myPostId!=myPostId "
+                     @click="removeUser(scope.$index)">删除
           </el-button>
         </template>
       </el-table-column>
+
+
+
     </el-table>
+
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -37,7 +49,11 @@
   export default {
     data() {
       return {
-
+        tableData:[],
+        checkBoxData:[],//被选中的记录数据
+        ids:[],//批量删除id
+        onUserId:[],
+        postId:[],
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
@@ -51,11 +67,12 @@
         textMap: {
           update: '编辑',
         },
-        tempFans: {
+        tempMyPost: {
           onUserId: '',
-          userId: '',
-          state: '',
-          fansId: ''
+          postId:'',
+          myPostState:'',
+          createTime: '',
+          myPostId: ''
         }
       }
     },
@@ -64,15 +81,51 @@
     },
     computed: {
       ...mapGetters([
-        'fansId'
+        'myPostId'
       ])
     },
     methods: {
+      deletePost(rows){
+        //批量删除
+          let _vue = this;
+        _vue.$confirm('是否确认此操作?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            rows.forEach(element =>{
+              _vue.ids.push(element.myPostId)
+              let param = {
+                "myPostId":_vue.ids
+              }
+              _vue.api({
+
+                url: "/comUserPost/updateUserPost",
+                method: "post",
+                data: param
+              }).then(() => {
+                _vue.getList()
+              }).catch(() => {
+                _vue.$message.error("删除失败")
+              })
+
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消'
+            });
+          });
+      },
+      changeFun(val) {
+        console.log("changeFun",val)
+        this.checkBoxData = val;
+      },
       getList() {
         //查询列表
         this.listLoading = true;
         this.api({
-          url: "/comUser/listUserFans",
+          url: "/comUser/listUserPost",
           method: "get",
           params: this.listQuery,
         }).then(data => {
@@ -106,11 +159,7 @@
       },
       showUpdate($index) {
         let user = this.list[$index];
-        this.tempFans.fansId = user.fansId;
-        this.tempFans.onUserId = user.onUserId;
-        this.tempFans.userId = user.onUserId;
-        this.tempFans.state = user.state;
-        this.tempFans.updateTime = user.updateTime;
+
         this.dialogStatus = "update"
         this.dialogFormVisible = true
       },
@@ -118,7 +167,7 @@
         //修改用户信息
         let _vue = this;
         this.api({
-          url: "/comUser/updateUserFans",
+          url: "/comUser/updateUserPost",
           method: "post",
           data: this.tempFans
         }).then(() => {
@@ -139,26 +188,27 @@
       },
       removeUser($index) {
         let _vue = this;
-        this.$confirm('确定修改此用户关注?', '提示', {
+        this.$confirm('确定删除此帖子?', '提示', {
           confirmButtonText: '确定',
           showCancelButton: false,
           type: 'warning'
         }).then(() => {
           let user = _vue.list[$index];
-
-          if (user.state ==1) {
-            user.state = '0';
+          if (user.myPostState == 0)
+          {
+            user.myPostState =1;
           }else {
-            user.state='1';
+            user.myPostState =0;
           }
+
           _vue.api({
-            url: "/comUserFans/updateUserFans",
+            url: "/comUserPost/updateUserPost",
             method: "post",
             data: user
           }).then(() => {
             _vue.getList()
           }).catch(() => {
-            _vue.$message.error("修改失败")
+            _vue.$message.error("删除失败")
           })
         })
       },

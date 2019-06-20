@@ -86,8 +86,28 @@ export const asyncRouterMap = [
         meta: {title: '用户关注列表', icon: 'user'},
         menu: 'fans'
       },
+      {
+        path: 'myPost',
+        name: '用户帖子列表',
+        component: _import('comUser/myPost'),
+        meta: {title: '用户帖子列表', icon: 'user'},
+        menu: 'myPost'
+      },
+      {
+        path: 'like',
+        name: '用户点赞列表',
+        component: _import('comUser/like'),
+        meta: {title: '用户点赞列表', icon: 'user'},
+        menu: 'like'
+      },
+      {
+        path: 'browse',
+        name: '用户浏览记录列表',
+        component: _import('comUser/browse'),
+        meta: {title: '用户浏览记录列表', icon: 'user'},
+        menu: 'browse'
+      },
     ]
   },
-
   {path: '*', redirect: '/404', hidden: true}
 ]

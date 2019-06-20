@@ -4,7 +4,7 @@
 <mapper namespace="com.heeexy.example.dao.WxFansDao">
     <!--添加粉丝关注用户-->
     <insert id="addByFans" parameterType="com.alibaba.fastjson.JSONObject">
-        insert  into  fly_fans values (#{onUserId},#{userId},1,now());
+        insert  into  fly_fans (onuser_id, user_id, state) values (#{onUserId},#{userId},1);
     </insert>
     <!--计算粉丝关注用户数-->
     <select id="countByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
@@ -25,22 +25,17 @@
     </select>
     <!--修改关注用户状态-->
     <update id="updateFansByUserId" parameterType="com.alibaba.fastjson.JSONObject">
-
-
-        update fly_fans set state = case when state = 0 then 1
-              when state = 1 then 0
-            end
-         where onuser_id = #{onUserId}
-         and user_id =#{userId};
+        update fly_fans set state = #{state}
+         where fans_id =#{fansId}
     </update>
 
     <!--查找所有用户粉丝关注表（后台显示）-->
     <select id="getListFans" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
        select
-t1.FansId,t1.onusername onUserId ,t2.username userId,t1.state state,DATE_FORMAT(t1.updateTime, '%Y.%m.%d %T') updateTime
+t1.FansId,t1.onusername onUserId ,t2.username userId,t1.state state,DATE_FORMAT(t1.createTime1, '%Y.%m.%d %T') createTime,DATE_FORMAT(t1.updateTime1, '%Y.%m.%d %T') updateTime
  from
 (select
-          fans.fans_id fansId,fans.onuser_id,users.user_name onusername ,fans.state state,DATE_FORMAT(fans.update_time, '%Y.%m.%d %T') updateTime
+          fans.fans_id fansId,fans.onuser_id,users.user_name onusername ,fans.state state,DATE_FORMAT(fans.create_time, '%Y.%m.%d %T') createTime1,DATE_FORMAT(fans.update_time, '%Y.%m.%d %T') updateTime1
        	 from  fly_fans fans,fly_user users
 
 		where   users.user_id =fans.onuser_id ) t1,

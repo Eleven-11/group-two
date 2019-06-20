@@ -8,13 +8,13 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="用户ID" prop="onUserId" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="被关注者用户ID" prop="userId" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="关注状态" prop="state" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="帖子ID" prop="postId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="更新时间" prop="updateTime" style="width: 60px;"></el-table-column>
+
       <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
-          <el-button type="danger" icon="delete" v-if="scope.row.fansId!=fansId "
+          <el-button type="danger" icon="delete" v-if="scope.row.browseId!=browseId "
                      @click="removeUser(scope.$index)">修改
           </el-button>
         </template>
@@ -51,11 +51,12 @@
         textMap: {
           update: '编辑',
         },
-        tempFans: {
+        tempBrowse: {
           onUserId: '',
-          userId: '',
-          state: '',
-          fansId: ''
+          postId:'',
+          createTime:'',
+          updateTime: '',
+          browseId: ''
         }
       }
     },
@@ -64,7 +65,7 @@
     },
     computed: {
       ...mapGetters([
-        'fansId'
+        'browseId'
       ])
     },
     methods: {
@@ -72,7 +73,7 @@
         //查询列表
         this.listLoading = true;
         this.api({
-          url: "/comUser/listUserFans",
+          url: "/comUser/listUserBrowse",
           method: "get",
           params: this.listQuery,
         }).then(data => {
@@ -106,11 +107,7 @@
       },
       showUpdate($index) {
         let user = this.list[$index];
-        this.tempFans.fansId = user.fansId;
-        this.tempFans.onUserId = user.onUserId;
-        this.tempFans.userId = user.onUserId;
-        this.tempFans.state = user.state;
-        this.tempFans.updateTime = user.updateTime;
+
         this.dialogStatus = "update"
         this.dialogFormVisible = true
       },
@@ -118,7 +115,7 @@
         //修改用户信息
         let _vue = this;
         this.api({
-          url: "/comUser/updateUserFans",
+          url: "/comUser/updateUserBrowse",
           method: "post",
           data: this.tempFans
         }).then(() => {
@@ -147,12 +144,12 @@
           let user = _vue.list[$index];
 
           if (user.state ==1) {
-            user.state = '0';
+            user.likeState = '0';
           }else {
-            user.state='1';
+            user.likeState='1';
           }
           _vue.api({
-            url: "/comUserFans/updateUserFans",
+            url: "/comUserBrowse/updateUserBrowse",
             method: "post",
             data: user
           }).then(() => {
@@ -165,3 +162,4 @@
     }
   }
 </script>
+

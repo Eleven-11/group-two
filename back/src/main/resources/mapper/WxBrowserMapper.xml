@@ -6,18 +6,28 @@
     <!--添加某个浏览记录-->
     <insert id="addBrowsePost" parameterType="com.alibaba.fastjson.JSONObject">
 
-        insert into  fly_browse (onuser_id, post_id, update_time) values(#{onUserId},#{postId},now());
+        insert into  fly_browse (onuser_id, post_id) values(#{onUserId},#{postId});
     </insert>
-<!--查找某个用户的浏览记录-->
-    <select id="getBrowsePost" parameterType="com.alibaba.fastjson.JSONObject">
-        select post_id postId from fly_browse where onuser_id =#{onUserId};
-    </select>
     <!--查找该用户是否有该帖子的浏览记录-->
-    <select id="getBrowsePostByPostId" parameterType="com.alibaba.fastjson.JSONObject">
+    <select id="getBrowsePostByPostId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
         select post_id postId from fly_browse where onuser_id =#{onUserId} and post_id = #{postId};
     </select>
     <!--修改该用户的浏览帖子记录的时间-->
-    <update id="updateBrowse" parameterType="com.alibaba.fastjson.JSONObject">
-        update fly_browse set update_time =now() where onuser_id =#{onUserId}
-    </update>
+    <!--<update id="updateBrowse" parameterType="com.alibaba.fastjson.JSONObject">
+        update fly_browse set update_time =now() where onuser_id =#{onUserId} and post_id = #{[postId}
+    </update>-->
+    <!--后台显示浏览记录表-->
+    <select id="getBrowseList"  parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select distinct(post_id),browse_id browseId,onuser_id onUserId,post_id postId,DATE_FORMAT(create_time, '%Y.%m.%d %T') createTime,DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
+        from fly_browse order by create_time desc ;
+    </select>
+    <!--后台计算浏览记录数-->
+    <select id="countBrowse" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select count(0) from fly_browse;
+    </select>
+    <!--前台显示当前用户浏览记录-->
+    <select id="getBrowseByUser" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select browse_id browseId,onuser_id onUserId,post_id postId,DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
+        from fly_browse where onuser_id = #{onUserId} order by create_time desc;
+    </select>
 </mapper>

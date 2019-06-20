@@ -12,10 +12,14 @@ import java.util.List;
  */
 public interface WxLikeDao {
     //增加用户点赞记录
-    int addByLike(JSONObject jsonObject);
-    //查找用户点赞帖子列表
+    int addLike(JSONObject jsonObject);
+    //网页查找用户点赞帖子列表
     List<JSONObject> getLikeByUserId(JSONObject jsonObject);
-    //查找用户是否已点赞该帖子信息
+    //后台每个用户点赞帖子记录
+    List<JSONObject> getLikeList(JSONObject jsonObject);
+    //后台每个用户点赞帖子列表计算
+    int countPostLike(JSONObject jsonObject);
+    //查找用户是否有已点赞该帖子信息
     JSONObject getLikeUserPost(JSONObject jsonObject);
     //修改帖子用户点赞状态
     int updateLikeByUserId(JSONObject jsonObject);

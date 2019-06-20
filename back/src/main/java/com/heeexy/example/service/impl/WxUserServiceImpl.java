@@ -39,8 +39,15 @@ public class WxUserServiceImpl implements WxUserService {
 
     @Override
     public JSONObject addByUser(JSONObject jsonObject) {
-        //增加用户
+        //增加普通用户
          wxUserDao.addByUser(jsonObject);
+        return CommonUtil.successJson();
+    }
+
+    @Override
+    public JSONObject addGuestUser(JSONObject jsonObject) {
+        //增加游客用户
+        wxUserDao.addGuestUser(jsonObject);
         return CommonUtil.successJson();
     }
 

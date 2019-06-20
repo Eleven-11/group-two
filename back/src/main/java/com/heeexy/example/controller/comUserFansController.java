@@ -21,12 +21,12 @@ public class comUserFansController {
     @Autowired
     private WxFansService wxFansService;
     /**
-    *后台展示用户关注列表
+    *前台展示用户关注列表
     */
     @GetMapping("/listUserFans")
     public JSONObject listUserFans(HttpServletRequest request) {
 
-        return wxFansService.getListFans(CommonUtil.request2Json(request));
+        return wxFansService.getListByUserId(CommonUtil.request2Json(request));
     }
     /**
      * 添加用户关注
@@ -37,8 +37,6 @@ public class comUserFansController {
         CommonUtil.hasAllRequired(requestJson, "onUserId,userId");
         return wxFansService.addByFans(requestJson);
     }
-
-
     /**
      * 修改用户关注状态
      */
@@ -53,6 +51,6 @@ public class comUserFansController {
     @PostMapping("/selectFans")
     public JSONObject selectFans(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "roleId,roleName,permissions");
-        return wxFansService.getListByUserId(requestJson);
+        return wxFansService.getUserFans(requestJson);
     }
 }

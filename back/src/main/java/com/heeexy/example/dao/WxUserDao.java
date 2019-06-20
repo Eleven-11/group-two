@@ -17,8 +17,10 @@ public interface WxUserDao {
     int countUser(JSONObject jsonObject);
     //查找最大id数用户
     JSONObject getMaxNumber(JSONObject jsonObject);
-    //增加用户
+    //增加普通用户
     int addByUser(JSONObject jsonObject);
+    //添加游客用户
+    int addGuestUser(JSONObject jsonObject);
     //修改虚假粉丝数
     int updateFansfById(JSONObject jsonObject);
 
