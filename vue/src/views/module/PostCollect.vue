@@ -17,15 +17,22 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="帖子标签" prop="businessSubwayName" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="上级的编号" prop="superiorId" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="帖子编号" prop="postId" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="用户编号" prop="userId" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="用户名" prop="userName" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" width="170" sortable></el-table-column>
       <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170" sortable></el-table-column>
+      <el-table-column align="center" label="是否收藏收藏"style="width: 60px;">
+        <template slot-scope="scope">
+          <el-tag  v-if="scope.row.display==1" type="success">收藏</el-tag>
+          <el-tag  v-if="scope.row.display==0" type="primary">不收藏</el-tag>
+        </template>
+
+      </el-table-column>
       <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
-          <el-button type="danger" icon="delete" v-if="scope.row.userId!=userId "
-                     @click="removeUser(scope.$index)">删除
+          <el-button type="primary" icon="delete" v-if="scope.row.userId!=userId "
+                     @click="removeUser(scope.$index)">更改收藏状态
           </el-button>
         </template>
       </el-table-column>
@@ -42,16 +49,15 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="tempUser" label-position="left" label-width="80px"
                style='width: 300px; margin-left:50px;'>
-        <el-form-item label="帖子标签" >
-          <el-input type="text" v-model="tempUser.businessSubwayName">
+        <el-form-item label="帖子编号">
+          <el-input type="text" v-model="tempUser.postId">
           </el-input>
         </el-form-item>
-        <el-form-item label="上级编号" >
-          <el-input type="text" v-model="tempUser.superiorId">
+        <el-form-item label="用户编号">
+          <el-input type="text" v-model="tempUser.userId">
           </el-input>
         </el-form-item>
       </el-form>
-
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button v-if="dialogStatus=='create'" type="success" @click="createUser">创 建</el-button>
@@ -82,10 +88,11 @@
           create: '新建'
         },
         tempUser: {
-          businessSubwayId:'',
-          businessSubwayName: '',
-          superiorId:'',
+          postCollectId:'',
+          postId: '',
+          userId:'',
           display:'',
+          username:'',
           input: ''
         }
       }
@@ -104,7 +111,7 @@
     methods: {
       getAllRoles() {
         this.api({
-          url: "/businesssubway/getAllPostCategorie",
+          url: "/postcollect/getAllPostCollect",
           method: "get"
         }).then(data => {
           this.roles = data.list;
@@ -115,7 +122,7 @@
         this.listQuery.input = this.tempUser.input;
         this.listLoading = true;
         this.api({
-          url: "/businesssubway/list",
+          url: "/postcollect/list",
           method: "get",
           params: this.listQuery
         }).then(data => {
@@ -145,17 +152,17 @@
       },
       showCreate() {
         //显示新增对话框
-        this.tempUser.businessSubwayId= "";
-        this.tempUser.businessSubwayName = "";
-        this.tempUser.superiorId= "";
+        this.tempUser.postCollectId= "";
+        this.tempUser.postId = "";
+        this.tempUser.userId= "";
         this.dialogStatus = "create"
         this.dialogFormVisible = true
       },
       showUpdate($index) {
         let postcategorie = this.list[$index];
-        this.tempUser.businessSubwayId = postcategorie.businessSubwayId;
-        this.tempUser.businessSubwayName = postcategorie.businessSubwayName;
-        this.tempUser.superiorId = postcategorie.superiorId;
+        this.tempUser.postId = postcategorie.postId;
+        this.tempUser.userId = postcategorie.userId;
+        this.tempUser.display = postcategorie.display;
         this.dialogStatus = "update"
         this.dialogFormVisible = true
       },showSearch($index){
@@ -166,7 +173,7 @@
       createUser() {
         //添加新用户
         this.api({
-          url: "/businesssubway/addBusinessSubway",
+          url: "/postcollect/addPostCollect",
           method: "post",
           data: this.tempUser
         }).then(() => {
@@ -174,46 +181,28 @@
           this.dialogFormVisible = false
         })
       },
-      updateUser() {
-        //修改用户信息
-        let _vue = this;
-        this.api({
-          url: "/businesssubway/updateBusinessSubway",
-          method: "post",
-          data: this.tempUser
-        }).then(() => {
-          let msg = "修改成功";
-          this.dialogFormVisible = false
-          if (this.userId === this.tempUser.userId) {
-            msg = '修改成功,部分信息重新登录后生效'
-          }
-          this.$message({
-            message: msg,
-            type: 'success',
-            duration: 1 * 1000,
-            onClose: () => {
-              _vue.getList();
-            }
-          })
-        })
-      },
+
       removeUser($index) {
         let _vue = this;
-        this.$confirm('确定删除此模块?', '提示', {
+        this.$confirm('确定修改收藏值?', '提示', {
           confirmButtonText: '确定',
           showCancelButton: false,
           type: 'warning'
         }).then(() => {
           let user = _vue.list[$index];
-          user.display = 0;
+          if(user.display == 1){
+            user.display = 0;
+          }else{
+            user.display = 1;
+          }
           _vue.api({
-            url: "/businesssubway/updateBusinessSubwayDisplay",
+            url: "/postcollect/updatePostCollectDisplay",
             method: "post",
             data: user
           }).then(() => {
             _vue.getList()
           }).catch(() => {
-            _vue.$message.error("删除失败")
+            _vue.$message.error("修改成功")
           })
         })
       },

@@ -77,9 +77,9 @@ export const asyncRouterMap = [
       },
       {
         path: 'ModuleInformation',
-        name: '信息管理',
-        component: _import('module/ModuleInformation'),
-        meta: {title: '信息管理', icon: 'user'},
+        name: '帖子收藏管理',
+        component: _import('module/PostCollect'),
+        meta: {title: '帖子收藏管理', icon: 'user'},
         menu: 'ModuleInformation'
       },
     ]

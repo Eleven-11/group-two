@@ -40,7 +40,7 @@
         where display = 1
     </select>
     <!--新增-->
-    <insert id="addPostCategorie" useGeneratedKeys="true" keyProperty="moduleId">
+    <insert id="addPostCategorie" useGeneratedKeys="true" keyProperty="categoriesId">
         INSERT into cqy_post_categories(categories_name,categories_img,display)
         values (#{categoriesName},#{categoriesImg},1)
     </insert>

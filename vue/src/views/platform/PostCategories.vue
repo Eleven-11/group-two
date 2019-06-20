@@ -17,12 +17,12 @@
       </el-table-column>
       <el-table-column align="center" label="帖子类别" prop="categoriesName" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="类别图标">
-        <template scope="scope">
+        <template slot-scope="scope">
           <img :src="scope.row.categoriesImg" width="70" height="70"/>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="创建时间" prop="createTime" width="170"></el-table-column>
-      <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170"></el-table-column>
+      <el-table-column align="center" label="创建时间" prop="createTime" width="170" sortable></el-table-column>
+      <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170" sortable></el-table-column>
       <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>

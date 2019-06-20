@@ -47,7 +47,7 @@
         where display = 1
     </select>
     <!--新增-->
-    <insert id="addBusinessSubway" useGeneratedKeys="true" keyProperty="moduleId">
+    <insert id="addBusinessSubway" useGeneratedKeys="true" keyProperty="businessSubwayId">
         INSERT into cqy_business_subway(business_subway_name,Superior_id,display)
         values (#{businessSubwayName},#{superiorId},1)
     </insert>

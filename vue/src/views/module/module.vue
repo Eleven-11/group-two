@@ -9,7 +9,7 @@
       </el-form>
     </div>
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
-              highlight-current-row>
+              highlight-current-row >
       <el-table-column align="center" label="序号" width="80">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index)"> </span>
@@ -17,8 +17,8 @@
       </el-table-column>
       <el-table-column align="center" label="板块名" prop="moduleName" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="模板内容" prop="moduleContent" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="创建时间" prop="createTime" width="170"></el-table-column>
-      <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170"></el-table-column>
+      <el-table-column align="center" label="创建时间" prop="createTime" width="170" sortable></el-table-column>
+      <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170" sortable></el-table-column>
       <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>

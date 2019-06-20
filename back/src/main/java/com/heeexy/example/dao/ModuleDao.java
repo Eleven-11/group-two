@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import java.util.List;
 
 /**
- * @author: 陈强勇
+ * @author: chenqiangyong
  * @description: 模块Dao层
  * @date: 2019/6/17 19:54
  */

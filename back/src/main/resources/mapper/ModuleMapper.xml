@@ -4,8 +4,8 @@
 <mapper namespace="com.heeexy.example.dao.ModuleDao">
 <!--计数-->
     <select id="countModule" resultType="Integer">
-        select count(0)
-        from cqy_module u
+         select count(0)
+         from cqy_module u
          where display = 1
     </select>
 
