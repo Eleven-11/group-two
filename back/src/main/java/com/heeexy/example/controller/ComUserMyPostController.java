@@ -23,19 +23,19 @@ public class ComUserMyPostController {
     @Autowired
     private WxMyPostService wxMyPostService;
     /**
-     * 删除用户帖子
+     * 删除用户帖子(修改帖子隐藏显示状态)
      */
     @PostMapping("/updateUserPost")
     public JSONObject updateFans(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "myPostId,myPostState");
+        CommonUtil.hasAllRequired(requestJson, "postId,onUserId,myPostState");
         return wxMyPostService.updateMyPostById(requestJson);
     }
     /**
-     * 删除用户帖子
+     * 删除用户帖子(批量修改帖子隐藏显示状态)（不成功）
      */
     @PostMapping("/updateUserPostMany")
     public JSONObject updatePostMany(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "myPostId,myPostState");
-        return wxMyPostService.updateByPostId(requestJson);
+        CommonUtil.hasAllRequired(requestJson, "myPostId");
+        return wxMyPostService.updateByPostIdMany(requestJson);
     }
 }

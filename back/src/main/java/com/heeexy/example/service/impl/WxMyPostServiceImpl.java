@@ -45,9 +45,9 @@ public class WxMyPostServiceImpl implements WxMyPostService {
     }
 
     @Override
-    public JSONObject updateByPostId(JSONObject jsonObject) {
-        //批量删除帖子
-        wxMyPostDao.updateByPostId(jsonObject);
+    public JSONObject updateByPostIdMany(JSONObject jsonObject) {
+        //批量删除帖子（不成功）
+        wxMyPostDao.updateByPostIdMany(jsonObject);
         return CommonUtil.successJson();
     }
 

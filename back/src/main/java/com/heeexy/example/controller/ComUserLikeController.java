@@ -5,6 +5,7 @@ import com.heeexy.example.service.WxBrowserService;
 import com.heeexy.example.service.WxLikeService;
 import com.heeexy.example.service.WxMyPostService;
 import com.heeexy.example.util.CommonUtil;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 public class ComUserLikeController {
     @Autowired
     private WxLikeService wxLikeService;
-    /*展示用户点赞列表*/
+    /**
+     * 展示用户点赞列表
+     */
     @GetMapping("/listUserLike")
     public JSONObject getListUserLike(HttpServletRequest request) {
 
@@ -30,6 +33,7 @@ public class ComUserLikeController {
     /**
      * 添加用户帖子点赞
      */
+    @RequiresPermissions("0")
     @PostMapping("/addLike")
     public JSONObject addFans(@RequestBody JSONObject requestJson) {
 
@@ -45,11 +49,11 @@ public class ComUserLikeController {
         return wxLikeService.updateLikeByUserId(requestJson);
     }
     /**
-     * 查找是否关注该帖子信息
+     * 查找是否点赞该帖子信息
      */
     @PostMapping("/selectLike")
     public JSONObject selectFans(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "roleId,roleName,permissions");
+        CommonUtil.hasAllRequired(requestJson, "onUserId,userId,postId");
         return wxLikeService.getLikeUserPost(requestJson);
     }
 }

@@ -101,6 +101,13 @@ export const asyncRouterMap = [
         menu: 'like'
       },
       {
+        path: 'comment',
+        name: '用户帖子评论列表',
+        component: _import('comUser/comment'),
+        meta: {title: '用户帖子评论列表', icon: 'user'},
+        menu: 'comment'
+      },
+      {
         path: 'browse',
         name: '用户浏览记录列表',
         component: _import('comUser/browse'),

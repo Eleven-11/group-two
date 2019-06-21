@@ -12,16 +12,48 @@ import java.util.List;
  * @Version: 1.0
  */
 public interface WxMyPostDao {
-    //后台每个用户自己的帖子记录
+
+     /**
+          * @methodsName: getMyPostList
+          * @description: 后台每个用户自己的帖子记录
+          * @param:  JSONObject
+          * @return: List<JSONObject>
+          */
     List<JSONObject> getMyPostList(JSONObject jsonObject);
-    //后台计数
+     /**
+          * @methodsName: countMyPost
+          * @description: 后台计数
+          * @param:  JSONObject
+          * @return: int
+          */
     int countMyPost(JSONObject jsonObject);
-    //修改自己帖子状态
+
+     /**
+          * @methodsName: updateMyPostById
+          * @description: 修改自己帖子状态
+          * @param:  JSONObject
+          * @return: int
+          */
     int updateMyPostById(JSONObject jsonObject);
-    //前台用户自己的帖子记录
+     /**
+          * @methodsName: getMyPostListById
+          * @description: 前台用户自己的帖子记录
+          * @param:  JSONObject
+          * @return:   List<JSONObject>
+          */
     List<JSONObject> getMyPostListById(JSONObject jsonObject);
-    //计算该用户发帖数量
+     /**
+          * @methodsName: countMyPostByUserId
+          * @description: 计算该用户发帖数量
+          * @param:  JSONObject
+          * @return: int
+          */
     int countMyPostByUserId(JSONObject jsonObject);
-        //批量删除帖子
-    int updateByPostId(JSONObject jsonObject);
+     /**
+          * @methodsName: updateByPostIdMany
+          * @description: 批量删除帖子
+          * @param:  JSONObject
+          * @return: int
+          */
+    int updateByPostIdMany(JSONObject jsonObject);
 }

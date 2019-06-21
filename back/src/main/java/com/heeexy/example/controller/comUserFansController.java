@@ -50,7 +50,7 @@ public class comUserFansController {
      */
     @PostMapping("/selectFans")
     public JSONObject selectFans(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "roleId,roleName,permissions");
+        CommonUtil.hasAllRequired(requestJson, "onUserId,userId");
         return wxFansService.getUserFans(requestJson);
     }
 }

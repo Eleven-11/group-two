@@ -58,6 +58,20 @@ public class WxUserServiceImpl implements WxUserService {
         wxUserDao.updateFansfById(jsonObject);
         return CommonUtil.successJson();
     }
+
+    @Override
+    public JSONObject updateStateByUserId(JSONObject jsonObject) {
+        //修改用户封禁状态
+        wxUserDao.updateStateByUserId(jsonObject);
+        return CommonUtil.successJson();
+    }
+
+    @Override
+    public JSONObject getUserByUsername(JSONObject jsonObject) {
+        JSONObject userByUsername = wxUserDao.getUserByUsername(jsonObject);
+        return userByUsername;
+    }
+
     //查找封禁状态集合
     @Override
     public JSONObject listUserState() {

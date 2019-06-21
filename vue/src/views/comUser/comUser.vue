@@ -34,7 +34,7 @@
     <el-table-column align="center" label="管理" width="220">
       <template slot-scope="scope">
         <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
-        <!--<el-button type="danger" icon="delete"  v-if="scope.row.userId!=userId "@click="removeUser(scope.$index)">删除
+       <!-- <el-button type="danger" icon="delete"  v-if="scope.row.userId!=userId "@click="updateState(scope.$index)">封禁？
         </el-button>-->
       </template>
     </el-table-column>
@@ -190,7 +190,7 @@
         //修改用户信息
         let _vue = this;
         this.api({
-          url: "/comUser/updateUser",
+          url: "/comUser/updateUserFans",
           method: "post",
           data: this.tempUser
         }).then(() => {
@@ -209,23 +209,27 @@
           })
         })
       },
-      removeUser($index) {
+      updateState($index) {
         let _vue = this;
-        this.$confirm('确定删除此用户?', '提示', {
+        this.$confirm('确定做此操作?', '提示', {
           confirmButtonText: '确定',
           showCancelButton: false,
           type: 'warning'
         }).then(() => {
           let user = _vue.list[$index];
-          user.deleteStatus = '2';
+          if (user.userState =="游客") {
+            user.userState = 0;
+          } else  {
+            user.userState=1;
+          }
           _vue.api({
-            url: "/comUser/deleteUser",
+            url: "/comUser/updateUserState",
             method: "post",
             data: user
           }).then(() => {
             _vue.getList()
           }).catch(() => {
-            _vue.$message.error("删除失败")
+            _vue.$message.error("修改失败")
           })
         })
       },

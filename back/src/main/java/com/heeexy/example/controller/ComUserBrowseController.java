@@ -23,7 +23,7 @@ public class ComUserBrowseController {
     @Autowired
     private WxBrowserService wxBrowserService;
     /**
-     * 添加用户关注
+     * 添加用户浏览帖记录
      */
     @PostMapping("/addBrowse")
     public JSONObject addFans(@RequestBody JSONObject requestJson) {
@@ -31,7 +31,9 @@ public class ComUserBrowseController {
         CommonUtil.hasAllRequired(requestJson, "onUserId,postId");
         return wxBrowserService.addBrowsePost(requestJson);
     }
-    /*展示用户浏览记录列表*/
+    /**
+     * 展示用户浏览记录列表
+     */
     @GetMapping("/listBrowseByUser")
     public JSONObject getListUserBrowse(HttpServletRequest request) {
 

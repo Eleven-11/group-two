@@ -2,7 +2,6 @@ package com.heeexy.example.service;
 
 import com.alibaba.fastjson.JSONObject;
 
-import java.util.List;
 
 /**
  * @ Author     ：良优
@@ -11,13 +10,35 @@ import java.util.List;
  * @Version: 1.0
  */
 public interface WxMyPostService {
-    //后台每个用户自己的帖子记录
+
+    /**
+     * @methodsName: getMyPostList
+     * @description: 后台每个用户自己的帖子记录
+     * @param:  JSONObject
+     * @return: JSONObject
+     */
     JSONObject getMyPostList(JSONObject jsonObject);
 
-    //删除自己帖子记录
+    /**
+     * @methodsName: updateMyPostById
+     * @description: 修改自己帖子状态
+     * @param:  JSONObject
+     * @return: JSONObject
+     */
     JSONObject updateMyPostById(JSONObject jsonObject);
-    //前台用户自己的帖子记录
+
+    /**
+     * @methodsName: getMyPostListById
+     * @description: 前台用户自己的帖子记录
+     * @param:  JSONObject
+     * @return:  JSONObject
+     */
     JSONObject getMyPostListById(JSONObject jsonObject);
-    //批量删除帖子
-    JSONObject updateByPostId(JSONObject jsonObject);
+    /**
+     * @methodsName: updateByPostIdMany
+     * @description: 批量删除帖子
+     * @param:  JSONObject
+     * @return: JSONObject
+     */
+    JSONObject updateByPostIdMany(JSONObject jsonObject);
 }

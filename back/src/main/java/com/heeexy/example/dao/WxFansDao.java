@@ -12,18 +12,60 @@ import java.util.List;
  * @ Version: 1.0
  */
 public interface WxFansDao {
-     /*查找关注用户列表*/
+
+
+     /**
+          * @methodsName: getListByUserId
+          * @description: 查找关注用户列表
+          * @param:  JSONObject
+          * @return: List<JSONObject>
+          */
      List<JSONObject> getListByUserId(JSONObject jsonObject);
-     /*计算粉丝关注用户数*/
+
+      /**
+           * @methodsName: countByUserId
+           * @description: 计算粉丝关注用户数
+           * @param: JSONObject
+           * @return: int
+           */
      int countByUserId(JSONObject jsonObject);
-     /*对用户关注状态的取消*/
+
+      /**
+           * @methodsName: updateFansByUserId
+           * @description: 对用户关注状态的取消
+           * @param:  JSONObject
+           * @return: int
+           */
      int updateFansByUserId(JSONObject jsonObject);
-//     添加粉丝关注用户
+
+      /**
+           * @methodsName: addByFans
+           * @description: 添加粉丝关注用户
+           * @param:  JSONObject
+           * @return: int
+           */
      int addByFans(JSONObject jsonObject);
-     //查找是否之前有关注用户信息
+
+      /**
+           * @methodsName: getUserFans
+           * @description: 查找是否之前有关注用户信息
+           * @param:  JSONObject
+           * @return: JSONObject
+           */
      JSONObject getUserFans(JSONObject jsonObject);
-     //查找所有用户粉丝关注表
+
+      /**
+           * @methodsName: getListFans
+           * @description: 查找所有用户粉丝关注表
+           * @param:  JSONObject
+           * @return:  List<JSONObject>
+           */
      List<JSONObject> getListFans(JSONObject jsonObject);
-     //计算所有用户关注信息数
+      /**
+           * @methodsName: countUserFans
+           * @description: 计算所有用户关注信息数
+           * @param:  JSONObject
+           * @return: int
+           */
      int countUserFans(JSONObject jsonObject);
 }

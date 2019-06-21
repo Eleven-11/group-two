@@ -19,9 +19,9 @@
     <!--增加游客用户-->
     <insert id="addGuestUser" parameterType="com.alibaba.fastjson.JSONObject">
     insert  into  fly_user (user_uuid userUuid,user_name, user_photo, user_sex, user_fans, user_fans_f, guest, user_state)
-    values (#{userUuid},#{userName},#{userPhoto},#{userSex},0,0,1,0);
+    values (0,#{userName},#{userPhoto},#{userSex},0,0,1,0);
     </insert>
-    <!--修改虚假粉丝数和用户封禁状态-->
+    <!--修改虚假粉丝数-->
     <update id="updateFansfById" parameterType="com.alibaba.fastjson.JSONObject" >
         update fly_user set user_fans_f = #{userFansf},user_state =#{userState} where  user_id = #{userId};
     </update>
@@ -58,11 +58,25 @@
         <where>
         <if test="userName != null and userName !=''">
             user_name LIKE CONCAT(CONCAT('%',#{userName}),'%')
+            and
         </if>
+            user_id !=1
     </where>;
     </select>
     <!--查找封禁状态集合-->
     <select id="listUserState" resultType="com.alibaba.fastjson.JSONObject">
       select  id Id,close_id closeId, close_name closeName from fly_userstate;
+    </select>
+    <!--查找某个用户-->
+    <select id="getUserByUsername" resultType="com.alibaba.fastjson.JSONObject" parameterType="com.alibaba.fastjson.JSONObject">
+        select
+      t1.user_id  userId,t1.user_uuid userUuid,t1.user_name userName,t1.user_photo userPhoto,
+      t1.user_sex  userSex,t1.user_fans userFans,t1.user_fans_f userFansf,
+      t1.guest guest, t2.close_name userState,DATE_FORMAT(first_time, '%Y.%m.%d %T') firstTime,DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
+      from  fly_user t1,fly_userstate t2 where user_uuid =#{userUuId};
+    </select>
+    <!--查看该用户是否是游客-->
+    <select id="getGuestByUuId" parameterType="com.alibaba.fastjson.JSONObject" >
+
     </select>
 </mapper>

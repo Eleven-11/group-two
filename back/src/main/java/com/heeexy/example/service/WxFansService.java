@@ -13,17 +13,43 @@ import java.util.List;
  */
 
 public interface WxFansService{
-    /*查找关注用户列表*/
+    /**
+     * @methodsName: getListByUserId
+     * @description: 查找关注用户列表
+     * @param:  JSONObject
+     * @return: List<JSONObject>
+     */
     JSONObject getListByUserId(JSONObject jsonObject);
 
-    /*对用户关注状态的取消*/
+    /**
+     * @methodsName: updateFansByUserId
+     * @description: 对用户关注状态的取消
+     * @param:  JSONObject
+     * @return: JSONObject
+     */
     JSONObject updateFansByUserId(JSONObject jsonObject);
-    //     添加粉丝关注用户
+    /**
+     * @methodsName: addByFans
+     * @description: 添加粉丝关注用户
+     * @param:  JSONObject
+     * @return: JSONObject
+     */
     JSONObject addByFans(JSONObject jsonObject);
-    //查找是否之前有关注
+    /**
+     * @methodsName: getUserFans
+     * @description: 查找是否之前有关注用户信息
+     * @param:  JSONObject
+     * @return: JSONObject
+     */
     JSONObject getUserFans(JSONObject jsonObject);
 
-    /*查找所有用户粉丝关注表*/
+
+    /**
+     * @methodsName: getListFans
+     * @description: 查找所有用户粉丝关注表
+     * @param:  JSONObject
+     * @return:  JSONObject
+     */
     JSONObject getListFans(JSONObject jsonObject);
 
 }

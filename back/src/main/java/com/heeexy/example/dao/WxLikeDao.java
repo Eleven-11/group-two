@@ -11,16 +11,49 @@ import java.util.List;
  * @Version: 1.0
  */
 public interface WxLikeDao {
-    //增加用户点赞记录
+
+     /**
+          * @methodsName: addLike
+          * @description: 增加用户点赞记录
+          * @param:  JSONObject
+          * @return: int
+          */
     int addLike(JSONObject jsonObject);
-    //网页查找用户点赞帖子列表
+     /**
+          * @methodsName: getLikeByUserId
+          * @description: 网页查找用户点赞帖子列表
+          * @param:  JSONObject
+          * @return:  List<JSONObject>
+          */
     List<JSONObject> getLikeByUserId(JSONObject jsonObject);
-    //后台每个用户点赞帖子记录
+
+     /**
+          * @methodsName: getLikeList
+          * @description: 后台每个用户点赞帖子记录
+          * @param:  JSONObject
+          * @return:   List<JSONObject>
+          */
     List<JSONObject> getLikeList(JSONObject jsonObject);
-    //后台每个用户点赞帖子列表计算
+     /**
+          * @methodsName: countPostLike
+          * @description: 后台每个用户点赞帖子列表计算
+          * @param:  JSONObject
+          * @return: int
+          */
     int countPostLike(JSONObject jsonObject);
-    //查找用户是否有已点赞该帖子信息
+     /**
+          * @methodsName: getLikeUserPost
+          * @description: 查找用户是否有已点赞该帖子信息
+          * @param:  JSONObject
+          * @return: JSONObject
+          */
     JSONObject getLikeUserPost(JSONObject jsonObject);
-    //修改帖子用户点赞状态
+
+     /**
+          * @methodsName: updateLikeByUserId
+          * @description: 修改帖子用户点赞状态
+          * @param:  JSONObject
+          * @return: int
+          */
     int updateLikeByUserId(JSONObject jsonObject);
 }

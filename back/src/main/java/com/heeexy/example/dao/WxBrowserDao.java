@@ -12,18 +12,51 @@ import java.util.List;
  */
 public interface WxBrowserDao {
 
-    //添加浏览记录
+
+    /**
+     * @methodsName: addBrowsePost
+     * @description: 添加浏览记录
+     * @param:  JSONObject
+     * @return: int
+     */
     int addBrowsePost(JSONObject jsonObject);
 
-    //查找该用户是否有该帖子的浏览记录
+    /**
+     * @methodsName: getBrowsePostByPostId
+     * @description: 查找该用户是否有该帖子的浏览记录
+     * @param:  JSONObject
+     * @return: JSONObject
+     */
      JSONObject getBrowsePostByPostId(JSONObject jsonObject);
-    //修改该用户的浏览帖子记录的时间
+
+
+    /**
+     * @methodsName: updateBrowse
+     * @description: 修改该用户的浏览帖子记录的时间
+     * @param:  JSONObject
+     * @return: int
+     */
     int updateBrowse(JSONObject jsonObject);
-    //后台显示浏览记录表
+    /**
+     * @methodsName: getBrowseList
+     * @description: 后台显示浏览记录表
+     * @param:  JSONObject
+     * @return: List<JSONObject>
+     */
     List<JSONObject> getBrowseList(JSONObject jsonObject);
-    //后台计算浏览记录数
+    /**
+     * @methodsName: countBrowse
+     * @description: 后台计算浏览记录数
+     * @param:  JSONObject
+     * @return: int
+     */
     int countBrowse(JSONObject jsonObject);
-    //前台显示当前用户浏览记录
+    /**
+     * @methodsName: getBrowseByUser
+     * @description: 前台显示当前用户浏览记录
+     * @param:  JSONObject
+     * @return:  List<JSONObject>
+     */
     List<JSONObject> getBrowseByUser(JSONObject jsonObject);
 
 

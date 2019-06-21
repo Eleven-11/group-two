@@ -2,8 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.heeexy.example.dao.WxLikeDao">
-
-
     <!--添加用户点赞帖子-->
     <insert id="addLike" parameterType="com.alibaba.fastjson.JSONObject">
         insert  into  fly_like (onuser_id, post_id, user_id, like_state) values (#{onUserId},#{postId},#{userId},1);
@@ -11,18 +9,29 @@
 
     <!--网页查找单个用户点赞帖子列表-->
     <select id="getLikeByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+         select t1.like_id likeId, t1.user_name onUserId,t1.post_id postId,t2.user_name userId,
+        t1.like_state likeState,DATE_FORMAT(t1.create_time, '%Y.%m.%d %T')  createTime,DATE_FORMAT(t1.update_time, '%Y.%m.%d %T')  updateTime
+        from
+        (select likes.like_id,likes.onuser_id,users.user_name, likes.post_id,
+        likes.user_id userId,likes.like_state,likes.create_time,likes.update_time
 
-        select * from fly_like
-        where post_id in ( select post_id from fly_like where onuser_id=#{onUserId} and state = 1;)
-
+        from fly_user users,fly_like likes where users.user_id = likes.onuser_id) t1,
+        (select fly_like.like_id, fly_user.user_name
+        from fly_user,fly_like where fly_user.user_id = fly_like.user_id) t2
+        where t1.like_id =t2.like_id  and t1.onuser_id =#{onUserId} and t1.like_state = 0;
        
     </select>
     <!--后台每个用户点赞帖子记录-->
     <select id="getLikeList" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-
-        select like_id likeId, onuser_id onUserId,post_id postId,user_id userId,like_state likeState,DATE_FORMAT(create_time, '%Y.%m.%d %T')  createTime,DATE_FORMAT(update_time, '%Y.%m.%d %T')  updateTime
-        from fly_like
-
+        select t1.like_id likeId, t1.user_name onUserId,t1.post_id postId,t2.user_name userId,
+        t1.like_state likeState,DATE_FORMAT(t1.create_time, '%Y.%m.%d %T')  createTime,DATE_FORMAT(t1.update_time, '%Y.%m.%d %T')  updateTime
+        from
+        (select likes.like_id,users.user_name, likes.post_id,
+        likes.user_id userId,likes.like_state,likes.create_time,likes.update_time
+        from fly_user users,fly_like likes where users.user_id = likes.onuser_id) t1,
+        (select fly_like.like_id, fly_user.user_name
+        from fly_user,fly_like where fly_user.user_id = fly_like.user_id) t2
+        where t1.like_id =t2.like_id;
     </select>
     <!--后台每个用户点赞帖子列表计算-->
     <select id="countPostLike" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
