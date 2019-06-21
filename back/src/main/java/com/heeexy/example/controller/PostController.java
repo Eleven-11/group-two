@@ -22,7 +22,7 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-    @GetMapping("/all")
+    @GetMapping("/list")
     public JSONObject listUser(HttpServletRequest request) {
         return postService.getAllPost(CommonUtil.request2Json(request));
     }

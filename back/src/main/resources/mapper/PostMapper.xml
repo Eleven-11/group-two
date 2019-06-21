@@ -5,62 +5,50 @@
     <select id="queryCountPost" resultType="java.lang.Integer">
         SELECT count(id)
         from tyn_post
-        where delete_state= 0
+        where delete_state= 1
     </select>
     <resultMap id="postMap" type="com.heeexy.example.util.model.One2Many">
-        <id column="id" property="postId"/>
-        <result column="post_owner" property="postOwnerId"/>
-        <result column="post_time" property="postTime"/>
-        <result column="post_content" property="postContent"/>
-        <result column="post_sort" property="postSortId"/>
-        <result column="post_location" property="postLocation"/>
-        <result column="post_phone" property="postPhone"/>
-        <result column="price_low" property="priceLow"/>
-        <result column="price_high" property="priceHigh"/>
-        <result column="time_start" property="timeStart"/>
-        <result column="time_end" property="timeEnd"/>
-        <result column="is_top" property="isTop"/>
-        <result column="delete_state" property="deleteState"/>
-        <result column="praise_offset" property="praiseOffset"/>
-        <result column="collect_offset" property="collectOffset"/>
-        <result column="view_offset" property="viewOffset"/>
-        <result column="user_name" property="postOwnerName"/>
-        <result column="categories_name" property="postSortName"/>
-        <result column="praiseCount" property="praiseCount"/>
-        <result column="viewCount" property="viewCount"/>
-        <result column="collectCount" property="collectCount"/>
-        <collection property="imgList" ofType="String">
-            <id column="img" property="postImg"/>
-        </collection>
+        <id column="postId" property="postId"/>
+        <result column="ownerName" property="ownerName"/>
+        <result column="postTime" property="postTime"/>
+        <result column="sortName" property="sortName"/>
+        <result column="isTop" property="isTop"/>
+        <result column="deleteState" property="deleteState"/>
+        <result column="likeOff" property="likeOff"/>
+        <result column="collectOff" property="collectOff"/>
+        <result column="viewOff" property="viewOff"/>
+        <result column="alike" property="alike"/>
+        <result column="acollect" property="acollect"/>
+        <result column="aview" property="aview"/>
         <collection property="tagList" ofType="String">
-            <id column="business_subway_name" property="tagName"/>
+            <id column="tagName" property="tagName"/>
         </collection>
     </resultMap>
     <select id="getAllPost" resultMap="postMap">
-
            SELECT
-            u.*,
-            r.role_name                            roleName,
-            CONCAT(p.menu_name, p.permission_name) permissionName
+            p.*,
+            bs.business_subway_name                            tagName,
+			(SELECT COUNT(0) FROM fly_like l WHERE l.post_id=p.postId and l.like_state) alike,
+			(SELECT COUNT(0) FROM cqy_post_collect pc WHERE pc.post_id=p.postId and pc.display=1) acollect,
+			(SELECT COUNT(0) FROM fly_browse b WHERE b.post_id=p.postId) aview
         FROM (
                  SELECT
                      id                                      postId,
-                     username                                username,
-                     nickname                                nickname,
-                     role_id                                 roleId,
-                     delete_status                           deleteStatus,
-                     DATE_FORMAT(create_time, '%Y.%m.%d %T') createTime,
-                     DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
-                 FROM sys_user
-                 WHERE delete_status = '1'
-                 ORDER BY id
-                 LIMIT #{offSet}, #{pageRow}
-             ) u
-            LEFT JOIN sys_role r ON r.id = u.roleId
-            LEFT JOIN sys_role_permission rp ON rp.role_id = r.id
-            LEFT JOIN sys_permission p ON p.id = rp.permission_id
-
-        ORDER BY u.userId
+                     user_name                               ownerName,
+                     DATE_FORMAT(post_time, '%Y.%m.%d %T')   postTime,
+                     categories_name                         sortName,
+                     is_top                                  isTop,
+                     delete_state                            deleteState,
+					 like_offset  							 likeOff,
+					 collect_offset					         collectOff,
+                     view_offset			                 viewOff
+                 FROM tyn_post,fly_user,cqy_post_categories
+                 WHERE delete_state = '1' and user_id=post_owner and categories_id=post_sort
+                 ORDER BY postTime
+             ) p
+            LEFT JOIN tyn_post_tag pt ON p.postId=pt.post_id
+            left join cqy_business_subway bs on pt.id=bs.business_subway_id
+        ORDER BY postTime
     </select>
 
 </mapper>

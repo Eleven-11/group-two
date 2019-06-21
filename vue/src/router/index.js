@@ -61,5 +61,25 @@ export const asyncRouterMap = [
       },
     ]
   },
+  {
+    path: '/post',
+    component: Layout,
+    redirect: '/post/',
+    name: '',
+    meta: {title: '帖子管理', icon: 'table'},
+    children: [
+      {
+        path: '', name: '帖子列表', component: _import('post/post'), meta: {title: '帖子列表', icon: 'post'}, menu: 'post'
+      },
+      {
+        path: 'role',
+        name: '权限管理',
+        component: _import('user/role'),
+        meta: {title: '权限管理', icon: 'password'},
+        menu: 'role'
+      },
+    ]
+  },
+
   {path: '*', redirect: '/404', hidden: true}
 ]
