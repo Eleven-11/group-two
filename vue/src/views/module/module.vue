@@ -1,3 +1,4 @@
+
 <template>
   <div class="app-container">
     <div class="filter-container">
@@ -16,7 +17,7 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="板块名" prop="moduleName" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="模板内容" prop="moduleContent" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="模板内容" prop="moduleContent" style="width: 60px;" lazy></el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" width="170" sortable></el-table-column>
       <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170" sortable></el-table-column>
       <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
@@ -50,14 +51,15 @@
           </el-input>
         </el-form-item>
         <el-form-item label="板块内容" >
-          <el-input type="text" v-model="tempUser.moduleContent">
+          <el-input type="textarea" v-model="tempUser.moduleContent">
           </el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button v-if="dialogStatus=='create'" type="success" @click="createUser">创 建</el-button>
-        <el-button type="primary" v-else @click="updateUser">修 改</el-button>
+        <el-button type="primary" v-if="dialogStatus=='update'"  @click="updateUser">修 改</el-button>
+        <el-button v-if="dialogStatus=='Send'"type="primary" v-else @click="showSends">发送</el-button>
       </div>
     </el-dialog>
   </div>
@@ -80,13 +82,14 @@
         dialogFormVisible: false,
         textMap: {
           update: '编辑',
-          create: '新建模块'
+          create: '新建模块',
+          Send:"发送",
         },
         tempUser: {
-          moduleId:'',
+          moduleId: '',
           moduleName: '',
-          moduleContent:'',
-          display:''
+          moduleContent: '',
+          display: ''
         }
       }
     },
@@ -144,9 +147,9 @@
       },
       showCreate() {
         //显示新增对话框
-        this.tempUser.moduleId= "";
+        this.tempUser.moduleId = "";
         this.tempUser.moduleName = "";
-        this.tempUser.moduleContent= "";
+        this.tempUser.moduleContent = "";
         this.dialogStatus = "create"
         this.dialogFormVisible = true
       },
@@ -156,6 +159,12 @@
         this.tempUser.moduleName = module.moduleName;
         this.tempUser.moduleContent = module.moduleContent;
         this.dialogStatus = "update"
+        this.dialogFormVisible = true
+      },
+      showSend($index) {
+        let module = this.list[$index];
+        this.tempUser.moduleContent = module.moduleContent;
+        this.dialogStatus = "Send"
         this.dialogFormVisible = true
       },
       createUser() {
@@ -212,6 +221,16 @@
           })
         })
       },
+      showSends() {
+        this.api({
+          url: "/module/addMessage",
+          method: "post",
+          data: this.tempUser
+        }).then(() => {
+          this.getList();
+          this.dialogFormVisible = false
+        })
+      }
     }
   }
 </script>

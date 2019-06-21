@@ -15,6 +15,11 @@ public interface ModuleService {
      * 新增模块
      */
     JSONObject addModule(JSONObject jsonObject);
+    /**
+     * 新增消息
+     */
+    JSONObject addMessage(JSONObject jsonObject);
+
 
     /**
      * 删除模块

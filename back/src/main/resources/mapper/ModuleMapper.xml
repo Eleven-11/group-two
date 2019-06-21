@@ -27,6 +27,7 @@
         DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
         from cqy_module
         where display = 1
+        LIMIT #{offSet}, #{pageRow}
     </select>
 <!--增/改后查询全部-->
     <select id="getAllModule" resultType="com.alibaba.fastjson.JSONObject">
@@ -44,6 +45,22 @@
         INSERT into cqy_module(module_name,module_content,display)
         values (#{moduleName},#{moduleContent},1)
     </insert>
+
+    <!--新增信息-->
+    <insert id="addMessage" useGeneratedKeys="true" keyProperty="MID">
+        INSERT into lc_message(from_user_id,message_content,status)
+        values (1,#{moduleContent},1)
+    </insert>
+    <resultMap id="map" type="com.heeexy.example.util.model.One2Many">
+        <id column="userid" property="userid"/>
+    </resultMap>
+    <!--查询用户id-->
+    <select id="getAllUserId" resultMap="map">
+       select user_id userid
+       from fly_user
+       where guest = 0
+    </select>
+
     <!--修改-->
     <update id="updateModuleName">
         update cqy_module
@@ -52,6 +69,8 @@
         module_content = #{moduleContent}
         where module_ID= #{moduleId} and display = 1
     </update>
+
+
 
     <!--删除-->
      <update id="removeModuleDisplay">

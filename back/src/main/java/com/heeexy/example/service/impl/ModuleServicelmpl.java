@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,6 +37,15 @@ public class ModuleServicelmpl implements ModuleService {
             }
         }
         moduleDao.addModule( jsonObject );
+        return CommonUtil.successJson();
+    }
+    /**
+     * 新增消息
+     */
+    @Override
+    public JSONObject addMessage(JSONObject jsonObject) {
+        moduleDao.addMessage( jsonObject);
+
         return CommonUtil.successJson();
     }
 

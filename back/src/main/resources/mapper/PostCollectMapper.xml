@@ -35,6 +35,7 @@
             </if>
             cqy_post_collect.user_id = fly_user.user_id
         </where>
+        LIMIT #{offSet}, #{pageRow}
     </select>
     <!--增/改后查询全部-->
     <select id="getAllPostCollect" resultType="com.alibaba.fastjson.JSONObject">

@@ -108,5 +108,21 @@ export const asyncRouterMap = [
       },
     ]
   },
+  {
+    path: '/platform',
+    component: Layout,
+    redirect: '/platform/pus',
+    name: '功能模块',
+    meta: {title: '功能模块', icon: 'tree'},
+    children: [
+      {
+        path: 'pus',
+        name: '1',
+        component: _import('platform/pus'),
+        meta: {title: '1', icon: 'example'},
+        menu: 'pus'
+      },
+    ]
+  },
   {path: '*', redirect: '/404', hidden: true}
 ]

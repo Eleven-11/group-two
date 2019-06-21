@@ -39,6 +39,15 @@ public class ModuleController {
         CommonUtil.hasAllRequired(requestJson, "moduleName,moduleContent");
         return moduleService.addModule(requestJson);
     }
+    /**
+     * 群发消息
+     */
+//    @RequiresPermissions("module:add")
+    @PostMapping("addMessage")
+    public JSONObject addMessage(@RequestBody JSONObject requestJson){
+        CommonUtil.hasAllRequired(requestJson, "moduleContent");
+        return moduleService.addMessage(requestJson);
+    }
 
     /**
      * 修改模块

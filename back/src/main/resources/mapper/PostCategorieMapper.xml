@@ -27,6 +27,7 @@
         DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
         from cqy_post_categories
         where display = 1
+        LIMIT #{offSet}, #{pageRow}
     </select>
     <!--增/改后查询全部-->
     <select id="getAllPostCategorie" resultType="com.alibaba.fastjson.JSONObject">

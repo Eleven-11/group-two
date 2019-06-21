@@ -33,6 +33,7 @@
             </if>
              display = 1
         </where>
+        LIMIT #{offSet}, #{pageRow}
     </select>
 
     <!--增/改后查询全部-->

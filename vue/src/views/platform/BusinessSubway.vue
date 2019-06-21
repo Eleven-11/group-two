@@ -46,9 +46,9 @@
           <el-input type="text" v-model="tempUser.businessSubwayName">
           </el-input>
         </el-form-item>
-        <el-form-item label="上级编号" >
-          <el-input type="text" v-model="tempUser.superiorId">
-          </el-input>
+        <el-form-item label="选择上级" >
+          <!--<el-input type="text" v-model="tempUser.superiorId">-->
+          <!--</el-input>-->
         </el-form-item>
       </el-form>
 

@@ -17,6 +17,15 @@ public interface ModuleDao {
     int addModule(JSONObject jsonObject);
 
     /**
+     * 发送给所有人消息
+     */
+    int addMessage(JSONObject jsonObject);
+    /**
+     * 获取所有人id
+     */
+     List<Integer> getAllUserId();
+
+    /**
      * 删除模块
      */
     int removeModuleDisplay(JSONObject jsonObject);
@@ -50,5 +59,7 @@ public interface ModuleDao {
      * 在添加/修改模块的时候要使用此方法
      */
     List<JSONObject> getAllModule();
+
+
 
 }
