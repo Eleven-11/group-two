@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.WxMyPostDao">
+
+    <!--后台每个用户自己的帖子记录-->
+    <select id="getMyPostList" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+
+       /* select mypost_id myPostId,onuser_id onUserId,post_id postId,mypost_state myPostState,
+        DATE_FORMAT(create_time, '%Y.%m.%d %T')  createTime
+        from fly_mypost*/
+
+        select  post.id postId,users.user_name onUserId,post.delete_state myPostState,
+        DATE_FORMAT(post.post_time, '%Y.%m.%d %T')  createTime
+
+        from  tyn_post post,fly_user users
+        where  post.post_owner =users.user_id
+    </select>
+<!--后台计数-->
+    <select id="countMyPost" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select count(0) from tyn_post;
+    </select>
+    <!--修改自己帖子隐藏状态-->
+    <update id="updateMyPostById" parameterType="com.alibaba.fastjson.JSONObject">
+        update  tyn_post  set delete_state =#{myPostState} where id = #{postId} ;
+
+    </update>
+    <!--前台用户自己的帖子记录-->
+    <select id="getMyPostListById" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+
+        select  post.id postId,users.user_name onUserId,post.delete_state myPostState,
+        DATE_FORMAT(post.post_time, '%Y.%m.%d %T')  createTime
+
+        from  tyn_post post,fly_user users
+        where  post.post_owner =users.user_id
+        and post.delete_state = 0 and post_owner = #{onUserId}
+        /*select mypost_id myPostId,onuser_id onUserId,post_id postId,DATE_FORMAT(create_time, '%Y.%m.%d %T')  createTime
+        from fly_mypost where onuser_id =#{onUserId} and mypost_state = 0;*/
+    </select>
+    <!--计算本人发帖数量-->
+    <select id="countMyPostByUserId" parameterType="com.alibaba.fastjson.JSONObject">
+        select count(0) from tyn_post where post_owner =#{onUserId}
+    </select>
+    <!--批量删除帖子--><!--（不成功）-->
+    <update id="updateByPostIdMany" parameterType="com.alibaba.fastjson.JSONObject">
+
+      <!--  <foreach collection="myPostId" item="postId" open="(" separator="," close=")">
+            <foreach collection="state" item="myPostState" open="(" separator="," close=")" >
+                update  tyn_post  set mypost_state =#{myPostState} where id = #{postId}
+            </foreach>
+
+        </foreach>-->
+    </update>
+</mapper>
