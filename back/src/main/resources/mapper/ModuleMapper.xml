@@ -48,8 +48,11 @@
 
     <!--新增信息-->
     <insert id="addMessage" useGeneratedKeys="true" keyProperty="MID">
-        INSERT into lc_message(from_user_id,message_content,status)
-        values (1,#{moduleContent},1)
+        INSERT into lc_message(from_user_id,to_user_id,message_content,status)
+        values
+        <foreach collection="ulist" item="u" separator=",">
+            (1,#{u.userid},#{moduleContent},1)
+        </foreach>
     </insert>
     <resultMap id="map" type="com.heeexy.example.util.model.One2Many">
         <id column="userid" property="userid"/>

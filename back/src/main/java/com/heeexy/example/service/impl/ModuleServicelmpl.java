@@ -44,8 +44,9 @@ public class ModuleServicelmpl implements ModuleService {
      */
     @Override
     public JSONObject addMessage(JSONObject jsonObject) {
-        moduleDao.addMessage( jsonObject);
-
+        List<Integer> allUserId = moduleDao.getAllUserId();
+        jsonObject.put("ulist",allUserId);
+        moduleDao.addMessage( jsonObject );
         return CommonUtil.successJson();
     }
 

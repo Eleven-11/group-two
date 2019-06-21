@@ -17,6 +17,7 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="帖子主键" prop="businessSubwayId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="帖子标签" prop="businessSubwayName" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="上级的编号" prop="superiorId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" width="170" sortable></el-table-column>
@@ -47,8 +48,8 @@
           </el-input>
         </el-form-item>
         <el-form-item label="选择上级" >
-          <!--<el-input type="text" v-model="tempUser.superiorId">-->
-          <!--</el-input>-->
+          <el-input type="text" v-model="tempUser.superiorId">
+          </el-input>
         </el-form-item>
       </el-form>
 
