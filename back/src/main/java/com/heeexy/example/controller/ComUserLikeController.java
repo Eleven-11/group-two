@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.service.WxBrowserService;
 import com.heeexy.example.service.WxLikeService;
 import com.heeexy.example.service.WxMyPostService;
+import com.heeexy.example.service.WxUserService;
 import com.heeexy.example.util.CommonUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 public class ComUserLikeController {
     @Autowired
     private WxLikeService wxLikeService;
+    @Autowired
+    private WxUserService wxUserService;
     /**
      * 展示用户点赞列表
      */
@@ -36,9 +39,15 @@ public class ComUserLikeController {
     @PostMapping("/addLike")
     public JSONObject addFans(@RequestBody JSONObject requestJson) {
 
-        CommonUtil.hasAllRequired(requestJson, "onUserId,userId");
+        CommonUtil.hasAllRequired(requestJson, "onUserId,userId,userUuId");
+        JSONObject userByUsername = wxUserService.getUserByUsername(requestJson);
+        String userState = userByUsername.getString("userState");
+        if (userState =="1"){
+            return null;
+        }else {
+            return wxLikeService.addLike(requestJson);
+        }
 
-        return wxLikeService.addLike(requestJson);
     }
     /**
      * 修改用户帖子点赞状态
