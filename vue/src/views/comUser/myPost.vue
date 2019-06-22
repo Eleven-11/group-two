@@ -92,12 +92,11 @@
           }).then(() => {
 
             rows.forEach(element =>{
-
               _vue.ids.push(element);
               let param = {
                 "posts":_vue.ids,
               }
-              console.log('pp'+param);
+
               _vue.api({
                 url: "/comUserPost/updateUserPostMany",
                 method: "post",
