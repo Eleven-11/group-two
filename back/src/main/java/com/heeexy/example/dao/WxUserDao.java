@@ -78,6 +78,11 @@ public interface WxUserDao {
           * @return: List<JSONObject>
           */
     List<JSONObject> listUserState();
-
-
+         /**
+              * @methodsName: countFansByUserId
+              * @description: 计算用户粉丝数
+              * @param:  JSONObject
+              * @return: JSONObject
+              */
+         JSONObject countFansByUserId(JSONObject jsonObject);
     }

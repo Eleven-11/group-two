@@ -5,6 +5,7 @@ import com.heeexy.example.service.WxMyCommentService;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,8 +26,8 @@ public class ComUserCommentController {
     *展示用户评论记录列表
      */
     @GetMapping("/listUserCommentByUserId")
-    public JSONObject getlistUserComment(HttpServletRequest request) {
-
-        return wxMyCommentService.getMyCommentList(CommonUtil.request2Json(request));
+    public JSONObject getlistUserComment(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "onUserId");
+        return wxMyCommentService.getMyCommentList(requestJson);
     }
 }

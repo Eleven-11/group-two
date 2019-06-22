@@ -57,7 +57,7 @@ public class ComUserController {
         return wxLikeService.getLikeList(CommonUtil.request2Json(request));
     }
     /**
-     * 展示用户浏览记录列表
+     * 后台展示用户浏览记录列表
      */
     @GetMapping("/listUserBrowse")
     public JSONObject getListUserBrowse(HttpServletRequest request) {
@@ -79,6 +79,13 @@ public class ComUserController {
     public JSONObject getlistUserComment(HttpServletRequest request) {
 
         return wxMyCommentService.getMyCommentList(CommonUtil.request2Json(request));
+    }
+    /**
+     * 查找用户
+     */
+    @GetMapping("/getUserByName")
+    public JSONObject getUserByName(HttpServletRequest request){
+        return wxUserService.getUserByUsername(CommonUtil.request2Json(request));
     }
     /**
      * 添加普通用户
@@ -127,4 +134,12 @@ public class ComUserController {
         return wxUserService.listUserState();
     }
 
+    /**
+     * 计算用户粉丝数
+     * */
+    @GetMapping("/getUserFans")
+    public JSONObject getUserFans(@RequestBody JSONObject requestJson){
+        CommonUtil.hasAllRequired(requestJson, " onUserId");
+        return wxUserService.countFansByUserId(requestJson);
+    };
 }

@@ -4,7 +4,7 @@
 <mapper namespace="com.heeexy.example.dao.WxUserDao">
 
     <!--查找最大id数-->
-    <select id="getMaxNumber" parameterType="com.alibaba.fastjson.JSONObject">
+    <select id="getMaxNumber" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
        select
          user_id  userId,user_name userName, user_photo userPhoto,
       user_sex  userSex,user_fans userFans,user_fans_f userFansf,
@@ -30,7 +30,7 @@
         update fly_user set  user_state =#{userState} where  user_id = #{userId};
     </update>
     <!--查找总粉丝数-->
-    <select id="countByUserid" parameterType="com.alibaba.fastjson.JSONObject">
+    <select id="countFansByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
         select sum(user_fans+user_fans_f) from fly_user where user_id =#{userId};
     </select>
 
@@ -75,8 +75,8 @@
       t1.guest guest, t2.close_name userState,DATE_FORMAT(first_time, '%Y.%m.%d %T') firstTime,DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
       from  fly_user t1,fly_userstate t2 where user_uuid =#{userUuId};
     </select>
-    <!--查看该用户是否是游客-->
-    <select id="getGuestByUuId" parameterType="com.alibaba.fastjson.JSONObject" >
-
+    <!--查看该用户的封禁状态-->
+    <select id="getStateByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+      select
     </select>
 </mapper>

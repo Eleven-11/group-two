@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.service.WxBrowserService;
 import com.heeexy.example.service.WxLikeService;
 import com.heeexy.example.service.WxMyPostService;
+import com.heeexy.example.service.WxUserService;
 import com.heeexy.example.util.CommonUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,23 +23,31 @@ import javax.servlet.http.HttpServletRequest;
 public class ComUserLikeController {
     @Autowired
     private WxLikeService wxLikeService;
+    @Autowired
+    private WxUserService wxUserService;
     /**
      * 展示用户点赞列表
      */
     @GetMapping("/listUserLike")
-    public JSONObject getListUserLike(HttpServletRequest request) {
-
-        return wxLikeService.getLikeByUserId(CommonUtil.request2Json(request));
+    public JSONObject getListUserLike(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "onUserId");
+        return wxLikeService.getLikeByUserId(requestJson);
     }
     /**
      * 添加用户帖子点赞
      */
-    @RequiresPermissions("0")
     @PostMapping("/addLike")
     public JSONObject addFans(@RequestBody JSONObject requestJson) {
 
-        CommonUtil.hasAllRequired(requestJson, "onUserId,userId");
-        return wxLikeService.addLike(requestJson);
+        CommonUtil.hasAllRequired(requestJson, "onUserId,userId,userUuId");
+        JSONObject userByUsername = wxUserService.getUserByUsername(requestJson);
+        String userState = userByUsername.getString("userState");
+        if (userState =="1"){
+            return null;
+        }else {
+            return wxLikeService.addLike(requestJson);
+        }
+
     }
     /**
      * 修改用户帖子点赞状态

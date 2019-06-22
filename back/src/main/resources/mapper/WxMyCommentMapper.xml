@@ -26,6 +26,6 @@
         comment.comment_status commentState,comment.comment_content commentContent,
         DATE_FORMAT(comment.comment_time, '%Y.%m.%d %T')  createTime
         from lc_comment comment,tyn_post post
-        where comment.post_id = post.id and comment.from_user_id = #{onUserId}
+        where comment.post_id = post.id and comment.comment_status != -1 and comment.from_user_id = #{onUserId}
     </select>
 </mapper>
