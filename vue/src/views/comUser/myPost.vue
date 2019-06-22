@@ -49,7 +49,6 @@
   export default {
     data() {
       return {
-        state:[],
         tableData:[],
         checkBoxData:[],//被选中的记录数据
         ids:[],
@@ -92,16 +91,13 @@
             type: 'warning'
           }).then(() => {
 
-
             rows.forEach(element =>{
 
-              _vue.ids.push(element.postId);
-              _vue.state.push(element.myPostState);
-
+              _vue.ids.push(element);
               let param = {
-                "myPostId":_vue.ids,
-                "state":_vue.state,
+                "posts":_vue.ids,
               }
+              console.log('pp'+param);
               _vue.api({
                 url: "/comUserPost/updateUserPostMany",
                 method: "post",

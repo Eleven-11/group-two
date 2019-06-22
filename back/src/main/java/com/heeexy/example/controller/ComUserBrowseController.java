@@ -32,12 +32,12 @@ public class ComUserBrowseController {
         return wxBrowserService.addBrowsePost(requestJson);
     }
     /**
-     * 展示用户浏览记录列表
+     * 前台展示用户浏览记录列表
      */
     @GetMapping("/listBrowseByUser")
-    public JSONObject getListUserBrowse(HttpServletRequest request) {
-
-        return wxBrowserService.getBrowseByUser(CommonUtil.request2Json(request));
+    public JSONObject getListUserBrowse(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "onUserId");
+        return wxBrowserService.getBrowseByUser(requestJson);
     }
 
 }

@@ -24,9 +24,9 @@ public class comUserFansController {
     *前台展示用户关注列表
     */
     @GetMapping("/listUserFans")
-    public JSONObject listUserFans(HttpServletRequest request) {
-
-        return wxFansService.getListByUserId(CommonUtil.request2Json(request));
+    public JSONObject listUserFans(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "onUserId");
+        return wxFansService.getListByUserId(requestJson);
     }
     /**
      * 添加用户关注

@@ -68,15 +68,24 @@ public class WxUserServiceImpl implements WxUserService {
 
     @Override
     public JSONObject getUserByUsername(JSONObject jsonObject) {
+        //查找用户
         JSONObject userByUsername = wxUserDao.getUserByUsername(jsonObject);
         return userByUsername;
     }
 
-    //查找封禁状态集合
+
     @Override
     public JSONObject listUserState() {
+        //查找封禁状态集合
         List<JSONObject> jsonObjects = wxUserDao.listUserState();
         return CommonUtil.successPage(jsonObjects);
+    }
+
+    @Override
+    public JSONObject countFansByUserId(JSONObject jsonObject) {
+        //计算用户粉丝数
+        JSONObject fans = wxUserDao.countFansByUserId(jsonObject);
+        return fans;
     }
 
 }

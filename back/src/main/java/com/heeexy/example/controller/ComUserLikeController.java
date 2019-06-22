@@ -26,18 +26,18 @@ public class ComUserLikeController {
      * 展示用户点赞列表
      */
     @GetMapping("/listUserLike")
-    public JSONObject getListUserLike(HttpServletRequest request) {
-
-        return wxLikeService.getLikeByUserId(CommonUtil.request2Json(request));
+    public JSONObject getListUserLike(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "onUserId");
+        return wxLikeService.getLikeByUserId(requestJson);
     }
     /**
      * 添加用户帖子点赞
      */
-    @RequiresPermissions("0")
     @PostMapping("/addLike")
     public JSONObject addFans(@RequestBody JSONObject requestJson) {
 
         CommonUtil.hasAllRequired(requestJson, "onUserId,userId");
+
         return wxLikeService.addLike(requestJson);
     }
     /**

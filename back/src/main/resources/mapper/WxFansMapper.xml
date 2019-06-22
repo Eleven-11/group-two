@@ -13,7 +13,7 @@
     <!--查找关注用户列表(小程序显示列表)-->
     <select id="getListByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
          select
-t1.FansId,t1.onusername onUserId ,t2.username userId,t1.state state,DATE_FORMAT(t1.createTime1, '%Y.%m.%d %T') createTime,DATE_FORMAT(t1.updateTime1, '%Y.%m.%d %T') updateTime
+t1.FansId,t1.onusername onUserName ,t2.username userName,t1.state state,DATE_FORMAT(t1.createTime1, '%Y.%m.%d %T') createTime,DATE_FORMAT(t1.updateTime1, '%Y.%m.%d %T') updateTime
  from
 (select
           fans.fans_id fansId,fans.onuser_id,users.user_name onusername ,fans.state state,DATE_FORMAT(fans.create_time, '%Y.%m.%d %T') createTime1,DATE_FORMAT(fans.update_time, '%Y.%m.%d %T') updateTime1
