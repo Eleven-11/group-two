@@ -1,16 +1,16 @@
 package com.heeexy.example.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.heeexy.example.service.WxBrowserService;
+
 import com.heeexy.example.service.WxLikeService;
-import com.heeexy.example.service.WxMyPostService;
+
 import com.heeexy.example.service.WxUserService;
 import com.heeexy.example.util.CommonUtil;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+
 
 /**
  * @ Author     ：良优
@@ -38,7 +38,6 @@ public class ComUserLikeController {
      */
     @PostMapping("/addLike")
     public JSONObject addFans(@RequestBody JSONObject requestJson) {
-
         CommonUtil.hasAllRequired(requestJson, "onUserId,userId,userUuId");
         JSONObject userByUsername = wxUserService.getUserByUsername(requestJson);
         String userState = userByUsername.getString("userState");
@@ -47,7 +46,6 @@ public class ComUserLikeController {
         }else {
             return wxLikeService.addLike(requestJson);
         }
-
     }
     /**
      * 修改用户帖子点赞状态
