@@ -50,11 +50,7 @@ export const asyncRouterMap = [
     meta: {title: '用户权限', icon: 'table'},
     children: [
       {
-        path: '',
-        name: '用户列表',
-        component: _import('user/user'),
-        meta: {title: '用户列表', icon: 'user'},
-        menu: 'user'
+        path: '', name: '用户列表', component: _import('user/user'), meta: {title: '用户列表', icon: 'user'}, menu: 'user'
       },
       {
         path: 'role',
@@ -66,14 +62,25 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '/post',
+    path: '/module',
     component: Layout,
-    redirect: '/post/',
+    redirect: '/module/',
     name: '',
-    meta: {title: '帖子管理', icon: 'table'},
+    meta: {title: '系统信息管理', icon: 'table'},
     children: [
       {
-        path: '', name: '帖子列表', component: _import('post/post'), meta: {title: '帖子列表', icon: 'post'}, menu: 'post'
+        path: '',
+        name: '模块管理',
+        component: _import('module/module'),
+        meta: {title: '模块管理', icon: 'user'},
+        menu: 'user'
+      },
+      {
+        path: 'ModuleInformation',
+        name: '帖子收藏管理',
+        component: _import('module/PostCollect'),
+        meta: {title: '帖子收藏管理', icon: 'user'},
+        menu: 'ModuleInformation'
       },
       {
         path: 'role',
@@ -86,53 +93,25 @@ export const asyncRouterMap = [
   },
 
   {
-    path: '/comUser',
+    path: '/platform',
     component: Layout,
-    redirect: '/comUser/',
+    redirect: '/platform/',
     name: '',
-    meta: {title: '普通用户', icon: 'table'},
+    meta: {title: '平台管理', icon: 'table'},
     children: [
       {
-        path: 'comUser',
-        name: '普通用户列表',
-        component: _import('comUser/comUser'),
-        meta: {title: '普通用户列表', icon: 'user'},
-        menu: 'comUser'
+        path: '',
+        name: '帖子类别管理',
+        component: _import('platform/PostCategories'),
+        meta: {title: '帖子类别管理', icon: 'user'},
+        menu: 'PostCategories'
       },
       {
-        path: 'fans',
-        name: '用户关注列表',
-        component: _import('comUser/fans'),
-        meta: {title: '用户关注列表', icon: 'user'},
-        menu: 'fans'
-      },
-      {
-        path: 'myPost',
-        name: '用户帖子列表',
-        component: _import('comUser/myPost'),
-        meta: {title: '用户帖子列表', icon: 'user'},
-        menu: 'myPost'
-      },
-      {
-        path: 'like',
-        name: '用户点赞列表',
-        component: _import('comUser/like'),
-        meta: {title: '用户点赞列表', icon: 'user'},
-        menu: 'like'
-      },
-      {
-        path: 'comment',
-        name: '用户帖子评论列表',
-        component: _import('comUser/comment'),
-        meta: {title: '用户帖子评论列表', icon: 'user'},
-        menu: 'comment'
-      },
-      {
-        path: 'browse',
-        name: '用户浏览记录列表',
-        component: _import('comUser/browse'),
-        meta: {title: '用户浏览记录列表', icon: 'user'},
-        menu: 'browse'
+        path: 'ModuleInformation',
+        name: '帖子标签管理',
+        component: _import('platform/BusinessSubway'),
+        meta: {title: '帖子标签管理', icon: 'user'},
+        menu: 'BusinessSubway'
       },
     ]
   },

@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author: 陈强勇
- * @description:模块相关controller
+ * @author: chenqiangyong
+ * @description:模板相关controller
  * @date: 2019/6/18 9:03
+ * @vevsion 1.0
  */
 @RestController
 @RequestMapping("/module")
@@ -36,8 +37,17 @@ public class ModuleController {
 //    @RequiresPermissions("module:add")
     @PostMapping("addModule")
     public JSONObject addModule(@RequestBody JSONObject requestJson){
-        CommonUtil.hasAllRequired(requestJson, "moduleName");
+        CommonUtil.hasAllRequired(requestJson, "moduleName,moduleContent");
         return moduleService.addModule(requestJson);
+    }
+    /**
+     * 群发消息
+     */
+//    @RequiresPermissions("module:add")
+    @PostMapping("addMessage")
+    public JSONObject addMessage(@RequestBody JSONObject requestJson){
+        CommonUtil.hasAllRequired(requestJson, "moduleContent");
+        return moduleService.addMessage(requestJson);
     }
 
     /**
@@ -46,8 +56,18 @@ public class ModuleController {
 //    @RequiresPermissions("module:update")
     @PostMapping("/updateModule")
     public JSONObject updateModule(@RequestBody JSONObject requestJson){
-        CommonUtil.hasAllRequired(requestJson, " moduleName");
-        return moduleService.updateModuleName(requestJson);
+        CommonUtil.hasAllRequired(requestJson, " moduleName,moduleContent");
+        return moduleService.updateModule(requestJson);
+    }
+
+    /**
+     * 删除角色
+     */
+//    @RequiresPermissions("role:delete")
+    @PostMapping("/removeModuleDisplay")
+    public JSONObject removeModuleDisplay(@RequestBody JSONObject requestJson) {
+//        CommonUtil.hasAllRequired(requestJson, "moduleID");
+        return moduleService.removeModuleDisplay(requestJson);
     }
     /**
      * 查询所有的模块

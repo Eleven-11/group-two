@@ -9,13 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author: chenqiangyong
- * @description:
+ * @description:模块/增删改查的实现
  * @date: 2019/6/18
- * @vevsion
+ * @vevsion 1.0
  */
 @Service
 public class ModuleServicelmpl implements ModuleService {
@@ -28,34 +29,44 @@ public class ModuleServicelmpl implements ModuleService {
      */
     @Override
     public JSONObject addModule(JSONObject jsonObject) {
-        int exist = moduleDao.queryExistModuleName( jsonObject );
+        int exist = moduleDao.queryExistModuleName(jsonObject);
         if( exist > 0 ){
-            return CommonUtil.errorJson(ErrorEnum.E_10009);
+            int i = moduleDao.queryExistModuleDisplay(jsonObject);
+            if(i==1){
+                return CommonUtil.errorJson(ErrorEnum.E_10009);
+            }
         }
         moduleDao.addModule( jsonObject );
         return CommonUtil.successJson();
     }
+    /**
+     * 新增消息
+     */
+    @Override
+    public JSONObject addMessage(JSONObject jsonObject) {
+        List<Integer> allUserId = moduleDao.getAllUserId();
+        jsonObject.put("ulist",allUserId);
+        moduleDao.addMessage( jsonObject );
+        return CommonUtil.successJson();
+    }
+
 
     /**
      * 删除模块
      */
-//    @Transactional(rollbackFor = Exception.class)
-//    @SuppressWarnings("unchecked")
-//    @Override
-//    public JSONObject removeModule(JSONObject jsonObject) {
-//        moduleDao.removeModuleName( jsonObject );
-//        return  CommonUtil.successJson();
-//    }
+    @Transactional(rollbackFor = Exception.class)
+    @SuppressWarnings("unchecked")
+    @Override
+    public JSONObject removeModuleDisplay(JSONObject jsonObject) {
+        moduleDao.removeModuleDisplay( jsonObject );
+        return  CommonUtil.successJson();
+    }
 
     /**
      * 修改模块
      */
     @Override
-    public JSONObject updateModuleName(JSONObject jsonObject) {
-        int exist = moduleDao.queryExistModuleName( jsonObject );
-        if( exist > 0 ){
-            return CommonUtil.errorJson(ErrorEnum.E_10009);
-        }
+    public JSONObject updateModule(JSONObject jsonObject) {
         moduleDao.updateModuleName( jsonObject );
         return CommonUtil.successJson();
     }
