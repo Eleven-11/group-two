@@ -4,6 +4,8 @@
     <div class="filter-container">
       <el-form>
         <el-form-item>
+          <el-input style="width: 300px" placeholder="请输入内容" v-model="tempUser.input" clearable ></el-input>
+          <el-button type="primary" icon="el-icon-search" @click="getList" >搜索</el-button>
           <el-button type="primary" icon="plus" v-if="hasPerm('user:add')" @click="showCreate">添加
           </el-button>
         </el-form-item>
@@ -74,6 +76,7 @@
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
         listQuery: {
+          input: '',
           pageNum: 1,//页码
           pageRow: 50,//每页条数
         },
@@ -89,7 +92,8 @@
           moduleId: '',
           moduleName: '',
           moduleContent: '',
-          display: ''
+          display: '',
+          input: ''
         }
       }
     },
@@ -115,6 +119,7 @@
       },
       getList() {
         //查询列表
+        this.listQuery.input = this.tempUser.input;
         this.listLoading = true;
         this.api({
           url: "/module/list",

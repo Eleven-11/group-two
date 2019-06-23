@@ -1,9 +1,5 @@
 <template>
   <div class="app-container">
-    <img src="../../assets/image/66.jpg"/>
-    <img src="../../assets/image/65.jpg"/>
-    <img src="../../assets/image/67.jpg"/>
-    <img src="../../assets/image/68.jpg"/>
     <div class="filter-container">
       <el-form>
         <el-form-item>

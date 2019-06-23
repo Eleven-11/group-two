@@ -19,7 +19,14 @@
       </el-table-column>
       <el-table-column align="center" label="帖子主键" prop="businessSubwayId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="帖子标签" prop="businessSubwayName" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="上级的编号" prop="superiorId" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="上级的编号" prop="superiorId" style="width: 60px;">
+        <template slot-scope="scope">
+          <el-tag type="primary"  v-if="scope.row.superiorId===0">无上级</el-tag>
+          <el-tag type="success" v-else-if="scope.row.superiorId===1">热门商圈</el-tag>
+          <el-tag type="success"  v-else-if="scope.row.superiorId===2">地铁周边</el-tag>
+          <el-tag type="info" v-text="scope.row.superiorId" v-else></el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" width="170" sortable></el-table-column>
       <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170" sortable></el-table-column>
       <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
@@ -48,8 +55,16 @@
           </el-input>
         </el-form-item>
         <el-form-item label="选择上级" >
-          <el-input type="text" v-model="tempUser.superiorId">
-          </el-input>
+          <!--<el-input type="text" v-model="tempUser.superiorId">-->
+            <el-select v-model="tempUser.superiorId" placeholder="请选择">
+              <el-option
+                v-for="item in roles"
+                :key="item.businessSubwayId"
+                :label="item.businessSubwayName"
+                :value="item.businessSubwayId">
+              </el-option>
+            </el-select>
+          <!--</el-input>-->
         </el-form-item>
       </el-form>
 
@@ -105,10 +120,12 @@
     methods: {
       getAllRoles() {
         this.api({
-          url: "/businesssubway/getAllPostCategorie",
+          url: "/businesssubway/getAllBusinessSubway",
           method: "get"
         }).then(data => {
-          this.roles = data.list;
+          this.roles = data;
+          console.log(data);
+          // alert(this.roles);
         })
       },
       getList() {

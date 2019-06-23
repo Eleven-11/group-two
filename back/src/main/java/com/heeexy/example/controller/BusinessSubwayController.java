@@ -60,7 +60,7 @@ public class BusinessSubwayController {
      * 在添加/修改帖子类别的时候要使用此方法
      */
 //    @RequiresPermissions(value = {"user:add", "user:update"}, logical = Logical.OR)
-    @GetMapping("/getAllPostCategorie")
+    @GetMapping("/getAllBusinessSubway")
     public JSONObject getAllBusinessSubway() {
         return businessSubwayService.getAllBusinessSubway();
     }

@@ -26,7 +26,13 @@
         DATE_FORMAT(create_time, '%Y.%m.%d %T') createTime,
         DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
         from cqy_module
-        where display = 1
+        <where>
+            <if test="input != null and input != ''">
+                module_name LIKE CONCAT(CONCAT('%',#{input}),'%')
+                and
+            </if>
+            display = 1
+        </where>
         LIMIT #{offSet}, #{pageRow}
     </select>
 <!--增/改后查询全部-->
