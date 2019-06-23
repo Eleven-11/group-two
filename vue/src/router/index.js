@@ -115,5 +115,57 @@ export const asyncRouterMap = [
       },
     ]
   },
+  {
+    path: '/comUser',
+    component: Layout,
+    redirect: '/comUser/',
+    name: '',
+    meta: {title: '普通用户', icon: 'table'},
+    children: [
+      {
+        path: 'comUser',
+        name: '普通用户列表',
+        component: _import('comUser/comUser'),
+        meta: {title: '普通用户列表', icon: 'user'},
+        menu: 'comUser'
+      },
+      {
+        path: 'fans',
+        name: '用户关注列表',
+        component: _import('comUser/fans'),
+        meta: {title: '用户关注列表', icon: 'user'},
+        menu: 'fans'
+      },
+      {
+        path: 'myPost',
+        name: '用户帖子列表',
+        component: _import('comUser/myPost'),
+        meta: {title: '用户帖子列表', icon: 'user'},
+        menu: 'myPost'
+      },
+      {
+        path: 'like',
+        name: '用户点赞列表',
+        component: _import('comUser/like'),
+        meta: {title: '用户点赞列表', icon: 'user'},
+        menu: 'like'
+      },
+      {
+        path: 'comment',
+        name: '用户帖子评论列表',
+        component: _import('comUser/comment'),
+        meta: {title: '用户帖子评论列表', icon: 'user'},
+        menu: 'comment'
+      },
+      {
+        path: 'browse',
+        name: '用户浏览记录列表',
+        component: _import('comUser/browse'),
+        meta: {title: '用户浏览记录列表', icon: 'user'},
+        menu: 'browse'
+      },
+    ]
+  },
+
   {path: '*', redirect: '/404', hidden: true}
 ]
