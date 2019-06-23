@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-form>
         <el-form-item>
-          <el-button type="primary" icon="plus" v-if="hasPerm('user:add')" @click="showCreate">添加
+          <el-button type="primary" icon="plus"  @click="showCreate">添加
           </el-button>
         </el-form-item>
       </el-form>
@@ -15,17 +15,22 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="昵称" prop="nickname" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="用户名" prop="username" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="角色" width="100">
+      <el-table-column  align="center" label="帖子ID" prop="postId" style="width: 60px;" v-if="false"></el-table-column>
+      <el-table-column align="center" label="昵称" prop="ownerName" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="用户名" prop="postTime" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="创建时间" prop="sortName" width="170"></el-table-column>
+      <el-table-column align="center" label="最近修改时间" prop="deleteState" width="170"></el-table-column>
+      <el-table-column align="center" label="最近修改时间" prop="likeOff" width="170"></el-table-column>
+      <el-table-column align="center" label="最近修改时间" prop="collectOff" width="170"></el-table-column>
+      <el-table-column align="center" label="最近修改时间" prop="viewOff" width="170"></el-table-column>
+      <el-table-column align="center" label="标签">
         <template slot-scope="scope">
-          <el-tag type="success" v-text="scope.row.roleName" v-if="scope.row.roleId===1"></el-tag>
-          <el-tag type="primary" v-text="scope.row.roleName" v-else></el-tag>
+          <div v-for="tag in tagList">
+            <div v-text="tag" style="display: inline-block;vertical-align: middle;"></div>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="创建时间" prop="createTime" width="170"></el-table-column>
-      <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170"></el-table-column>
-      <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
+      <el-table-column align="center" label="管理" width="220" >
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
           <el-button type="danger" icon="delete" v-if="scope.row.userId!=userId "
@@ -87,11 +92,12 @@
   export default {
     data() {
       return {
+        peerPost:[],
+        tagList:[],
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
         listQuery: {
-
           pageNum: 1,//页码
           pageRow: 50,//每页条数
         },
@@ -135,13 +141,37 @@
         //查询列表
         this.listLoading = true;
         this.api({
-          url: "/user/list",
+          url: "/post/list",
           method: "get",
           params: this.listQuery
         }).then(data => {
           this.listLoading = false;
           this.list = data.list;
           this.totalCount = data.totalCount;
+          for ( var i=0;i<data.list.length;i++){
+            this.peerPost=data.list[i];
+          }
+          this.tagList = this.peerPost.tagList;
+
+          var temp=parseInt(this.tag.isTop);
+          if(this.tag.istop=2222) {this.tag.istop='未置顶' }
+           else{
+             if(temp%10<2) {
+            this.tag.isTop = '人气模块&'
+          }
+          var temp1=parseInt(temp/10);
+          if(temp1%10<2) {
+            this.tag.isTop = '地铁周边模块&'+this.tag.isTop;
+          }
+          var temp2=parseInt(temp1/10);
+          if(temp2%10<2) {
+            this.tag.isTop = '热门商圈模块&'+this.tag.isTop;
+          }
+          var temp3=parseInt(temp2/10);
+          if(temp3%10<2) {
+            this.tag.isTop = '推荐模块&'+this.tag.isTop;
+          }
+          }
         })
       },
       handleSizeChange(val) {
@@ -175,10 +205,10 @@
       },
       showUpdate($index) {
         let user = this.list[$index];
-        this.tempUser.username = user.username;
-        this.tempUser.nickname = user.nickname;
-        this.tempUser.roleId = user.roleId;
-        this.tempUser.userId = user.userId;
+        this.tempUser.username = post.username;
+        this.tempUser.nickname = post.nickname;
+        this.tempUser.roleId = post.roleId;
+        this.tempUser.userId = post.userId;
         this.tempUser.deleteStatus = '1';
         this.tempUser.password = '';
         this.dialogStatus = "update"
@@ -226,11 +256,11 @@
           type: 'warning'
         }).then(() => {
           let user = _vue.list[$index];
-          user.deleteStatus = '2';
+          post.deleteStatus = '2';
           _vue.api({
             url: "/user/updateUser",
             method: "post",
-            data: user
+            data: post
           }).then(() => {
             _vue.getList()
           }).catch(() => {
