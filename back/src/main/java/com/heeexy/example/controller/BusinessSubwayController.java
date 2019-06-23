@@ -12,8 +12,9 @@ import javax.servlet.http.HttpServletRequest;
  * @author: chenqiangyong
  * @description:帖子标签表相关controller
  * @date: 2019/6/19 15:32
- * @vevsion
+ * @vevsion 1.0
  */
+
 @RestController
 @RequestMapping("/businesssubway")
 public class BusinessSubwayController {

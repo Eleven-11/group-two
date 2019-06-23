@@ -15,7 +15,7 @@ import java.util.List;
  * @author: chenqiangyong
  * @description:模块/增删改查的实现
  * @date: 2019/6/18
- * @vevsion
+ * @vevsion 1.0
  */
 @Service
 public class PostCategorieServiceImpl implements PostCategorieService {
@@ -29,10 +29,7 @@ public class PostCategorieServiceImpl implements PostCategorieService {
     public JSONObject addPostCategorie(JSONObject jsonObject) {
         int exist = postCategorieDao.queryExistPostCategorieName(jsonObject);
         if( exist > 0 ){
-            int i = postCategorieDao.queryExistCategorieDisplay(jsonObject);
-            if(i==1){
                 return CommonUtil.errorJson(ErrorEnum.E_10009);
-            }
         }
         postCategorieDao.addPostCategorie(jsonObject);
         return CommonUtil.successJson();

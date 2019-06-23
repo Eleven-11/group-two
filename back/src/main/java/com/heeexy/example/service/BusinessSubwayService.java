@@ -3,9 +3,10 @@ package com.heeexy.example.service;
 import com.alibaba.fastjson.JSONObject;
 
 /**
- * @author: 陈强勇
+ * @author: chengqiangyong
  * @description: 帖子标签表/增删改查
  * @date: 2019/6/19 12:31
+ * @vevsion 1.0
  */
 public interface BusinessSubwayService {
     /**

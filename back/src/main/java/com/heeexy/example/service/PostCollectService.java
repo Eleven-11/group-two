@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
  * @author: chenqiangyong
  * @description:帖子收藏的/增删改查
  * @date: 2019/6/20 10:52
+ * @vevsion 1.0
  */
 public interface PostCollectService {
     /**

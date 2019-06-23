@@ -5,9 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import java.util.List;
 
 /**
- * @author: 陈强勇
+ * @author: chenqiangyong
  * @description: 帖子类别表Dao层
  * @date: 2019/6/18 17:47
+ * @vevsion 1.0
  */
 public interface PostCategorieDao {
     /**

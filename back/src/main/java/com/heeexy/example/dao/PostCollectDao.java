@@ -8,6 +8,7 @@ import java.util.List;
  * @author: chenqiangyong
  * @description: 帖子收藏的Dao层
  * @date: 2019/6/20 9:58
+ * @vevsion 1.0
  */
 public interface PostCollectDao {
     /**

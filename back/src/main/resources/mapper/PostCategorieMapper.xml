@@ -23,10 +23,10 @@
         categories_id categoriesId,
         categories_name categoriesName,
         categories_img categoriesImg,
+        display display,
         DATE_FORMAT(create_time, '%Y.%m.%d %T') createTime,
         DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
         from cqy_post_categories
-        where display = 1
         LIMIT #{offSet}, #{pageRow}
     </select>
     <!--增/改后查询全部-->
@@ -35,10 +35,10 @@
         module_ID moduleId,
         module_name moduleName,
         module_content moduleContent,
+        display display,
         create_time createTime,
         update_time updateTime
         from cqy_module
-        where display = 1
     </select>
     <!--新增-->
     <insert id="addPostCategorie" useGeneratedKeys="true" keyProperty="categoriesId">
@@ -51,20 +51,20 @@
         set
         categories_name = #{categoriesName},
         categories_img = #{categoriesImg}
-        where categories_id= #{categoriesId} and display = 1
+        where categories_id= #{categoriesId}
     </update>
     <!--删除-->
     <update id="updatePostCategorieDisplay">
         update cqy_post_categories
         set
-        display = 0
+         display = #{display}
         where categories_id= #{categoriesId}
      </update>
     <!--查询校模块名是否已存在-->
     <select id="queryExistPostCategorieName" resultType="int">
         select count(0)
         from cqy_post_categories
-        where categories_name= #{categoriesName} and display = 1
+        where categories_name= #{categoriesName}
     </select>
     <!--查询隐藏值-->
     <select id="queryExistCategorieDisplay" resultType="int">
@@ -76,6 +76,6 @@
     <select id="queryExistPostCategorieNameTwo" resultType="int">
         select count(0)
         from cqy_post_categories
-        where categories_name= #{categoriesName} and display = 1 and categories_id != #{categoriesId}
+        where categories_name= #{categoriesName} and categories_id != #{categoriesId}
     </select>
 </mapper>

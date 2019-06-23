@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author: chenqiangyong
  * @description:帖子收藏相关的controller
  * @date: 2019/6/20 14:06
- * @vevsion
+ * @vevsion 1.0
  */
 
 

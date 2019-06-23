@@ -14,8 +14,8 @@ import java.util.List;
 /**
  * @author: chenqiangyong
  * @description:帖子标签表/增删改查的实现
- * @date: 2019/6/19
- * @vevsion 2019/6/19 12:34
+ * @date: 2019/6/19 12:34
+ * @vevsion 1.0
  */
 @Service
 public class BusinessSubwayServiceImpl implements BusinessSubwayService {

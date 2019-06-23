@@ -15,7 +15,7 @@ import java.util.List;
  * @author: chenqiangyong
  * @description:帖子收藏的/增删改查的实现
  * @date: 2019/6/20 10:52
- * @vevsion
+ * @vevsion 1.0
  */
 
 @Service

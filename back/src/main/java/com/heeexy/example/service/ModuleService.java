@@ -8,6 +8,7 @@ import java.util.List;
  * @author: chenqiangyong
  * @description:模块/增删改查
  * @date: 2019/6/18 9:03
+ * @vevsion 1.0
  */
 public interface ModuleService {
 
