@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.WxLikeDao">
+    <!--添加用户点赞帖子-->
+    <insert id="addLike" parameterType="com.alibaba.fastjson.JSONObject">
+        insert  into  fly_like (onuser_id, post_id, user_id, like_state) values (#{onUserId},#{postId},#{userId},1);
+    </insert>
+
+    <!--网页查找单个用户点赞帖子列表-->
+    <select id="getLikeByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+       select t1.like_id likeId,t1.onuser_id onUserId, t1.user_name onUserName,t1.post_id postId,p.post_content postContent,t2.user_name userName,
+        t1.like_state likeState,DATE_FORMAT(t1.create_time, '%Y.%m.%d %T')  createTime,DATE_FORMAT(t1.update_time, '%Y.%m.%d %T')  updateTime
+        from
+        (select likes.like_id,likes.onuser_id,users.user_name, likes.post_id,
+        likes.user_id userId,likes.like_state,likes.create_time,likes.update_time
+        from fly_user users,fly_like likes where users.user_id = likes.onuser_id) t1,
+        (select fly_like.like_id, fly_user.user_name
+        from fly_user,fly_like where fly_user.user_id = fly_like.user_id) t2,tyn_post p
+        where t1.like_id =t2.like_id and p.id =t1.post_id and t1.onuser_id =#{onUserId} and t1.like_state =1 ;
+       
+    </select>
+    <!--后台每个用户点赞帖子记录-->
+    <select id="getLikeList" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+
+       select t1.like_id likeId, t1.user_name onUserName,t1.post_id postId,p.post_content postContent,t2.user_name userName,
+        t1.like_state likeState,DATE_FORMAT(t1.create_time, '%Y.%m.%d %T')  createTime,DATE_FORMAT(t1.update_time, '%Y.%m.%d %T')  updateTime
+        from
+        (select likes.like_id,users.user_name, likes.post_id,
+        likes.user_id userId,likes.like_state,likes.create_time,likes.update_time
+        from fly_user users,fly_like likes where users.user_id = likes.onuser_id) t1,
+        (select fly_like.like_id, fly_user.user_name
+        from fly_user,fly_like where fly_user.user_id = fly_like.user_id) t2,tyn_post p
+        where t1.like_id =t2.like_id and p.id =t1.post_id;
+    </select>
+    <!--后台每个用户点赞帖子列表计算-->
+    <select id="countPostLike" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select count(0) from fly_like
+    </select>
+
+    <!--查找用户是否已点赞该帖子信息-->
+    <select id="getLikeUserPost" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select like_id likeId, onuser_id onUserId,like_state likeState from fly_like
+        where onuser_id =#{onUserId} and post_id =#{postId};
+    </select>
+    <!--修改帖子用户点赞状态-->
+    <update id="updateLikeByUserId" parameterType="com.alibaba.fastjson.JSONObject">
+<if test="likeState ==0">
+    update fly_like set like_state =1 where like_id = #{likeId};
+</if>
+        <if test="likeState ==1">
+            update fly_like set like_state = 0 where like_id = #{likeId};
+        </if>
+    </update>
+</mapper>

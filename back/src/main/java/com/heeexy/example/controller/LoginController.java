@@ -30,6 +30,8 @@ public class LoginController {
 		return loginService.authLogin(requestJson);
 	}
 
+
+
 	/**
 	 * 查询当前登录用户的信息
 	 */

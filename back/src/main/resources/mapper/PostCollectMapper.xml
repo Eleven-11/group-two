@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.PostCollectDao">
+    <!--计数-->
+    <select id="countPostCollect" resultType="Integer">
+        select count(0)
+        from cqy_post_collect
+    </select>
+
+    <resultMap id="postcollectMap" type="com.heeexy.example.util.model.One2Many">
+        <id column="postCollectId" property="postCollectId"/>
+        <result column="postId" property="postId"/>
+        <result column="userId" property="userId"/>
+        <result column="userName" property="userName"/>
+        <result column="updateTime" property="updateTime"/>
+        <result column="moduleContent" property="moduleContent"/>
+        <result column="display" property="display"/>
+    </resultMap>
+    <!--查询全部-->
+    <select id="listPostCollect" resultMap="postcollectMap">
+        select
+        post_collect_id postCollectId,
+        post_id postId,
+        cqy_post_collect.user_id userId,
+        user_name username,
+        DATE_FORMAT(cqy_post_collect.create_time, '%Y.%m.%d %T') createTime,
+        DATE_FORMAT(cqy_post_collect.update_time, '%Y.%m.%d %T') updateTime,
+        display display
+        from cqy_post_collect,fly_user
+        <where>
+            <if test="input != null and input != ''">
+                user_name LIKE CONCAT(CONCAT('%',#{input}),'%')
+                and
+            </if>
+            cqy_post_collect.user_id = fly_user.user_id
+        </where>
+        LIMIT #{offSet}, #{pageRow}
+    </select>
+    <!--增/改后查询全部-->
+    <select id="getAllPostCollect" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        post_collect_id postCollectId,
+        post_id postId,
+        cqy_post_collect.user_id userId,
+        user_name username,
+        DATE_FORMAT(cqy_post_collect.create_time, '%Y.%m.%d %T') createTime,
+        DATE_FORMAT(cqy_post_collect.update_time, '%Y.%m.%d %T') updateTime,
+        display display
+        from cqy_post_collect,fly_user
+        where cqy_post_collect.user_id = fly_user.user_id
+    </select>
+    <!--新增-->
+    <insert id="addPostCollect" useGeneratedKeys="true" keyProperty="postId">
+        INSERT into cqy_post_collect(post_id,user_id,display)
+        values (#{postId},#{userId},1)
+    </insert>
+    <!--修改-->
+    <update id="updatePostCollect">
+        update cqy_post_collect
+        set display = #{display}
+        where post_collect_id= #{postCollectId}
+    </update>
+
+    <!--修改 Display1或0-->
+    <update id="updatePostCollectDisplay">
+        update cqy_post_collect
+        set
+        display = #{display}
+        where post_collect_id= #{postCollectId}
+     </update>
+    <!--修改 Display为1-->
+    <update id="updatePostCollectDisplayTwo">
+        update cqy_post_collect
+        set
+        display = 1
+        where post_collect_id= #{postCollectId}
+     </update>
+    <!--查询模块名是否存在-->
+    <select id="queryExistPostCollectPU" resultType="int">
+        select count(0)
+        from cqy_post_collect
+        where post_id= #{postId} and user_id=#{userId}
+    </select>
+    <!--查询隐藏值-->
+    <select id="queryExistPostCollectDisplay" resultType="int">
+        select display
+        from cqy_post_collect
+        where post_id= #{postId} and user_id=#{userId}
+    </select>
+
+    <!--校验帖子id是否存在（在帖子表中）-->
+    <select id="queryExistPostCollectPostId" resultType="int">
+        select count(0)
+        from tyn_post
+        where post_id= #{postId}
+    </select>
+    <!--校验用户是否已存在（在用户表中）-->
+    <select id="queryExistPostCollectUserId" resultType="int">
+        select count(0)
+        from fly_user
+        where user_id= #{userId}
+    </select>
+    <!--查询用户收藏的帖子-->
+    <select id="listPostCollectId" resultType="com.alibaba.fastjson.JSONObject">
+        select
+    </select>
+</mapper>

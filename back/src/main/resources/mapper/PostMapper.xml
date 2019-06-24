@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.PostDao">
+    <select id="queryCountPost" resultType="java.lang.Integer">
+        SELECT count(id)
+        from tyn_post
+        where delete_state in (1,2)
+    </select>
+    <resultMap id="postMap" type="com.heeexy.example.util.model.One2Many">
+        <id column="postId" property="postId"/>
+        <result column="ownerName" property="ownerName"/>
+        <result column="postTime" property="postTime"/>
+        <result column="sortName" property="sortName"/>
+        <result column="isTop" property="isTop"/>
+        <result column="deleteState" property="deleteState"/>
+        <result column="likeOff" property="likeOff"/>
+        <result column="collectOff" property="collectOff"/>
+        <result column="viewOff" property="viewOff"/>
+        <result column="alike" property="alike"/>
+        <result column="acollect" property="acollect"/>
+        <result column="aview" property="aview"/>
+        <collection property="tagList" ofType="String">
+            <id column="tagName" property="tagName"/>
+        </collection>
+    </resultMap>
+    <select id="getAllPost" resultMap="postMap">
+           SELECT
+            p.*,
+            bs.business_subway_name                            tagName,
+			(SELECT COUNT(0) FROM fly_like l WHERE l.post_id=p.postId and l.like_state=1) alike,
+			(SELECT COUNT(0) FROM cqy_post_collect pc WHERE pc.post_id=p.postId and pc.display=1) acollect,
+			(SELECT COUNT(0) FROM fly_browse b WHERE b.post_id=p.postId) aview
+        FROM (
+                 SELECT
+                     id                                      postId,
+                     user_name                               ownerName,
+                     DATE_FORMAT(post_time, '%Y.%m.%d %T')   postTime,
+                     categories_name                         sortName,
+                     is_top                                  isTop,
+                     delete_state                            deleteState,
+					 like_offset  							 likeOff,
+					 collect_offset					         collectOff,
+                     view_offset			                 viewOff
+                 FROM tyn_post,fly_user,cqy_post_categories
+                 WHERE delete_state in (1,2)  and user_id=post_owner and categories_id=post_sort
+                 ORDER BY postTime DESC
+                 LIMIT #{offSet}, #{pageRow}
+             ) p
+            LEFT JOIN tyn_post_tag pt ON p.postId=pt.post_id
+            left join cqy_business_subway bs on pt.id=bs.business_subway_id
+        ORDER BY postTime Desc
+    </select>
+    <update id="updatePostState">
+        UPDATE tyn_post
+        SET
+        delete_state = #{deleteState}
+        WHERE id = #{postId}
+    </update>
+    <resultMap id="postDetailMap" type="com.heeexy.example.util.model.One2Many">
+        <id column="postId" property="postId"/>
+        <result column="ownerId" property="ownerId"/>
+        <result column="ownerName" property="ownerName"/>
+        <result column="postTime" property="postTime"/>
+        <result column="sortId" property="sortId"/>
+        <result column="sortName" property="sortName"/>
+        <result column="postContent" property="postContent"/>
+        <result column="postLocation" property="postLocation"/>
+        <result column="postPhone" property="postPhone"/>
+        <result column="priceLow" property="priceLow"/>
+        <result column="priceHigh" property="priceHigh"/>
+        <result column="timeStart" property="timeStart"/>
+        <result column="timeEnd" property="timeEnd"/>
+        <result column="isTop" property="isTop"/>
+        <result column="likeOff" property="likeOff"/>
+        <result column="collectOff" property="collectOff"/>
+        <result column="viewOff" property="viewOff"/>
+        <result column="alike" property="alike"/>
+        <result column="acollect" property="acollect"/>
+        <result column="aview" property="aview"/>
+        <collection property="tagList" ofType="String">
+            <id column="tagName" property="tagName"/>
+        </collection>
+        <collection property="imgList" ofType="String">
+            <id column="imgName" property="imgName"/>
+        </collection>
+    </resultMap>
+    <select id="queryOnePost" resultMap="postDetailMap">
+           SELECT
+            p.*,
+            bs.business_subway_name                            tagName,
+            pi.img                                             imgName,
+			(SELECT COUNT(0) FROM fly_like l WHERE l.post_id=p.postId and l.like_state=1) alike,
+			(SELECT COUNT(0) FROM cqy_post_collect pc WHERE pc.post_id=p.postId and pc.display=1) acollect,
+			(SELECT COUNT(0) FROM fly_browse b WHERE b.post_id=p.postId) aview
+        FROM (
+                 SELECT
+                     id                                      postId,
+                     post_owner                              ownerId,
+                     user_name                               ownerName,
+                     DATE_FORMAT(post_time, '%Y.%m.%d %T')   postTime,
+                     post_sort                               sortId,
+                     categories_name                         sortName,
+                     post_content                            postContent,
+                     post_location                           postLocation,
+                     post_phone                              postPhone,
+                     price_low                               priceLow,
+                     price_high                              priceHigh,
+                     time_start                              timeStart,
+                     time_end                                timeEnd,
+                     is_top                                  isTop,
+					 like_offset  							 likeOff,
+					 collect_offset					         collectOff,
+                     view_offset			                 viewOff
+                 FROM tyn_post,fly_user,cqy_post_categories
+                 WHERE id=#{postId} and user_id=post_owner and categories_id=post_sort
+             ) p
+            LEFT JOIN tyn_post_tag pt ON p.postId=pt.post_id
+            left join cqy_business_subway bs on pt.id=bs.business_subway_id
+            left join tyn_post_img pi on pi.post_id=p.postId
+
+    </select>
+    <select id="getAllSorts" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+            categories_id        sortId,
+            categories_name      sortName
+        FROM cqy_post_categories
+        WHERE display=1
+    </select>
+
+</mapper>

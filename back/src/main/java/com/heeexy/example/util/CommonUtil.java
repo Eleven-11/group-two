@@ -176,4 +176,12 @@ public class CommonUtil {
 	public static void fillPageParam(final JSONObject paramObject) {
 		fillPageParam(paramObject, 10);
 	}
+
+	public static JSONObject successJsonOne(JSONObject thePost) {
+		JSONObject result = successJson();
+		JSONObject info = new JSONObject();
+		info.put("thePost", thePost);
+		result.put("info", info);
+		return result;
+	}
 }
