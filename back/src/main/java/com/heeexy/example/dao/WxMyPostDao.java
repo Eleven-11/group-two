@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import netscape.javascript.JSObject;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ Author     ：良优
@@ -55,5 +56,5 @@ public interface WxMyPostDao {
           * @param:  JSONObject
           * @return: int
           */
-    int updateByPostIdMany(JSONObject jsonObject);
+    int updateByPostIdMany(Map map);
 }

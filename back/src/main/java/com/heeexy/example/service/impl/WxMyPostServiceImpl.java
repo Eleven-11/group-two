@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ Author     ：良优
@@ -45,9 +46,9 @@ public class WxMyPostServiceImpl implements WxMyPostService {
     }
 
     @Override
-    public JSONObject updateByPostIdMany(JSONObject jsonObject) {
+    public JSONObject updateByPostIdMany(Map map) {
         //批量删除帖子（不成功）
-        wxMyPostDao.updateByPostIdMany(jsonObject);
+        wxMyPostDao.updateByPostIdMany(map);
         return CommonUtil.successJson();
     }
 

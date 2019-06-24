@@ -8,10 +8,20 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="用户名" prop="onUserId" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="帖子ID" prop="postId" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="发帖用户名" prop="userId" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="点赞状态" prop="likeState" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="用户名" prop="onUserName" style="width: 60px;"></el-table-column>
+      <el-table-column  align="center" label="帖子ID" prop="postId" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="帖子内容" prop="postContent" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="发帖用户名"  prop="userName" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="点赞状态:1"  prop="likeState" style="width: 60px;">
+        <template slot-scope="scope">
+          <p v-if="scope.row.likeState=='1'">
+            已点赞
+          </p>
+          <p v-else-if="scope.row.likeState=='0'">
+            未点赞
+          </p>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="更新时间" prop="updateTime" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="管理" width="220">
@@ -54,9 +64,10 @@
           update: '编辑',
         },
         tempLike: {
-          onUserId: '',
+          postContent:'',
+          onUserName: '',
           postId:'',
-          userId: '',
+          userName: '',
           likeState: '',
           createTime: '',
           likeId: ''
@@ -145,11 +156,6 @@
           type: 'warning'
         }).then(() => {
           let user = _vue.list[$index];
-          if (user.likeState ==1) {
-            user.likeState = '0';
-          }else {
-            user.likeState='1';
-          }
           _vue.api({
             url: "/comUserLike/updateUserLike",
             method: "post",

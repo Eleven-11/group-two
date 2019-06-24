@@ -18,10 +18,10 @@
     </update>-->
     <!--后台显示浏览记录表-->
     <select id="getBrowseList"  parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-        select browse.browse_id browseId,users.user_name onUserId,browse.post_id postId,
+        select browse.browse_id browseId,users.user_name onUserName,browse.post_id postId,p.post_content postContent,
         DATE_FORMAT(browse.create_time, '%Y.%m.%d %T') createTime,DATE_FORMAT(browse.update_time, '%Y.%m.%d %T') updateTime
-        from fly_browse browse ,fly_user users
-        where users.user_id =browse.onuser_id
+        from fly_browse browse ,fly_user users,tyn_post p
+        where users.user_id =browse.onuser_id and p.id =browse.post_id
         order by create_time desc ;
     </select>
     <!--后台计算浏览记录数-->
@@ -30,7 +30,10 @@
     </select>
     <!--前台显示当前用户浏览记录-->
     <select id="getBrowseByUser" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-        select browse_id browseId,onuser_id onUserId,post_id postId,DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
-        from fly_browse where onuser_id = #{onUserId} order by create_time desc;
+          select browse.browse_id browseId,users.user_name onUserName,browse.post_id postId,p.post_content postContent,
+        DATE_FORMAT(browse.create_time, '%Y.%m.%d %T') createTime,DATE_FORMAT(browse.update_time, '%Y.%m.%d %T') updateTime
+        from fly_browse browse ,fly_user users,tyn_post p
+        where users.user_id =browse.onuser_id and p.id =browse.post_id and browse.onuser_id = #{onUserId}
+        order by create_time desc ;
     </select>
 </mapper>

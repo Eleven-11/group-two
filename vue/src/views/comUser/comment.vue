@@ -15,12 +15,24 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="用户ID" prop="onUserId" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="用户ID" prop="onUserName" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="帖子ID" prop="postId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="发帖内容" prop="postContent" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="评论Id" prop="toCommentId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="评论内容" prop="commentContent" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="评论状态" prop="commentState" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="评论状态" prop="commentState" style="width: 60px;">
+        <template slot-scope="scope">
+          <p v-if="scope.row.commentState=='0'">
+            未读
+          </p>
+          <p v-else-if="scope.row.commentState=='1'">
+            已读
+          </p>
+          <p v-else-if="scope.row.commentState=='-1'">
+            已删除
+          </p>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" style="width: 60px;"></el-table-column>
      <!-- <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
@@ -68,7 +80,7 @@
           update: '编辑',
         },
         tempMyComment: {
-          onUserId: '',
+          onUserName: '',
           postId:'',
           postContent:'',
           commentContent:'',
@@ -88,42 +100,6 @@
       ])
     },
     methods: {
-      deletePost(rows){
-        //批量删除
-        let _vue = this;
-        _vue.$confirm('是否确认此操作?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          rows.forEach(element =>{
-            _vue.ids.push(element.commentId)
-            let param = {
-              "myPostId":_vue.ids
-            }
-            _vue.api({
-
-              url: "/comUserPost/updateUserPost",
-              method: "post",
-              data: param
-            }).then(() => {
-              _vue.getList()
-            }).catch(() => {
-              _vue.$message.error("删除失败")
-            })
-
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });
-        });
-      },
-      changeFun(val) {
-        console.log("changeFun",val)
-        this.checkBoxData = val;
-      },
       getList() {
         //查询列表
         this.listLoading = true;
@@ -165,55 +141,6 @@
 
         this.dialogStatus = "update"
         this.dialogFormVisible = true
-      },
-      updateUser() {
-        //修改用户信息
-        let _vue = this;
-        this.api({
-          url: "/comUser/updateUserPost",
-          method: "post",
-          data: this.tempMyComment
-        }).then(() => {
-          let msg = "修改成功";
-          this.dialogFormVisible = false
-          if (this.commentId === this.tempMyComment.commentId) {
-            msg = '修改成功,部分信息重新登录后生效'
-          }
-          this.$message({
-            message: msg,
-            type: 'success',
-            duration: 1 * 1000,
-            onClose: () => {
-              _vue.getList();
-            }
-          })
-        })
-      },
-      removeUser($index) {
-        let _vue = this;
-        this.$confirm('确定删除此帖子?', '提示', {
-          confirmButtonText: '确定',
-          showCancelButton: false,
-          type: 'warning'
-        }).then(() => {
-          let user = _vue.list[$index];
-          if (user.myPostState == 0)
-          {
-            user.myPostState =1;
-          }else {
-            user.myPostState =0;
-          }
-
-          _vue.api({
-            url: "/comUserPost/updateUserPost",
-            method: "post",
-            data: user
-          }).then(() => {
-            _vue.getList()
-          }).catch(() => {
-            _vue.$message.error("删除失败")
-          })
-        })
       },
     }
   }

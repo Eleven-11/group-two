@@ -2,6 +2,8 @@ package com.heeexy.example.service;
 
 import com.alibaba.fastjson.JSONObject;
 
+import java.util.Map;
+
 
 /**
  * @ Author     ：良优
@@ -40,5 +42,5 @@ public interface WxMyPostService {
      * @param:  JSONObject
      * @return: JSONObject
      */
-    JSONObject updateByPostIdMany(JSONObject jsonObject);
+    JSONObject updateByPostIdMany(Map map);
 }
