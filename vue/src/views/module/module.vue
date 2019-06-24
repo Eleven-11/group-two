@@ -1,30 +1,38 @@
+
 <template>
   <div class="app-container">
     <div class="filter-container">
       <el-form>
         <el-form-item>
+          <el-input style="width: 300px" placeholder="请输入内容" v-model="tempUser.input" clearable ></el-input>
+          <el-button type="primary" icon="el-icon-search" @click="getList" >搜索</el-button>
           <el-button type="primary" icon="plus" v-if="hasPerm('user:add')" @click="showCreate">添加
           </el-button>
         </el-form-item>
       </el-form>
     </div>
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
-              highlight-current-row>
+              highlight-current-row >
       <el-table-column align="center" label="序号" width="80">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="板块编号" prop="moduleId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="板块名" prop="moduleName" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="创建时间" prop="createTime" width="170"></el-table-column>
-      <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170"></el-table-column>
+      <el-table-column align="center" label="模板内容" prop="moduleContent" style="width: 60px;" lazy></el-table-column>
+      <el-table-column align="center" label="创建时间" prop="createTime" width="170" sortable></el-table-column>
+      <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170" sortable></el-table-column>
       <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
-          <!--<el-button type="danger" icon="delete" v-if="scope.row.userId!=userId "-->
-                     <!--@click="removeUser(scope.$index)">删除-->
-          <!--</el-button>-->
+          <el-button type="danger" icon="delete" v-if="scope.row.userId!=userId "
+                     @click="removeUser(scope.$index)">删除
+          </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="信息" width="220" v-if="hasPerm('user:update')">
+        <template slot-scope="scope">
+          <el-button type="warning" icon="edit" @click="showSend(scope.$index)">发送所有人</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -40,15 +48,20 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="tempUser" label-position="left" label-width="80px"
                style='width: 300px; margin-left:50px;'>
-        <el-form-item label="板块名" >
+        <el-form-item label="板块名" required v-if="dialogStatus=='create'">
           <el-input type="text" v-model="tempUser.moduleName">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="板块内容" >
+          <el-input type="textarea" v-model="tempUser.moduleContent">
           </el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button v-if="dialogStatus=='create'" type="success" @click="createUser">创 建</el-button>
-        <el-button type="primary" v-else @click="updateUser">修 改</el-button>
+        <el-button type="primary" v-if="dialogStatus=='update'"  @click="updateUser">修 改</el-button>
+        <el-button v-if="dialogStatus=='Send'"type="primary" v-else @click="showSends">发送</el-button>
       </div>
     </el-dialog>
   </div>
@@ -63,6 +76,7 @@
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
         listQuery: {
+          input: '',
           pageNum: 1,//页码
           pageRow: 50,//每页条数
         },
@@ -71,11 +85,15 @@
         dialogFormVisible: false,
         textMap: {
           update: '编辑',
-          create: '新建用户'
+          create: '新建模块',
+          Send:"发送",
         },
         tempUser: {
-          moduleId:'',
-          moduleName: ''
+          moduleId: '',
+          moduleName: '',
+          moduleContent: '',
+          display: '',
+          input: ''
         }
       }
     },
@@ -101,6 +119,7 @@
       },
       getList() {
         //查询列表
+        this.listQuery.input = this.tempUser.input;
         this.listLoading = true;
         this.api({
           url: "/module/list",
@@ -133,8 +152,9 @@
       },
       showCreate() {
         //显示新增对话框
-        this.tempUser.moduleId= "";
+        this.tempUser.moduleId = "";
         this.tempUser.moduleName = "";
+        this.tempUser.moduleContent = "";
         this.dialogStatus = "create"
         this.dialogFormVisible = true
       },
@@ -142,7 +162,14 @@
         let module = this.list[$index];
         this.tempUser.moduleId = module.moduleId;
         this.tempUser.moduleName = module.moduleName;
+        this.tempUser.moduleContent = module.moduleContent;
         this.dialogStatus = "update"
+        this.dialogFormVisible = true
+      },
+      showSend($index) {
+        let module = this.list[$index];
+        this.tempUser.moduleContent = module.moduleContent;
+        this.dialogStatus = "Send"
         this.dialogFormVisible = true
       },
       createUser() {
@@ -179,6 +206,36 @@
           })
         })
       },
+      removeUser($index) {
+        let _vue = this;
+        this.$confirm('确定删除此模块?', '提示', {
+          confirmButtonText: '确定',
+          showCancelButton: false,
+          type: 'warning'
+        }).then(() => {
+          let user = _vue.list[$index];
+          user.display = 0;
+          _vue.api({
+            url: "/module/removeModuleDisplay",
+            method: "post",
+            data: user
+          }).then(() => {
+            _vue.getList()
+          }).catch(() => {
+            _vue.$message.error("删除失败")
+          })
+        })
+      },
+      showSends() {
+        this.api({
+          url: "/module/addMessage",
+          method: "post",
+          data: this.tempUser
+        }).then(() => {
+          this.getList();
+          this.dialogFormVisible = false
+        })
+      }
     }
   }
 </script>

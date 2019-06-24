@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.WxUserDao">
+
+    <!--查找最大id数-->
+    <select id="getMaxNumber" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+       select
+         user_id  userId,user_name userName, user_photo userPhoto,
+      user_sex  userSex,user_fans userFans,user_fans_f userFansf,
+      guest guest, user_state userState,DATE_FORMAT(first_time, '%Y.%m.%d %T') firstTime,DATE_FORMAT(update_time, '%Y.%m.%d %T')  updateTime
+        from  fly_user where user_id = (select max(user_id) from fly_user)
+    </select>
+    <!--增加普通用户-->
+    <insert id="addByUser" parameterType="com.alibaba.fastjson.JSONObject">
+    insert  into  fly_user (user_uuid userUuid,user_name, user_photo, user_sex, user_fans, user_fans_f, guest, user_state)
+    values (#{userUuid},#{userName},#{userPhoto},#{userSex},0,0,0,0);
+    </insert>
+    <!--增加游客用户-->
+    <insert id="addGuestUser" parameterType="com.alibaba.fastjson.JSONObject">
+    insert  into  fly_user (user_uuid userUuid,user_name, user_photo, user_sex, user_fans, user_fans_f, guest, user_state)
+    values (0,#{userName},#{userPhoto},#{userSex},0,0,1,0);
+    </insert>
+    <!--修改虚假粉丝数-->
+    <update id="updateFansfById" parameterType="com.alibaba.fastjson.JSONObject" >
+        update fly_user set user_fans_f = #{userFansf},user_state =#{userState} where  user_id = #{userId};
+    </update>
+    <!--修改用户封禁状态-->
+    <update id="updateStateByUserId" parameterType="com.alibaba.fastjson.JSONObject">
+        update fly_user set  user_state =#{userState} where  user_id = #{userId};
+    </update>
+    <!--查找总粉丝数-->
+    <select id="countFansByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select sum(user_fans+user_fans_f) from fly_user where user_id =#{userId};
+    </select>
+
+    <!--查找所有用户-->
+    <select id="getListUser" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+      select
+      t1.user_id  userId,t1.user_uuid userUuid,t1.user_name userName,t1.user_photo userPhoto,
+      t1.user_sex  userSex,t1.user_fans userFans,t1.user_fans_f userFansf,
+      t1.guest guest, t2.close_name userState,DATE_FORMAT(first_time, '%Y.%m.%d %T') firstTime,DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
+      from  fly_user t1,fly_userstate t2
+
+        <where>
+            t1.user_state =t2.close_id
+            <if test="userName != null and userName != ''">
+              and user_name LIKE CONCAT(CONCAT('%',#{userName}),'%')
+
+            </if>
+            and t1.user_id > 1
+        </where>
+       LIMIT #{offSet}, #{pageRow};
+    </select>
+    <!--计算用户数-->
+    <select id="countUser" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select count(0) from fly_user
+        <where>
+        <if test="userName != null and userName !=''">
+            user_name LIKE CONCAT(CONCAT('%',#{userName}),'%')
+            and
+        </if>
+            user_id !=1
+    </where>;
+    </select>
+    <!--查找封禁状态集合-->
+    <select id="listUserState" resultType="com.alibaba.fastjson.JSONObject">
+      select  id Id,close_id closeId, close_name closeName from fly_userstate;
+    </select>
+    <!--查找某个用户-->
+    <select id="getUserByUsername" resultType="com.alibaba.fastjson.JSONObject" parameterType="com.alibaba.fastjson.JSONObject">
+        select
+      t1.user_id  userId,t1.user_uuid userUuid,t1.user_name userName,t1.user_photo userPhoto,
+      t1.user_sex  userSex,t1.user_fans userFans,t1.user_fans_f userFansf,
+      t1.guest guest, t2.close_name userState,DATE_FORMAT(first_time, '%Y.%m.%d %T') firstTime,DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
+      from  fly_user t1,fly_userstate t2 where user_uuid =#{userUuId};
+    </select>
+    <!--查看该用户的封禁状态-->
+    <select id="getStateByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+      select
+    </select>
+</mapper>

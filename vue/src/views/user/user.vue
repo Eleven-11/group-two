@@ -91,6 +91,7 @@
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
         listQuery: {
+
           pageNum: 1,//页码
           pageRow: 50,//每页条数
         },

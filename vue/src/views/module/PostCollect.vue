@@ -3,25 +3,36 @@
     <div class="filter-container">
       <el-form>
         <el-form-item>
-          <el-button type="primary" icon="plus" v-if="hasPerm('user:add')" @click="showCreate">添加
-          </el-button>
+          <el-input style="width: 300px" placeholder="请输入内容" v-model="tempUser.input" clearable ></el-input>
+          <el-button type="primary" icon="el-icon-search" @click="getList" >搜索</el-button>
+          <el-button type="primary" icon="plus" v-if="hasPerm('user:add')" @click="showCreate">添加</el-button>
         </el-form-item>
       </el-form>
     </div>
+
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
-      <el-table-column align="center" label="消息编号" width="80">
+      <el-table-column align="center" label="序号" width="80">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="消息模块编号" prop="nickname" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="消息内容" prop="username" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="管理xxxx" width="220" v-if="hasPerm('user:update')">
+      <el-table-column align="center" label="帖子编号" prop="postId" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="用户编号" prop="userId" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="用户名" prop="userName" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="创建时间" prop="createTime" width="170" sortable></el-table-column>
+      <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170" sortable></el-table-column>
+      <el-table-column align="center" label="是否收藏收藏"style="width: 60px;">
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
-          <el-button type="danger" icon="delete" v-if="scope.row.userId!=userId "
-                     @click="removeUser(scope.$index)">删除
+          <el-tag  v-if="scope.row.display==1" type="success">收藏</el-tag>
+          <el-tag  v-if="scope.row.display==0" type="primary">不收藏</el-tag>
+        </template>
+
+      </el-table-column>
+      <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
+        <template slot-scope="scope">
+          <el-button type="primary" icon="delete" v-if="scope.row.userId!=userId "
+                     @click="removeUser(scope.$index)">更改收藏状态
           </el-button>
         </template>
       </el-table-column>
@@ -38,30 +49,12 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="tempUser" label-position="left" label-width="80px"
                style='width: 300px; margin-left:50px;'>
-        <el-form-item label="用户名" required v-if="dialogStatus=='create'">
-          <el-input type="text" v-model="tempUser.username">
+        <el-form-item label="帖子编号">
+          <el-input type="text" v-model="tempUser.postId">
           </el-input>
         </el-form-item>
-        <el-form-item label="密码" v-if="dialogStatus=='create'" required>
-          <el-input type="password" v-model="tempUser.password">
-          </el-input>
-        </el-form-item>
-        <el-form-item label="新密码" v-else>
-          <el-input type="password" v-model="tempUser.password" placeholder="不填则表示不修改">
-          </el-input>
-        </el-form-item>
-        <el-form-item label="角色" required>
-          <el-select v-model="tempUser.roleId" placeholder="请选择">
-            <el-option
-              v-for="item in roles"
-              :key="item.roleId"
-              :label="item.roleName"
-              :value="item.roleId">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="昵称" required>
-          <el-input type="text" v-model="tempUser.nickname">
+        <el-form-item label="用户编号">
+          <el-input type="text" v-model="tempUser.userId">
           </el-input>
         </el-form-item>
       </el-form>
@@ -83,6 +76,7 @@
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
         listQuery: {
+          input: '',
           pageNum: 1,//页码
           pageRow: 50,//每页条数
         },
@@ -91,14 +85,15 @@
         dialogFormVisible: false,
         textMap: {
           update: '编辑',
-          create: '新建用户'
+          create: '新建'
         },
         tempUser: {
-          username: '',
-          password: '',
-          nickname: '',
-          roleId: '',
-          userId: ''
+          postCollectId:'',
+          postId: '',
+          userId:'',
+          display:'',
+          username:'',
+          input: ''
         }
       }
     },
@@ -116,7 +111,7 @@
     methods: {
       getAllRoles() {
         this.api({
-          url: "/user/getAllRoles",
+          url: "/postcollect/getAllPostCollect",
           method: "get"
         }).then(data => {
           this.roles = data.list;
@@ -124,9 +119,10 @@
       },
       getList() {
         //查询列表
+        this.listQuery.input = this.tempUser.input;
         this.listLoading = true;
         this.api({
-          url: "/user/list",
+          url: "/postcollect/list",
           method: "get",
           params: this.listQuery
         }).then(data => {
@@ -156,29 +152,28 @@
       },
       showCreate() {
         //显示新增对话框
-        this.tempUser.username = "";
-        this.tempUser.password = "";
-        this.tempUser.nickname = "";
-        this.tempUser.roleId = "";
-        this.tempUser.userId = "";
+        this.tempUser.postCollectId= "";
+        this.tempUser.postId = "";
+        this.tempUser.userId= "";
         this.dialogStatus = "create"
         this.dialogFormVisible = true
       },
       showUpdate($index) {
-        let user = this.list[$index];
-        this.tempUser.username = user.username;
-        this.tempUser.nickname = user.nickname;
-        this.tempUser.roleId = user.roleId;
-        this.tempUser.userId = user.userId;
-        this.tempUser.deleteStatus = '1';
-        this.tempUser.password = '';
+        let postcategorie = this.list[$index];
+        this.tempUser.postId = postcategorie.postId;
+        this.tempUser.userId = postcategorie.userId;
+        this.tempUser.display = postcategorie.display;
         this.dialogStatus = "update"
+        this.dialogFormVisible = true
+      },showSearch($index){
+        this.tempUser.businessSubwayName = postcategorie.businessSubwayName;
+        this.dialogStatus = "search"
         this.dialogFormVisible = true
       },
       createUser() {
         //添加新用户
         this.api({
-          url: "/user/addUser",
+          url: "/postcollect/addPostCollect",
           method: "post",
           data: this.tempUser
         }).then(() => {
@@ -186,49 +181,33 @@
           this.dialogFormVisible = false
         })
       },
-      updateUser() {
-        //修改用户信息
-        let _vue = this;
-        this.api({
-          url: "/user/updateUser",
-          method: "post",
-          data: this.tempUser
-        }).then(() => {
-          let msg = "修改成功";
-          this.dialogFormVisible = false
-          if (this.userId === this.tempUser.userId) {
-            msg = '修改成功,部分信息重新登录后生效'
-          }
-          this.$message({
-            message: msg,
-            type: 'success',
-            duration: 1 * 1000,
-            onClose: () => {
-              _vue.getList();
-            }
-          })
-        })
-      },
+
       removeUser($index) {
         let _vue = this;
-        this.$confirm('确定删除此用户?', '提示', {
+        this.$confirm('确定修改收藏值?', '提示', {
           confirmButtonText: '确定',
           showCancelButton: false,
           type: 'warning'
         }).then(() => {
           let user = _vue.list[$index];
-          user.deleteStatus = '2';
+          if(user.display == 1){
+            user.display = 0;
+          }else{
+            user.display = 1;
+          }
           _vue.api({
-            url: "/user/updateUser",
+            url: "/postcollect/updatePostCollectDisplay",
             method: "post",
             data: user
           }).then(() => {
             _vue.getList()
           }).catch(() => {
-            _vue.$message.error("删除失败")
+            _vue.$message.error("修改成功")
           })
         })
       },
     }
   }
 </script>
+
+
