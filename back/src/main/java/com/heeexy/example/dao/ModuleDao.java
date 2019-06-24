@@ -27,6 +27,25 @@ public interface ModuleDao {
      List<Integer> getAllUserId();
 
     /**
+     * 获取接收人的id
+     */
+    List<Integer> getAllLcChatAid();
+    /**
+     * 获取chat中userid是1的id
+     */
+    List<Integer> getAllLcChatId();
+    /**
+     * 插入chat表中信息
+     */
+    int addChat(JSONObject jsonObject);
+
+
+
+
+
+
+
+    /**
      * 删除模块
      */
     int removeModuleDisplay(JSONObject jsonObject);
