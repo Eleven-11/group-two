@@ -26,4 +26,16 @@ public class PostServiceImpl implements PostService {
         List<JSONObject> list = postDao.getAllPost(jsonObject);
         return CommonUtil.successPage(jsonObject, list, count);
     }
+
+    @Override
+    public JSONObject updatePostState(JSONObject jsonObject) {
+       postDao.updatePostState(jsonObject);
+       return CommonUtil.successJson();
+    }
+
+    @Override
+    public JSONObject queryOnePost(JSONObject jsonObject) {
+        JSONObject thePost = postDao.queryOnePost(jsonObject);
+        return CommonUtil.successJsonOne(thePost);
+    }
 }
