@@ -11,7 +11,6 @@ import java.util.List;
  * @Date : 2019-06-21 9:42
  * @Version : 1.0
  **/
-@Service
 public interface CommentService {
     /**
      * 获取全部评论

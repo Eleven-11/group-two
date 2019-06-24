@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.CommentDao;
 import com.heeexy.example.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
  * @Date : 2019-06-21 9:43
  * @Version : 1.0
  **/
+@Service
 public class CommentServiceImpl implements CommentService {
     @Autowired
     private CommentDao commentDao;

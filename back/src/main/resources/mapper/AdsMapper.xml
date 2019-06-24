@@ -15,14 +15,24 @@
     </select>
 
     <select id="getAllAds" resultType="com.alibaba.fastjson.JSONObject">
-        SELECT a.ads_id, a.ads_picture, a.ads_title, a.ads_link, a.ads_status
+        SELECT
+          a.ads_id        adsId,
+          a.ads_picture   adsPicture,
+          a.ads_title     adsTitle,
+          a.ads_link      adsLink,
+          a.ads_status    adsStatus
         FROM lc_ads a
         ORDER BY a.ads_id
         LIMIT #{offSet}, #{pageRow}
     </select>
 
     <select id="getEnableAds" resultType="com.alibaba.fastjson.JSONObject">
-        SELECT a.ads_id, a.ads_picture, a.ads_title, a.ads_link, a.ads_status
+        SELECT
+          a.ads_id        adsId,
+          a.ads_picture   adsPicture,
+          a.ads_title     adsTitle,
+          a.ads_link      adsLink,
+          a.ads_status    adsStatus
         FROM lc_ads a
         WHERE a.ads_status = 1
         ORDER BY a.ads_id
@@ -30,7 +40,12 @@
     </select>
 
     <select id="getAdsById" parameterType="Integer" resultType="com.alibaba.fastjson.JSONObject">
-        SELECT a.ads_id, a.ads_picture, a.ads_title, a.ads_link, a.ads_status
+        SELECT
+          a.ads_id        adsId,
+          a.ads_picture   adsPicture,
+          a.ads_title     adsTitle,
+          a.ads_link      adsLink,
+          a.ads_status    adsStatus
         FROM lc_ads a
         WHERE a.ads_id = #{id}
     </select>
