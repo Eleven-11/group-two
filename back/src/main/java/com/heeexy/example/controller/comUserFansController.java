@@ -42,7 +42,7 @@ public class comUserFansController {
      */
     @PostMapping("/updateUserFans")
     public JSONObject updateFans(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "state,onUserId,userId");
+        CommonUtil.hasAllRequired(requestJson, "state,fansId");
         return wxFansService.updateFansByUserId(requestJson);
     }
     /**

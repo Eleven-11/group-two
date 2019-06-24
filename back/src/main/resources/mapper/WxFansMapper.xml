@@ -25,7 +25,9 @@ t1.FansId,t1.onusername onUserName ,t2.username userName,t1.state state,DATE_FOR
        	 from  fly_fans fans,fly_user users
 
 		where   users.user_id =fans.user_id ) t2
-where t1.FansId =t2.fansId and t1.onuser_id =#{onUserId} and t1.state = 1;
+where t1.FansId =t2.fansId and t1.onuser_id =#{onUserId} and t1.state = 1
+
+;
     </select>
 
     <!--查找用户是否有关注信息-->
@@ -34,14 +36,20 @@ where t1.FansId =t2.fansId and t1.onuser_id =#{onUserId} and t1.state = 1;
     </select>
     <!--修改关注用户状态-->
     <update id="updateFansByUserId" parameterType="com.alibaba.fastjson.JSONObject">
-        update fly_fans set state = #{state}
-         where fans_id =#{fansId}
+<if test="state==1">
+    update fly_fans set state = 0
+    where fans_id =#{fansId}
+</if>
+        <if test="state==0">
+            update fly_fans set state = 1
+            where fans_id =#{fansId}
+        </if>
     </update>
 
     <!--查找所有用户粉丝关注表（后台显示）-->
     <select id="getListFans" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
        select
-t1.FansId,t1.onusername onUserId ,t2.username userId,t1.state state,DATE_FORMAT(t1.createTime1, '%Y.%m.%d %T') createTime,DATE_FORMAT(t1.updateTime1, '%Y.%m.%d %T') updateTime
+t1.FansId,t1.onusername onUserName ,t2.username userName,t1.state state,DATE_FORMAT(t1.createTime1, '%Y.%m.%d %T') createTime,DATE_FORMAT(t1.updateTime1, '%Y.%m.%d %T') updateTime
  from
 (select
           fans.fans_id fansId,fans.onuser_id,users.user_name onusername ,fans.state state,DATE_FORMAT(fans.create_time, '%Y.%m.%d %T') createTime1,DATE_FORMAT(fans.update_time, '%Y.%m.%d %T') updateTime1
