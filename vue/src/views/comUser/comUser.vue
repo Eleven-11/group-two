@@ -139,7 +139,7 @@
     },
     created() {
       this.getList();
-      this.getAllState();
+      /*this.getAllState();*/
     },
     computed: {
       ...mapGetters([
@@ -157,6 +157,7 @@
       },*/
       getList() {
         //查询列表
+        this.listQuery.userName = this.userName
         this.listLoading = true;
         this.api({
           url: "/comUser/listUser",
@@ -166,7 +167,7 @@
           this.listLoading = false;
           this.list = data.list;
           this.totalCount = data.totalCount;
-          this.listQuery.userName = this.userName
+         /* this.listQuery.userName = this.userName*/
         })
       },
       handleSizeChange(val) {
