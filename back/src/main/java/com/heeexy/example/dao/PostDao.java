@@ -49,6 +49,8 @@ public interface PostDao {
      * @return com.alibaba.fastjson.JSONObject
      */
 
+    List<JSONObject> getAllSorts();
+
 
 
 

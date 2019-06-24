@@ -40,6 +40,8 @@ public interface PostService {
      * @return com.alibaba.fastjson.JSONObject
      */
 
+    JSONObject getAllSorts();
+
 
 
 

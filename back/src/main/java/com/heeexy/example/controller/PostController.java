@@ -35,7 +35,11 @@ public class PostController {
     @PostMapping("/getOnePost")
     public JSONObject getOnePost(@RequestBody JSONObject requestJson){
         CommonUtil.hasAllRequired(requestJson,"postId");
-        System.out.println(requestJson);
         return postService.queryOnePost(requestJson);
+    }
+
+    @GetMapping("/getAllSorts")
+    public JSONObject getAllSorts() {
+        return postService.getAllSorts();
     }
 }

@@ -62,6 +62,7 @@
         <result column="ownerId" property="ownerId"/>
         <result column="ownerName" property="ownerName"/>
         <result column="postTime" property="postTime"/>
+        <result column="sortId" property="sortId"/>
         <result column="sortName" property="sortName"/>
         <result column="postContent" property="postContent"/>
         <result column="postLocation" property="postLocation"/>
@@ -98,6 +99,7 @@
                      post_owner                              ownerId,
                      user_name                               ownerName,
                      DATE_FORMAT(post_time, '%Y.%m.%d %T')   postTime,
+                     post_sort                               sortId,
                      categories_name                         sortName,
                      post_content                            postContent,
                      post_location                           postLocation,
@@ -117,6 +119,13 @@
             left join cqy_business_subway bs on pt.id=bs.business_subway_id
             left join tyn_post_img pi on pi.post_id=p.postId
 
+    </select>
+    <select id="getAllSorts" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+            categories_id        sortId,
+            categories_name      sortName
+        FROM cqy_post_categories
+        WHERE display=1
     </select>
 
 </mapper>
