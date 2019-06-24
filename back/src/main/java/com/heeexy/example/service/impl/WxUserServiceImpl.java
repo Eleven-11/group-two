@@ -88,4 +88,14 @@ public class WxUserServiceImpl implements WxUserService {
         return fans;
     }
 
+    @Override
+    public JSONObject getDetailUserById(JSONObject jsonObject) {
+
+
+        //用户详情发帖计数和粉丝计数
+
+        JSONObject detailUserById = wxUserDao.getDetailUserById(jsonObject);
+        return detailUserById;
+    }
+
 }

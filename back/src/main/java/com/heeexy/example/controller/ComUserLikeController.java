@@ -52,7 +52,7 @@ public class ComUserLikeController {
      */
     @PostMapping("/updateUserLike")
     public JSONObject updateFans(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "onUserId,userId,postId,likeState");
+        CommonUtil.hasAllRequired(requestJson, "likeId,likeState");
         return wxLikeService.updateLikeByUserId(requestJson);
     }
     /**

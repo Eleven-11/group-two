@@ -23,11 +23,16 @@
     </insert>
     <!--修改虚假粉丝数-->
     <update id="updateFansfById" parameterType="com.alibaba.fastjson.JSONObject" >
-        update fly_user set user_fans_f = #{userFansf},user_state =#{userState} where  user_id = #{userId};
+        update fly_user set user_fans_f = #{userFansf} where  user_id = #{userId};
     </update>
     <!--修改用户封禁状态-->
     <update id="updateStateByUserId" parameterType="com.alibaba.fastjson.JSONObject">
-        update fly_user set  user_state =#{userState} where  user_id = #{userId};
+      <if test="userState ==0">
+          update fly_user set  user_state =1 where  user_id = #{userId};
+      </if>
+        <if test="userState ==1">
+            update fly_user set  user_state =0 where  user_id = #{userId};
+        </if>
     </update>
     <!--查找总粉丝数-->
     <select id="countFansByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
@@ -39,16 +44,16 @@
       select
       t1.user_id  userId,t1.user_uuid userUuid,t1.user_name userName,t1.user_photo userPhoto,
       t1.user_sex  userSex,t1.user_fans userFans,t1.user_fans_f userFansf,
-      t1.guest guest, t2.close_name userState,DATE_FORMAT(first_time, '%Y.%m.%d %T') firstTime,DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
-      from  fly_user t1,fly_userstate t2
+      t1.guest guest, t1.user_state userState,DATE_FORMAT(first_time, '%Y.%m.%d %T') firstTime,DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
+      from  fly_user t1
 
         <where>
-            t1.user_state =t2.close_id
-            <if test="userName != null and userName != ''">
-              and user_name LIKE CONCAT(CONCAT('%',#{userName}),'%')
 
+            <if test="userName != null and userName != ''">
+              user_name LIKE CONCAT(CONCAT('%',#{userName}),'%')
+                and
             </if>
-            and t1.user_id > 1
+             t1.user_id > 1
         </where>
        LIMIT #{offSet}, #{pageRow};
     </select>
@@ -77,6 +82,13 @@
     </select>
     <!--查看该用户的封禁状态-->
     <select id="getStateByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-      select
+
     </select>
+    <!--用户详情页-->
+<select id="getDetailUserById" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select  count(p.post_owner) postNumber, sum(u.user_fans_f+u.user_fans) fansNumber
+        from tyn_post p,fly_user u
+        where u.user_id =p.post_owner  and u.user_id =#{userId} and p.delete_state = 0
+</select>
+
 </mapper>

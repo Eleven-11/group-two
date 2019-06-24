@@ -53,21 +53,47 @@
     </insert>
 
     <!--新增信息-->
-    <insert id="addMessage" useGeneratedKeys="true" keyProperty="MID">
-        INSERT into lc_message(from_user_id,to_user_id,message_content,status)
+    <insert id="addMessage" useGeneratedKeys="true" keyProperty="messageid">
+        INSERT into lc_message(chat_id,message_content,status)
         values
-        <foreach collection="ulist" item="u" separator=",">
-            (1,#{u.userid},#{moduleContent},1)
+        <foreach collection="clist" item="c" separator=",">
+            (#{c.chatid},#{moduleContent},0)
         </foreach>
     </insert>
-    <resultMap id="map" type="com.heeexy.example.util.model.One2Many">
-        <id column="userid" property="userid"/>
-    </resultMap>
+
+    <!--在chat中新增信息-->
+    <insert id="addChat" useGeneratedKeys="true" keyProperty="chat_id">
+        INSERT into lc_chat(user_id,another_id)
+        values
+        <foreach collection="ulist" item="u" separator=",">
+
+                (1,#{u.userid})
+
+        </foreach>
+    </insert>
+
     <!--查询用户id-->
-    <select id="getAllUserId" resultMap="map">
-       select user_id userid
-       from fly_user
-       where guest = 0
+    <select id="getAllUserId" resultType="com.alibaba.fastjson.JSONObject">
+      select user_id userid
+      from fly_user
+      where guest = 0
+      and user_id not in
+     (select another_id anotherid
+      from lc_chat
+      where user_id=1)
+    </select>
+    <!--查询所有接收者id-->
+    <select id="getAllLcChatAid" resultType="com.alibaba.fastjson.JSONObject">
+      select another_id anotherid
+      from lc_chat
+      where user_id=1
+    </select>
+
+    <!--查询chat的userid为1的id-->
+    <select id="getAllLcChatId" resultType="com.alibaba.fastjson.JSONObject">
+      select chat_id chatid
+      from lc_chat
+      where user_id=1
     </select>
 
     <!--修改-->

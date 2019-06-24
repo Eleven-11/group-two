@@ -101,13 +101,6 @@ export const asyncRouterMap = [
         meta: {title: '帖子收藏管理', icon: 'user'},
         menu: 'ModuleInformation'
       },
-      {
-        path: 'role',
-        name: '权限管理',
-        component: _import('user/role'),
-        meta: {title: '权限管理', icon: 'password'},
-        menu: 'role'
-      },
     ]
   },
 

@@ -1,5 +1,22 @@
 <template>
+
   <div class="app-container">
+    <div>
+      <span style="font-size: 30px;">树形图</span>
+      <el-tree
+        ref="tree"
+        :data="treeData"
+        :props="defaultProps"
+        accordion
+        show-checkbox
+        node-key="businessSubwayId"
+        check-strictly="true"
+        @node-click="handleNodeClick" >
+      </el-tree>
+    </div>
+
+
+
     <div class="filter-container">
       <el-form>
         <el-form-item>
@@ -38,6 +55,8 @@
         </template>
       </el-table-column>
     </el-table>
+
+
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -68,6 +87,7 @@
         </el-form-item>
       </el-form>
 
+
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button v-if="dialogStatus=='create'" type="success" @click="createUser">创 建</el-button>
@@ -75,13 +95,21 @@
       </div>
     </el-dialog>
   </div>
+
+
 </template>
+
 <script>
   import {mapGetters} from 'vuex'
 
   export default {
     data() {
       return {
+        data : [],
+        defaultProps: {
+          children: 'children',
+          label: 'businessSubwayName'
+        },
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
@@ -113,9 +141,17 @@
       }
     },
     computed: {
-      ...mapGetters([
+ /*     ...mapGetters([
         'userId'
-      ])
+      ]),*/
+      treeData(){
+        let cloneData = JSON.parse(JSON.stringify(this.data))    // 对源数据深度克隆
+        return cloneData.filter(father=>{
+          let branchArr = cloneData.filter(child=>father.businessSubwayId == child.superiorId)    //返回每一项的子级数组
+          branchArr.length>0 ? father.children = branchArr : ''   //如果存在子级，则给父级添加一个children属性，并赋值
+          return father.superiorId==0;      //返回第一层
+        });
+      }
     },
     methods: {
       getAllRoles() {
@@ -140,6 +176,8 @@
           this.listLoading = false;
           this.list = data.list;
           this.totalCount = data.totalCount;
+          this.data=data.list
+          console.log(this.data);
         })
       },
       handleSizeChange(val) {
@@ -151,6 +189,10 @@
         //改变页码
         this.listQuery.pageNum = val
         this.getList();
+      },
+      handleNodeClick(data){
+        // console.log(data)
+        console.log(this.treeData)
       },
       handleFilter() {
         //查询事件
@@ -169,6 +211,7 @@
         this.dialogStatus = "create"
         this.dialogFormVisible = true
       },
+
       showUpdate($index) {
         let postcategorie = this.list[$index];
         this.tempUser.businessSubwayId = postcategorie.businessSubwayId;
@@ -240,3 +283,8 @@
 </script>
 
 
+<style>
+  .el-tree-node__label {
+    font-size: 20px;
+  }
+</style>

@@ -11,10 +11,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: chenqiangyong
@@ -36,6 +33,7 @@ public class PostCategorieController {
         Map<String,Object> map = new HashMap<>();
         MultipartFile file = multiReq.getFile("file");
         String originalFilename = file.getOriginalFilename();
+        String temp = UUID.randomUUID().toString();
         String desFilePath =
                 "F:" + File.separator+"ideaworkspace"
                         + File.separator+"group-two"
@@ -43,9 +41,11 @@ public class PostCategorieController {
                         + File.separator+"src"
                         + File.separator+"assets"
                         + File.separator+"image"
-                        + "/" + originalFilename;
+                        + "/"
+                        + temp
+                        + originalFilename;
         File localFile  = new File(desFilePath);
-        String srcUrl = "http://localhost:9520/static/img/"+originalFilename;
+        String srcUrl = "http://localhost:9520/static/img/"+ temp +originalFilename;
         string=srcUrl;
         if (!localFile.exists()) {
             localFile.createNewFile();
@@ -53,8 +53,15 @@ public class PostCategorieController {
         }
         map.put("code", 0);
         map.put("msg", "上传成功");
-        map.put("url", srcUrl);
+        map.put("url", desFilePath);
         return map;
+    }
+
+    @PostMapping("/delete")
+    public void delete (@RequestBody JSONObject jsonObject) {
+       string="";
+        File file = new File(jsonObject.getString("desFilePath"));
+        file.delete();
     }
 
 
