@@ -137,12 +137,15 @@ public class ComUserController {
 
     /**
      * 计算用户粉丝数
-     * */
+      */
     @GetMapping("/getUserFans")
     public JSONObject getUserFans(@RequestBody JSONObject requestJson){
         CommonUtil.hasAllRequired(requestJson, " onUserId");
         return wxUserService.countFansByUserId(requestJson);
     }
+    /**
+     * 用户详情页数量部分数据
+     */
     @GetMapping("/getDetailUserById")
     public JSONObject getDetailUserById(@RequestBody JSONObject requestJson){
         return  wxUserService.getDetailUserById(requestJson);
