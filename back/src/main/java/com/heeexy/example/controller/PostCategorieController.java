@@ -35,17 +35,20 @@ public class PostCategorieController {
         String originalFilename = file.getOriginalFilename();
         String temp = UUID.randomUUID().toString();
         String desFilePath =
-                "F:" + File.separator+"ideaworkspace"
-                        + File.separator+"group-two"
-                        + File.separator+"vue"
-                        + File.separator+"src"
-                        + File.separator+"assets"
-                        + File.separator+"image"
+                "F:"      + File.separator+"OTA"
+//                        + File.separator+"ideaworkspace"
+//                        + File.separator+"group-two"
+//                        + File.separator+"back"
+//                        + File.separator+"src"
+//                        + File.separator+"main"
+//                        + File.separator+"resources"
+//                        + File.separator+"OTA"
                         + "/"
                         + temp
                         + originalFilename;
         File localFile  = new File(desFilePath);
-        String srcUrl = "http://localhost:9520/static/img/"+ temp +originalFilename;
+//        String srcUrl = "F:/OTA/"+ temp +originalFilename;
+        String srcUrl = desFilePath.replaceFirst( "F:\\\\", "http://localhost:8080/");
         string=srcUrl;
         if (!localFile.exists()) {
             localFile.createNewFile();
