@@ -1,5 +1,6 @@
 package com.heeexy.example.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.service.WxBrowserService;
 import com.heeexy.example.service.WxLikeService;
@@ -9,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @ Author     ：良优
@@ -43,8 +48,10 @@ public class ComUserMyPostController {
     @PostMapping("/updateUserPostMany")
     public JSONObject updatePostMany(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "posts");
-        String posts = requestJson.getString("posts");
-        System.out.println(posts);
+        ArrayList<Map<String,String>> posts = (ArrayList<Map<String,String>>)requestJson.get("posts");
+        for (Map<String, String> post : posts) {
+            System.out.println(post);
+        }
         return wxMyPostService.updateByPostIdMany(requestJson);
     }
 }

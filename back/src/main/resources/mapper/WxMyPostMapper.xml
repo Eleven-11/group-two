@@ -22,7 +22,12 @@
     </select>
     <!--修改自己帖子隐藏状态-->
     <update id="updateMyPostById" parameterType="com.alibaba.fastjson.JSONObject">
-        update  tyn_post  set delete_state =#{myPostState} where id = #{postId} ;
+        <if test="myPostState == 0">
+            update  tyn_post  set delete_state = 1 where id = #{postId} ;
+        </if>
+        <if test="myPostState == 1">
+            update  tyn_post  set delete_state = 0 where id = #{postId} ;
+        </if>
 
     </update>
     <!--前台用户自己的帖子记录-->
@@ -42,13 +47,13 @@
     <!--批量删除帖子--><!--（不成功）-->
     <update id="updateByPostIdMany" parameterType="com.alibaba.fastjson.JSONObject">
 
-        <foreach collection="posts" item="psot"  index="index">
+        <!--
                 <if test="psot.myPostState ==0 ">
                     update  tyn_post  set delete_state = 1 where id = #{psot.postId}
                 </if>
             <if test="psot.myPostState ==1 ">
                 update  tyn_post  set delete_state = 0 where id = #{psot.postId}
-            </if>
-        </foreach>
+            </if>-->
+
     </update>
 </mapper>
