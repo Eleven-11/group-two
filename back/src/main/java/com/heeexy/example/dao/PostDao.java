@@ -31,6 +31,26 @@ public interface PostDao {
      * @return java.util.List<com.alibaba.fastjson.JSONObject>
      */
 
+    int updatePostState(JSONObject jsonObject);
+    /*
+     * @Author lover_tyn
+     * @Description //TODO
+     * @Date  2019/6/23 10:41
+     * @Param [jsonObject]
+     * @return int
+     */
+
+    JSONObject queryOnePost(JSONObject jsonObject);
+    /*
+     * @Author lover_tyn
+     * @Description //TODO
+     * @Date  2019/6/23 19:45
+     * @Param [jsonObject]
+     * @return com.alibaba.fastjson.JSONObject
+     */
+
+
+
 
 
     
