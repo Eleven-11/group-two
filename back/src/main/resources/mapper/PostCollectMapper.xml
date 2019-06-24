@@ -24,8 +24,8 @@
         post_id postId,
         cqy_post_collect.user_id userId,
         user_name username,
-        DATE_FORMAT(create_time, '%Y.%m.%d %T') createTime,
-        DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime,
+        DATE_FORMAT(cqy_post_collect.create_time, '%Y.%m.%d %T') createTime,
+        DATE_FORMAT(cqy_post_collect.update_time, '%Y.%m.%d %T') updateTime,
         display display
         from cqy_post_collect,fly_user
         <where>
@@ -44,8 +44,8 @@
         post_id postId,
         cqy_post_collect.user_id userId,
         user_name username,
-        DATE_FORMAT(create_time, '%Y.%m.%d %T') createTime,
-        DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime,
+        DATE_FORMAT(cqy_post_collect.create_time, '%Y.%m.%d %T') createTime,
+        DATE_FORMAT(cqy_post_collect.update_time, '%Y.%m.%d %T') updateTime,
         display display
         from cqy_post_collect,fly_user
         where cqy_post_collect.user_id = fly_user.user_id
