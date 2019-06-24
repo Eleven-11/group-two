@@ -3,8 +3,10 @@ package com.heeexy.example.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.AdsDao;
 import com.heeexy.example.service.AdsService;
+import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,8 +32,11 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public List<JSONObject> getAllAds(JSONObject jsonObject) {
-        return adsDao.getAllAds(jsonObject);
+    public JSONObject getAllAds(JSONObject jsonObject) {
+        CommonUtil.fillPageParam(jsonObject);
+        int count = adsDao.countAds();
+        List<JSONObject> list = adsDao.getAllAds(jsonObject);
+        return CommonUtil.successPage(jsonObject, list, count);
     }
 
     @Override
@@ -45,13 +50,17 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject updateAds(JSONObject jsonObject) {
-        return adsDao.updateAds(jsonObject);
+        adsDao.updateAds(jsonObject);
+        return CommonUtil.successJson();
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject addAds(JSONObject jsonObject) {
-        return adsDao.addAds(jsonObject);
+        adsDao.addAds(jsonObject);
+        return CommonUtil.successJson();
     }
 
     @Override

@@ -29,7 +29,7 @@ export const asyncRouterMap = [
   {
     path: '/system',
     component: Layout,
-    redirect: '/system/article',
+    redirect: '/system/',
     name: '功能模块',
     meta: {title: '功能模块', icon: 'tree'},
     children: [
@@ -40,6 +40,13 @@ export const asyncRouterMap = [
         meta: {title: '文章', icon: 'example'},
         menu: 'article'
       },
+      {
+        path: 'ads',
+        name: '广告',
+        component: _import('ads/ads'),
+        meta: {title: '广告', icon: 'form'},
+        menu: 'ads'
+      }
     ]
   },
   {

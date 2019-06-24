@@ -5,9 +5,16 @@ import com.heeexy.example.service.AdsService;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @Author : 林成
@@ -25,7 +32,7 @@ public class AdsController {
      * 展示所有广告信息
      */
     @GetMapping("/getAllAds")
-    public List<JSONObject> getAllAds(HttpServletRequest request){
+    public JSONObject getAllAds(HttpServletRequest request){
         return adsService.getAllAds(CommonUtil.request2Json(request));
     }
 
@@ -49,16 +56,18 @@ public class AdsController {
      * 修改广告信息
      */
     @PostMapping("/updateAds")
-    public JSONObject updateAds(HttpServletRequest request){
-        return adsService.updateAds(CommonUtil.request2Json(request));
+    public JSONObject updateAds(@RequestBody JSONObject requestJson){
+        CommonUtil.hasAllRequired(requestJson, "id,picture,title,link,status");
+        return adsService.updateAds(requestJson);
     }
 
     /**
      * 添加广告信息
      */
     @PostMapping("/addAds")
-    public JSONObject addAds(HttpServletRequest request){
-        return adsService.addAds(CommonUtil.request2Json(request));
+    public JSONObject addAds(@RequestBody JSONObject requestJson){
+        CommonUtil.hasAllRequired(requestJson, "picture,title,link");
+        return adsService.addAds(requestJson);
     }
 
     /**
@@ -67,6 +76,34 @@ public class AdsController {
     @GetMapping("/removeAdsById/{id}")
     public JSONObject removeAdsById(@PathVariable int id){
         return adsService.removeAdsById(id);
+    }
+
+    @PostMapping("/upload")
+    public Map imgUpload(HttpServletRequest req, MultipartHttpServletRequest multiReq) throws IOException {
+        Map<String,Object> map = new HashMap<>();
+        MultipartFile file = multiReq.getFile("file");
+        String originalFilename = file.getOriginalFilename();
+        String temp = UUID.randomUUID().toString();
+        String desFilePath =
+                "D:" + File.separator+"Web Projects"
+                        + File.separator+"group-two"
+                        + File.separator+"vue"
+                        + File.separator+"src"
+                        + File.separator+"assets"
+                        + File.separator+"upload"
+                        + File.separator+"ads"
+                        + "/" + temp
+                        + originalFilename;
+        System.out.println(desFilePath);
+        File localFile  = new File(desFilePath);
+        String srcUrl = "http://localhost:9520/static/img/"+temp+originalFilename;
+        localFile.createNewFile();
+        file.transferTo(localFile);
+        map.put("code", 0);
+        map.put("msg", "上传成功");
+        map.put("desFilePath", desFilePath);
+        map.put("url", srcUrl);
+        return map;
     }
 
 }

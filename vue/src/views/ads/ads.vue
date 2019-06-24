@@ -15,21 +15,25 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="adsPicture" label="图片" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" prop="adsTitle" label="标题" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" prop="adsLink" label="链接" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" prop="picture" label="图片" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" prop="title" label="标题" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" prop="link" label="链接" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="状态" style="width: 60px;">
+        <template slot-scope="scope">
+          <span v-if="scope.row.status">启用</span>
+          <span v-if="!scope.row.status">禁用</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="管理" width="200" >
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" v-if="scope.row.adsStatus==1" @click="disableAds(scope.$index)">禁用</el-button>
-        </template>
-        <template slot-scope="scope">
-          <el-button type="primary" icon="delete" v-if="scope.row.adsStatus==0" @click="enableAds(scope.$index)">启用</el-button>
-        </template>
-        <template slot-scope="scope">
+          <el-button type="danger"  icon="edit" v-if="scope.row.status" @click="changeStatus(scope.$index, 0)">禁用</el-button>
+          <el-button type="success" icon="edit" v-if="!scope.row.status" @click="changeStatus(scope.$index, 1)">启用</el-button>
           <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
         </template>
       </el-table-column>
     </el-table>
+
+
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -39,17 +43,28 @@
       :page-sizes="[10, 20, 50, 100]"
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
+
+
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="tempAds" label-position="left" label-width="60px"
                style='width: 300px; margin-left:50px;'>
         <el-form-item label="图片">
-          <el-input type="text" v-model="tempAds.adsPicture"></el-input>
+          <el-upload
+            action="api/ads/upload"
+            :show-file-list="false"
+            :on-success="handleSuccess"
+            :on-error="handleError"
+            :on-progress="handleProgress"
+          >
+            <el-button type="primary" size="medium">上传图片</el-button>
+          </el-upload>
+
         </el-form-item>
         <el-form-item label="标题">
-          <el-input type="text" v-model="tempAds.adsTitle"></el-input>
+          <el-input type="text" v-model="tempAds.title"></el-input>
         </el-form-item>
         <el-form-item label="链接">
-          <el-input type="text" v-model="tempAds.adsLink"></el-input>
+          <el-input type="text" v-model="tempAds.link"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -79,10 +94,11 @@
           create: '创建广告'
         },
         tempAds: {
-          adsId: "",
-          adsPicture: "",
-          adsTitle: "",
-          adsLink: ""
+          id: "",
+          picture: "",
+          title: "",
+          link: "",
+          status: ""
         }
       }
     },
@@ -119,23 +135,23 @@
       },
       showCreate() {
         //显示新增对话框
-        this.tempAds.adsPicture = "";
-        this.tempAds.adsTitle = "";
-        this.tempAds.adsLink = "";
+        this.tempAds.picture = "";
+        this.tempAds.title = "";
+        this.tempAds.link = "";
         this.dialogStatus = "create"
         this.dialogFormVisible = true
       },
       showUpdate($index) {
         //显示修改对话框
-        this.tempAds.adsId = this.list[$index].adsId;
-        this.tempAds.adsPicture = this.list[$index].adsPicture;
-        this.tempAds.adsTitle = this.list[$index].adsTitle;
-        this.tempAds.adsLink = this.list[$index].adsLink;
+        this.tempAds.id = this.list[$index].id;
+        this.tempAds.picture = this.list[$index].picture;
+        this.tempAds.title = this.list[$index].title;
+        this.tempAds.link = this.list[$index].link;
         this.dialogStatus = "update"
         this.dialogFormVisible = true
       },
       createAds() {
-        //保存新文章
+        //保存新广告
         this.api({
           url: "/ads/addAds",
           method: "post",
@@ -146,7 +162,23 @@
         })
       },
       updateAds() {
-        //修改文章
+        //修改广告
+        this.api({
+          url: "/ads/updateAds",
+          method: "post",
+          data: this.tempAds
+        }).then(() => {
+          this.getList();
+          this.dialogFormVisible = false
+        })
+      },
+      changeStatus($index, val) {
+        this.tempAds.id = this.list[$index].id;
+        this.tempAds.picture = this.list[$index].picture;
+        this.tempAds.title = this.list[$index].title;
+        this.tempAds.link = this.list[$index].link;
+        this.tempAds.status = val;
+        //修改广告
         this.api({
           url: "/ads/updateAds",
           method: "post",

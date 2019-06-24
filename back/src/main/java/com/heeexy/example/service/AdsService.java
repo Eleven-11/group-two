@@ -25,7 +25,7 @@ public interface AdsService {
     /**
      * 获取所有广告信息
      */
-    List<JSONObject> getAllAds(JSONObject jsonObject);
+    JSONObject getAllAds(JSONObject jsonObject);
 
     /**
      * 获取启用广告信息

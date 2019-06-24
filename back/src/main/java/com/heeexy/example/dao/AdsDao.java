@@ -41,12 +41,12 @@ public interface AdsDao {
     /**
      * 修改广告信息
      */
-    JSONObject updateAds(JSONObject jsonObject);
+    int updateAds(JSONObject jsonObject);
 
     /**
      * 新增广告信息
      */
-    JSONObject addAds(JSONObject jsonObject);
+    int addAds(JSONObject jsonObject);
 
     /**
      * 删除广告信息
