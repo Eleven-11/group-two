@@ -56,15 +56,27 @@
           </el-input>
         </el-form-item>
         <el-form-item label="类别图标" >
+          <!--<el-upload-->
+            <!--class="avatar-uploader"-->
+            <!--action="/api/postcategorie/upload"-->
+            <!--:show-file-list="false"-->
+            <!--:on-success="handleAvatarSuccess"-->
+            <!--:before-upload="beforeAvatarUpload">-->
+            <!--<img v-if="imageUrl" :src="imageUrl" class="avatar">-->
+            <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+          <!--</el-upload>-->
           <el-upload
-            class="avatar-uploader"
             action="/api/postcategorie/upload"
-            :show-file-list="false"
+            list-type="picture-card"
+            :on-preview="handlePictureCardPreview"
+            :on-remove="handleRemove"
             :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            :limit="imgLimit" >
+            <i class="el-icon-plus"></i>
           </el-upload>
+          <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="dialogImageUrl" alt="">
+          </el-dialog>
         </el-form-item>
       </el-form>
 
@@ -83,11 +95,14 @@
     data() {
       return {
 
+        imgData:{
+          desFilePath:""
+        },
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
         listQuery: {
-          imageUrl: '',
+          // imageUrl: '',
           pageNum: 1,//页码
           pageRow: 50,//每页条数
         },
@@ -104,7 +119,10 @@
           categoriesImg:'',
           display:''
         },
-        imageUrl: ''
+        // imageUrl: ''
+        dialogImageUrl: '',
+        dialogVisible: false,
+        imgLimit: 1
       }
     },
     created() {
@@ -127,23 +145,42 @@
           this.roles = data.list;
         })
       },
-      handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
-        // this.categoriesImg = this.imageUrl;
-        // this.tempUser.categoriesImg = this.imageUrl;
-        // alert(this.tempUser.categoriesImg);
-      },
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
+      // handleAvatarSuccess(res, file) {
+      //   this.imageUrl = URL.createObjectURL(file.raw);
+      //   // this.categoriesImg = this.imageUrl;
+      //   // this.tempUser.categoriesImg = this.imageUrl;
+      //   // alert(this.tempUser.categoriesImg);
+      // },
+      // beforeAvatarUpload(file) {
+      //   const isJPG = file.type === 'image/jpeg';
+      //   const isLt2M = file.size / 1024 / 1024 < 2;
+      //
+      //   if (!isJPG) {
+      //     this.$message.error('上传头像图片只能是 JPG 格式!');
+      //   }
+      //   if (!isLt2M) {
+      //     this.$message.error('上传头像图片大小不能超过 2MB!');
+      //   }
+      //   return isJPG && isLt2M;
+      // },
+      handleRemove(file, fileList) {
+        this.api({
+          url:"/postcategorie/delete",
+          method:"post",
+          data:this.imgData
 
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return isJPG && isLt2M;
+        })
+        console.log(file, fileList);
+      },
+      handleAvatarSuccess(response, file, fileList) {
+        //response这个
+        this.imgData.desFilePath = response.url;
+        // console.log("传回的地址："+response.url)
+      },
+
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
       },
 
       getList() {

@@ -43,6 +43,7 @@
       :current-page="listQuery.pageNum"
       :page-size="listQuery.pageRow"
       :total="totalCount"
+      :on-remove="handleRemove"
       :page-sizes="[10, 20, 50, 100]"
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
@@ -96,6 +97,9 @@
           input: ''
         }
       }
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
     },
     created() {
       this.getList();
