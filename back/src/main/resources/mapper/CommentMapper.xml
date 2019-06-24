@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.CommentDao">
+
+    <select id="getAllComment" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT c.comment_id, c.post_id, c.from_user_id, c.to_comment_id, c.comment_content, c.comment_time, c.comment_status
+        FROM lc_comment c
+        ORDER BY c.comment_id
+        LIMIT #{offSet}, #{pageRow}
+    </select>
+    
+    <select id="getComment" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT c.comment_id, c.post_id, c.from_user_id, c.to_comment_id, c.comment_content, c.comment_time, c.comment_status
+        FROM lc_comment c
+        WHERE c.comment_status = #{status}
+        ORDER BY c.comment_id
+        LIMIT #{offSet}, #{pageRow}
+    </select>
+
+    <select id="getAllCommentByUserId" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT c.comment_id, c.post_id, c.from_user_id, c.to_comment_id, c.comment_content, c.comment_time, c.comment_status
+        FROM lc_comment c
+        WHERE c.from_user_id = #{id}
+        ORDER BY c.comment_id
+        LIMIT #{offSet}, #{pageRow}
+    </select>
+
+    <select id="getAllCommentByPostId" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT c.comment_id, c.post_id, c.from_user_id, c.to_comment_id, c.comment_content, c.comment_time, c.comment_status
+        FROM lc_comment c
+        WHERE c.post_id = #{id}
+        ORDER BY c.comment_id
+        LIMIT #{offSet}, #{pageRow}
+    </select>
+
+    <select id="getCommentByUserId" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT c.comment_id, c.post_id, c.from_user_id, c.to_comment_id, c.comment_content, c.comment_time, c.comment_status
+        FROM lc_comment c
+        WHERE c.from_user_id = #{id} AND c.comment_status = #{status}
+        ORDER BY c.comment_id
+        LIMIT #{offSet}, #{pageRow}
+    </select>
+
+    <select id="getCommentByPostId" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT c.comment_id, c.post_id, c.from_user_id, c.to_comment_id, c.comment_content, c.comment_time, c.comment_status
+        FROM lc_comment c
+        WHERE c.post_id = #{id} AND c.comment_status = #{status}
+        ORDER BY c.comment_id
+        LIMIT #{offSet}, #{pageRow}
+    </select>
+
+    <select id="getCommentById" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT c.comment_id, c.post_id, c.from_user_id, c.to_comment_id, c.comment_content, c.comment_time, c.comment_status
+        FROM lc_comment c
+        WHERE c.comment_id = #{id}
+    </select>
+
+    <select id="countAllComment" resultType="Integer">
+      SELECT COUNT(0)
+      FROM lc_comment
+      WHERE c.post_id = #{id}
+    </select>
+
+    <select id="countUnreadComment" resultType="Integer">
+      SELECT COUNT(0)
+      FROM lc_comment c
+      WHERE c.post_id = #{id} AND c.comment_status = 0
+    </select>
+
+    <insert id="addComment" parameterType="com.alibaba.fastjson.JSONObject">
+      INSERT INTO lc_comment
+      (post_id, from_user_id, to_comment_id, comment_content)
+      VALUES
+      (#{pid}, #{fuid}, #{tcid}, #{content})
+    </insert>
+
+    <update id="updateComment" parameterType="com.alibaba.fastjson.JSONObject">
+      UPDATE lc_comment
+      SET lc_comment.comment_status = #{status}
+      WHERE lc_comment.comment_id = #{id}
+    </update>
+
+</mapper>

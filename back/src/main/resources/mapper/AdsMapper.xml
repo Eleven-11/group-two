@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.AdsDao">
+
+    <select id="countAds" resultType="Integer">
+        SELECT COUNT(0)
+        FROM lc_ads
+    </select>
+
+    <select id="countEnableAds" resultType="Integer">
+        SELECT COUNT(0)
+        FROM lc_ads a
+        WHERE a.ads_status = 1
+    </select>
+
+    <select id="getAllAds" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT a.ads_id, a.ads_picture, a.ads_title, a.ads_link, a.ads_status
+        FROM lc_ads a
+        ORDER BY a.ads_id
+        LIMIT #{offSet}, #{pageRow}
+    </select>
+
+    <select id="getEnableAds" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT a.ads_id, a.ads_picture, a.ads_title, a.ads_link, a.ads_status
+        FROM lc_ads a
+        WHERE a.ads_status = 1
+        ORDER BY a.ads_id
+        LIMIT #{offSet}, #{pageRow}
+    </select>
+
+    <select id="getAdsById" parameterType="Integer" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT a.ads_id, a.ads_picture, a.ads_title, a.ads_link, a.ads_status
+        FROM lc_ads a
+        WHERE a.ads_id = #{id}
+    </select>
+
+    <update id="updateAds">
+        UPDATE lc_ads
+        SET ads_picture = #{picture}, ads_title = #{title}, ads_link = #{link}, ads_status = #{status}
+        WHERE ads_id = #{id}
+    </update>
+
+    <insert id="addAds">
+        INSERT INTO lc_ads
+        (ads_picture, ads_title, ads_link)
+        VALUES
+        (#{picture}, #{title}, #{link})
+    </insert>
+
+    <delete id="deleteAds">
+        DELETE FROM lc_ads
+        WHERE ads_id = #{id}
+    </delete>
+</mapper>
