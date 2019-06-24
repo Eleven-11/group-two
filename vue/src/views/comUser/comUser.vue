@@ -17,9 +17,9 @@
       </template>
     </el-table-column>
     <el-table-column align="center" label="用户UUID" prop="userUuid" style="width: 60px;"></el-table-column>
-    <el-table-column label="头像" width="100">
+    <el-table-column  align="center" label="头像" width="100">
       <template slot-scope="scope">
-        <img :src="scope.row.userPhoto" width="80" height="80" class="head_pic"/>
+        <img :src="scope.row.userPhoto" width="80" height="80"  style="border-radius:50%;" />
       </template>
     </el-table-column>
    <!-- <el-table-column align="center" label="用户头像" prop="userPhoto" style="width: 60px;"></el-table-column>-->
@@ -27,15 +27,33 @@
     <el-table-column align="center" label="性别" prop="userSex" style="width: 60px;"></el-table-column>
     <el-table-column align="center" label="粉丝数" prop="userFans" style="width: 60px;"></el-table-column>
     <el-table-column align="center" label="虚拟粉丝" prop="userFansf" style="width: 60px;"></el-table-column>
-    <el-table-column align="center" label="游客角色:1" prop="guest" style="width: 60px;"></el-table-column>
-    <el-table-column align="center" label="封禁状态" prop="userState" style="width: 60px;"></el-table-column>
+    <el-table-column align="center" label="角色" prop="guest" style="width: 60px;">
+      <template slot-scope="scope">
+        <p v-if="scope.row.guest=='0'">
+          普通用户
+        </p>
+        <p v-else-if="scope.row.guest=='1'">
+          游客
+        </p>
+      </template>
+    </el-table-column>
+    <el-table-column align="center" label="封禁状态" prop="userState" style="width: 60px;">
+      <template slot-scope="scope">
+        <p v-if="scope.row.userState=='0'">
+          正常
+        </p>
+        <p v-else-if="scope.row.userState=='1'">
+          封禁
+        </p>
+      </template>
+
+    </el-table-column>
     <el-table-column align="center" label="授权时间" prop="firstTime" style="width: 60px;"></el-table-column>
     <el-table-column align="center" label="更新时间" prop="updateTime" style="width: 60px;"></el-table-column>
     <el-table-column align="center" label="管理" width="220">
       <template slot-scope="scope">
         <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
-       <!-- <el-button type="danger" icon="delete"  v-if="scope.row.userId!=userId "@click="updateState(scope.$index)">封禁？
-        </el-button>-->
+       <el-button type="danger" icon="delete"  @click="updateState(scope.$index)">封禁？</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -68,7 +86,7 @@
         <el-input type="text" v-model="tempUser.userFansf">
         </el-input>
       </el-form-item>
-      <el-form-item label="封禁状态" required>
+     <!-- <el-form-item label="封禁状态" required>
         <el-select v-model="tempUser.userState" placeholder="请选择">
           <el-option
             v-for="item in states"
@@ -77,7 +95,7 @@
             :value="item.closeId">
           </el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item>-->
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -92,7 +110,7 @@
   export default {
     data() {
       return {
-        userName:"",
+        userName:"",//搜索框中信息
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
@@ -129,14 +147,14 @@
       ])
     },
     methods: {
-      getAllState() {
+   /*   getAllState() {
         this.api({
           url: "/comUser/getAllState",
           method: "get"
         }).then(data => {
           this.states = data.list;
         })
-      },
+      },*/
       getList() {
         //查询列表
         this.listLoading = true;
@@ -217,11 +235,6 @@
           type: 'warning'
         }).then(() => {
           let user = _vue.list[$index];
-          if (user.userState =="游客") {
-            user.userState = 0;
-          } else  {
-            user.userState=1;
-          }
           _vue.api({
             url: "/comUser/updateUserState",
             method: "post",

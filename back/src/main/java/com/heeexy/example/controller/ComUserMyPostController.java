@@ -39,19 +39,20 @@ public class ComUserMyPostController {
      */
     @PostMapping("/updateUserPost")
     public JSONObject updateFans(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "postId,onUserId,myPostState");
+        CommonUtil.hasAllRequired(requestJson, "postId,myPostState");
         return wxMyPostService.updateMyPostById(requestJson);
     }
     /**
-     * 删除用户帖子(批量修改帖子隐藏显示状态)（不成功）
+     * 删除用户帖子(批量修改帖子隐藏显示状态)
      */
     @PostMapping("/updateUserPostMany")
     public JSONObject updatePostMany(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "posts");
+//        CommonUtil.hasAllRequired(requestJson, "posts");/
         ArrayList<Map<String,String>> posts = (ArrayList<Map<String,String>>)requestJson.get("posts");
         for (Map<String, String> post : posts) {
             System.out.println(post);
+          wxMyPostService.updateByPostIdMany(post);
         }
-        return wxMyPostService.updateByPostIdMany(requestJson);
+      return CommonUtil.successJson();
     }
 }

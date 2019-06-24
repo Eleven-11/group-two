@@ -38,6 +38,7 @@ public class ComUserController {
     @GetMapping("/listUser")
     public JSONObject getListUser( HttpServletRequest request) {
 
+
         return wxUserService.getListUser(CommonUtil.request2Json(request));
     }
     /**
@@ -115,7 +116,7 @@ public class ComUserController {
         * */
     @PostMapping("/updateUserFans")
     public JSONObject updateUserFans(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, " userId,userFansf,userState");
+        CommonUtil.hasAllRequired(requestJson, " userId,userFansf");
         return wxUserService.updateFansfById(requestJson);
     }
     /**
@@ -141,5 +142,10 @@ public class ComUserController {
     public JSONObject getUserFans(@RequestBody JSONObject requestJson){
         CommonUtil.hasAllRequired(requestJson, " onUserId");
         return wxUserService.countFansByUserId(requestJson);
-    };
+    }
+    @GetMapping("/getDetailUserById")
+    public JSONObject getDetailUserById(@RequestBody JSONObject requestJson){
+        return  wxUserService.getDetailUserById(requestJson);
+    }
+
 }

@@ -7,9 +7,18 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="用户名" prop="onUserId" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="被关注者用户名" prop="userId" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="关注状态:1" prop="state" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="用户名" prop="onUserName" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="被关注者用户名" prop="userName" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="关注状态:1" prop="state" style="width: 60px;">
+        <template slot-scope="scope">
+        <p v-if="scope.row.state=='1'">
+          已关注
+        </p>
+        <p v-else-if="scope.row.state=='0'">
+          未关注
+        </p>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="更新时间" prop="updateTime" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="管理" width="220">
@@ -52,8 +61,8 @@
           update: '编辑',
         },
         tempFans: {
-          onUserId: '',
-          userId: '',
+          onUserName: '',
+          userName: '',
           state: '',
           fansId: ''
         }
@@ -145,12 +154,6 @@
           type: 'warning'
         }).then(() => {
           let user = _vue.list[$index];
-
-          if (user.state ==1) {
-            user.state = '0';
-          }else {
-            user.state='1';
-          }
           _vue.api({
             url: "/comUserFans/updateUserFans",
             method: "post",

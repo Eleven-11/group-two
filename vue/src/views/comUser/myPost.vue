@@ -16,15 +16,23 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="用户名" prop="onUserId" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="用户名" prop="onUserName" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="帖子ID" prop="postId" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="帖子状态" prop="myPostState" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="帖子内容" prop="postContent" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="帖子状态" prop="myPostState" style="width: 60px;">
+        <template slot-scope="scope">
+          <p v-if="scope.row.myPostState=='1'">
+            已删除
+          </p>
+          <p v-else-if="scope.row.myPostState=='0'">
+            未删除
+          </p>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
-          <el-button type="danger" icon="delete" v-if="scope.row.postId!=postId "
-                     @click="removeUser(scope.$index)">删除
-          </el-button>
+          <el-button type="danger" icon="delete"@click="removeUser(scope.$index)">删除</el-button>
         </template>
       </el-table-column>
 
@@ -66,7 +74,8 @@
           update: '编辑',
         },
         tempMyPost: {
-          onUserId: '',
+          postContent:'',
+          onUserName: '',
           postId:'',
           myPostState:'',
           createTime: '',
@@ -194,12 +203,6 @@
           type: 'warning'
         }).then(() => {
           let user = _vue.list[$index];
-          if (user.myPostState == 0)
-          {
-            user.myPostState = '1';
-          }else {
-            user.myPostState = '0';
-          }
           _vue.api({
             url: "/comUserPost/updateUserPost",
             method: "post",

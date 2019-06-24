@@ -7,10 +7,11 @@
     <select id="getMyCommentList" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
 
         select comment.comment_id commentId,comment.post_id postId,post.post_content postContent ,comment.from_user_id onUserId,
-        comment.to_comment_id toCommentId,comment.comment_status commentState,comment.comment_content commentContent,
+        u.user_name onUserName,comment.to_comment_id toCommentId,comment.comment_status commentState,
+        comment.comment_content commentContent,
         DATE_FORMAT(comment.comment_time, '%Y.%m.%d %T')  createTime
-        from lc_comment comment,tyn_post post
-        where comment.post_id = post.id
+        from lc_comment comment,tyn_post post,fly_user u
+        where comment.post_id = post.id and u.user_id =comment.from_user_id
 
     </select>
     <!--后台计数-->
