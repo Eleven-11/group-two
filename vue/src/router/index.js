@@ -58,7 +58,7 @@ export const asyncRouterMap = [
         component: _import('user/role'),
         meta: {title: '权限管理', icon: 'password'},
         menu: 'role'
-      },
+      }
     ]
   },
   {path: '*', redirect: '/404', hidden: true}
