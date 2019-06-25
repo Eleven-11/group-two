@@ -3,9 +3,39 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.heeexy.example.dao.PostDao">
     <select id="queryCountPost" resultType="java.lang.Integer">
-        SELECT count(id)
-        from tyn_post
-        where delete_state in (1,2)
+        SELECT
+            count(distinct postId)
+        from(
+        SELECT
+        p.*,
+        bs.business_subway_name                            tagName
+        FROM (
+        SELECT
+        id                                      postId,
+        categories_name                         sortName
+        FROM tyn_post,fly_user,cqy_post_categories
+        <where>
+            delete_state in (1,2)  and user_id=post_owner and categories_id=post_sort
+            <if test="theStart!= null and theStart != ''">
+                and post_time&gt;=#{theStart}
+            </if>
+            <if test="theEnd!= null and theEnd != ''">
+                and post_time&lt;=#{theEnd}
+            </if>
+            <if test="theOwnerName!=null and theOwnerName!='' ">
+                and user_name like '%${theOwnerName}%'
+            </if>
+        </where>
+        ) p
+        LEFT JOIN tyn_post_tag pt ON p.postId=pt.post_id
+        left join cqy_business_subway bs on pt.id=bs.business_subway_id
+        ) op,tyn_post
+        <where>
+            op.postId=tyn_post.id
+            <if test="theOthers!=null and theOthers!='' ">
+               and (op.sortName like '%${theOthers}%' or tyn_post.post_content like '%${theOthers}%' or  op.tagName like '%${theOthers}%')
+            </if>
+        </where>
     </select>
     <resultMap id="postMap" type="com.heeexy.example.util.model.One2Many">
         <id column="postId" property="postId"/>
@@ -25,12 +55,15 @@
         </collection>
     </resultMap>
     <select id="getAllPost" resultMap="postMap">
+        SELECT
+        op.*,
+        (SELECT COUNT(0) FROM fly_like l WHERE l.post_id=op.postId and l.like_state=1) alike,
+        (SELECT COUNT(0) FROM cqy_post_collect pc WHERE pc.post_id=op.postId and pc.display=1) acollect,
+        (SELECT COUNT(0) FROM fly_browse b WHERE b.post_id=op.postId) aview
+         from(
            SELECT
             p.*,
-            bs.business_subway_name                            tagName,
-			(SELECT COUNT(0) FROM fly_like l WHERE l.post_id=p.postId and l.like_state=1) alike,
-			(SELECT COUNT(0) FROM cqy_post_collect pc WHERE pc.post_id=p.postId and pc.display=1) acollect,
-			(SELECT COUNT(0) FROM fly_browse b WHERE b.post_id=p.postId) aview
+            bs.business_subway_name                            tagName
         FROM (
                  SELECT
                      id                                      postId,
@@ -43,12 +76,29 @@
 					 collect_offset					         collectOff,
                      view_offset			                 viewOff
                  FROM tyn_post,fly_user,cqy_post_categories
-                 WHERE delete_state in (1,2)  and user_id=post_owner and categories_id=post_sort
-                 ORDER BY postTime DESC
+        <where>
+            delete_state in (1,2)  and user_id=post_owner and categories_id=post_sort
+            <if test="theStart!= null and theStart != ''">
+                and post_time&gt;=#{theStart}
+            </if>
+            <if test="theEnd!= null and theEnd != ''">
+                and post_time&lt;=#{theEnd}
+            </if>
+            <if test="theOwnerName!=null and theOwnerName!='' ">
+                and user_name like '%${theOwnerName}%'
+            </if>
+        </where>
                  LIMIT #{offSet}, #{pageRow}
              ) p
             LEFT JOIN tyn_post_tag pt ON p.postId=pt.post_id
             left join cqy_business_subway bs on pt.id=bs.business_subway_id
+            ) op,tyn_post
+            <where>
+            op.postId=tyn_post.id
+                <if test="theOthers!=null and theOthers!='' ">
+                    and (op.sortName like '%${theOthers}%' or tyn_post.post_content like '%${theOthers}%' or op.tagName like '%${theOthers}%')
+                </if>
+            </where>
         ORDER BY postTime Desc
     </select>
     <update id="updatePostState">
@@ -75,9 +125,6 @@
         <result column="likeOff" property="likeOff"/>
         <result column="collectOff" property="collectOff"/>
         <result column="viewOff" property="viewOff"/>
-        <result column="alike" property="alike"/>
-        <result column="acollect" property="acollect"/>
-        <result column="aview" property="aview"/>
         <collection property="tagList" ofType="String">
             <id column="tagName" property="tagName"/>
         </collection>
@@ -89,10 +136,7 @@
            SELECT
             p.*,
             bs.business_subway_name                            tagName,
-            pi.img                                             imgName,
-			(SELECT COUNT(0) FROM fly_like l WHERE l.post_id=p.postId and l.like_state=1) alike,
-			(SELECT COUNT(0) FROM cqy_post_collect pc WHERE pc.post_id=p.postId and pc.display=1) acollect,
-			(SELECT COUNT(0) FROM fly_browse b WHERE b.post_id=p.postId) aview
+            pi.img                                             imgName
         FROM (
                  SELECT
                      id                                      postId,

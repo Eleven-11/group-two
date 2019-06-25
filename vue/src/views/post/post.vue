@@ -1,17 +1,34 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-form>
+      <el-form :inline="true" >
         <el-form-item>
-          <el-button type="primary" icon="plus"  @click="showCreate">添加
+          <div class="block">
+            <el-date-picker
+            v-model="theStart"
+            type="datetime"
+            placeholder="选择起始时间">
+          </el-date-picker>至
+            <el-date-picker
+              v-model="theEnd"
+              type="datetime"
+              placeholder="选择截止时间">
+            </el-date-picker>
+        </div>
+        </el-form-item>
+      <el-form-item>
+        <el-input type="text" v-model="theOwnerName" placeholder="搜索发帖人" clearable="true" style="width: 180px"></el-input>
+      </el-form-item>
+        <el-form-item>
+          <el-input type="text" v-model="theOthers" placeholder="其他搜索条件:分类，标签，内容等" maxlength="20"
+                    clearable="true" style="width: 300px"  ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search"  @click="getList">搜索
           </el-button>
         </el-form-item>
       </el-form>
     </div>
-    <div>
-       <el-input type="search" v-model="search" style="width:15%;margin-right: 5px;float: right;" placeholder="请输入筛选关键字"></el-input>
-    </div>
-    <div class="table">
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
       <el-table-column align="center" label="序号" width="80">
@@ -20,13 +37,13 @@
         </template>
       </el-table-column>
       <el-table-column  align="center" label="帖子ID" prop="postId" style="width: 60px;" v-if="false"></el-table-column>
-      <el-table-column align="center" label="发帖人" prop="ownerName" style="width: 60px;" sortable></el-table-column>
-      <el-table-column align="center" label="发帖时间" prop="postTime" style="width: 120px;" sortable></el-table-column>
+      <el-table-column align="center" label="发帖人" prop="ownerName"  sortable></el-table-column>
+      <el-table-column align="center" label="发帖时间" prop="postTime" width="100" sortable></el-table-column>
       <el-table-column align="center" label="所属分类" prop="sortName" width="110" sortable></el-table-column>
-      <el-table-column align="center" label="标签">
+      <el-table-column align="center" label="标签" width="270">
         <template slot-scope="scope">
           <div v-for="tag in scope.row.tagList">
-            <div v-text="tag" style="display: inline-block;vertical-align: middle;"></div>
+            <el-tag v-text="tag" style="float: left;margin-left: 5px"></el-tag>
           </div>
         </template>
       </el-table-column>
@@ -50,7 +67,7 @@
         </template>
       </el-table-column>
     </el-table>
-    </div>
+
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -64,9 +81,6 @@
       <el-form class="small-space" :model="tempPost" label-position="left" label-width="180px">
         <el-form-item label="发帖者账号:"  v-if="dialogStatus=='detail'" v-model="tempPost.ownerId" required>
              {{tempPost.ownerId}}
-        </el-form-item>
-        <el-form-item label="发帖人昵称:"  v-if="dialogStatus=='detail'" v-model="tempPost.ownerName" required>
-            {{tempPost.ownerName}}
         </el-form-item>
         <el-form-item label="发帖时间:"  v-if="dialogStatus=='detail'" v-model="tempPost.postTime" required>
             {{tempPost.postTime}}
@@ -89,13 +103,20 @@
         <el-form-item label="帖子标签:"  required>
           <div v-if="dialogStatus=='detail'" v-model="tempPost.tags">
             <div v-for="tag in tempPost.tags">
-              <div v-text="'#'+tag" style="float: left;">/</div>
+              <div v-text="'#'+tag" style="float: left;"></div>
            </div>
           </div>
         </el-form-item>
         <el-form-item label="帖子内容:"  required>
           <div v-if="dialogStatus=='detail'" v-model="tempPost.postContent">
             {{tempPost.postContent}}
+          </div>
+          <div v-else>
+            <el-input
+              type="textarea"
+              autosize
+              v-model="tempPost.postContent">
+            </el-input>
           </div>
         </el-form-item>
         <el-form-item  style="overflow: hidden;">
@@ -106,37 +127,22 @@
           </div>
 
       </el-form-item>
-        <el-form-item label="位置:" required>
-          <div v-if="dialogStatus=='detail'" v-model="tempPost.postLocation">
+        <el-form-item label="位置:" required v-if="dialogStatus=='detail'" v-model="tempPost.postLocation">
             {{tempPost.postLocation}}
-          </div>
         </el-form-item>
-        <el-form-item label="联系电话:" required>
-          <div v-if="dialogStatus=='detail'" v-model="tempPost.postPhone">
+        <el-form-item label="联系电话:"  v-if="dialogStatus=='detail'" v-model="tempPost.postPhone"required>
             {{tempPost.postPhone}}
-          </div>
         </el-form-item>
-        <el-form-item label="最低价格:"  required>
-          <div v-if="dialogStatus=='detail'" v-model="tempPost.priceLow">
+        <el-form-item   label="价格:"  v-if="dialogStatus=='detail'" v-model="tempPost.priceLow" required>
             {{tempPost.priceLow}}
-          </div>
+          <span v-if="tempPost.priceHigh!=null " v-model="tempPost.priceHigh">~~{{tempPost.priceHigh}}</span>
         </el-form-item>
-        <el-form-item label="最高价格:"  required v-if="tempPost.priceHigh!=null " v-model="tempPost.priceHigh" >
-            <div v-if="dialogStatus=='detail'">
-             {{tempPost.priceHigh}}
-          </div>
-        </el-form-item>
-        <el-form-item label="起租时间:"  v-if="tempPost.timeStart!=null" v-model="tempPost.timeStart" required>
-          <div v-if="dialogStatus=='detail' " >
+        <el-form-item label="租赁时间:"  v-if="tempPost.sortName=='菜虚鲲'&&dialogStatus=='detail'" v-model="tempPost.sortName" required>
+          <div v-if=" tempPost.timeStart!=null" v-model="tempPost.timeStart" >
             {{tempPost.timeStart}}
+            <span v-if="tempPost.timeEnd!=null" v-model="tempPost.timeEnd">~~{{tempPost.timeEnd}}</span>
           </div>
         </el-form-item>
-        <el-form-item label="结束时间:"  v-if="tempPost.timeEnd!=null " v-model="tempPost.timeEnd"required>
-          <div v-if="dialogStatus=='detail' " >
-            {{tempPost.timeEnd}}
-          </div>
-        </el-form-item>
-
       </el-form>
 <!--      <el-form-item label="标签" required>-->
 <!--        <div v-for=" (menu,_index) in allPermission" :key="menu.menuName">-->
@@ -169,7 +175,11 @@
   export default {
     data() {
       return {
-        listTop:[],
+        theStart:'',
+        theEnd:'',
+        theOwnerName:'',
+        theOthers:'',  //搜索参数
+        listTop:[],    //置顶模块
         peerPost:[],
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
@@ -177,6 +187,10 @@
         listQuery: {
           pageNum: 1,//页码
           pageRow: 50,//每页条数
+          theStart:'',
+          theEnd:'',
+          theOwnerName:'',
+          theOthers:'',
         },
         sorts: [],//分类列表
         dialogStatus: 'detail',
@@ -188,7 +202,6 @@
         tempPost: {
           postId: '',
           ownerId: '',
-          ownerName: '',
           postTime: '',
           sortId:'',
           sortName: '',
@@ -200,9 +213,9 @@
           timeStart:'',
           timeEnd:'',
           isTop:'',
-          allLike:'',
-          allCollect:'',
-          allView:'',
+          likeOff:'',
+          collectOff:'',
+          viewOff:'',
           tags:[],
           imgs:[]
         },
@@ -220,16 +233,6 @@
         'postId'
       ])
     },
-
-    // methods: {
-    //   getAllRoles() {
-    //     this.api({
-    //       url: "/user/getAllRoles",
-    //       method: "get"
-    //     }).then(data => {
-    //       this.roles = data.list;
-    //     })
-    //   },
       methods: {
         getAllSorts() {
           this.api({
@@ -242,6 +245,11 @@
       getList() {
         //查询列表
         this.listLoading = true;
+        this.listQuery.theStart = this.theStart;
+        this.listQuery.theEnd =this.theEnd;
+        this.listQuery.theOwnerName = this.theOwnerName;
+        this.listQuery.theOthers = this.theOthers;
+        console.log(this.listQuery);
         this.api({
           url: "/post/list",
           method: "get",
@@ -257,7 +265,7 @@
             else{
               if(temp%10<2) {
                 this.peerPost.isTop = '人气模块/'
-              }
+              }else{this.peerPost.isTop=''}
               var temp1=parseInt(temp/10);
               if(temp1%10<2) {
                 this.peerPost.isTop = '地铁周边模块/'+this.peerPost.isTop;
@@ -310,7 +318,6 @@
             this.listLoading = false;
             let oPost=data.thePost;
             this.tempPost.ownerId = oPost.ownerId;
-            this.tempPost.ownerName = oPost.ownerName;
             this.tempPost.postTime = oPost.postTime;
             this.tempPost.sortName = oPost.sortName;
             this.tempPost.postContent = oPost.postContent;
@@ -343,37 +350,37 @@
           this.tempPost.postPhone = oPost.postPhone;
           this.tempPost.tags = oPost.tagList;
           this.tempPost.imgs = oPost.imgList;
-          this.tempPost.allLike = 1;
-          this.tempPost.allCollect = 2;
-          this.tempPost.allView = 3;
+          this.tempPost.likeOff = oPost.likeOff;
+          this.tempPost.collectOff = oPost.collectOff;
+          this.tempPost.viewOff = oPost.viewOff;
           this.tempPost.isTop = oPost.isTop;
           this.dialogStatus = "update";
           this.dialogFormVisible = true;
         })
       },
-      // updatePost() {
-      //   //修改用户信息
-      //   let _vue = this;
-      //   this.api({
-      //     url: "/user/updateUser",
-      //     method: "post",
-      //     data: this.tempUser
-      //   }).then(() => {
-      //     let msg = "修改成功";
-      //     this.dialogFormVisible = false
-      //     if (this.userId === this.tempUser.userId) {
-      //       msg = '修改成功,部分信息重新登录后生效'
-      //     }
-      //     this.$message({
-      //       message: msg,
-      //       type: 'success',
-      //       duration: 1 * 1000,
-      //       onClose: () => {
-      //         _vue.getList();
-      //       }
-      //     })
-      //   })
-      // },
+      updatePost() {
+        //修改用户信息
+        let _vue = this;
+        this.api({
+          url: "/post/updatePost",
+          method: "post",
+          data: this.tempUser
+        }).then(() => {
+          let msg = "修改成功";
+          this.dialogFormVisible = false
+          if (this.userId === this.tempUser.userId) {
+            msg = '修改成功,部分信息重新登录后生效'
+          }
+          this.$message({
+            message: msg,
+            type: 'success',
+            duration: 1 * 1000,
+            onClose: () => {
+              _vue.getList();
+            }
+          })
+        })
+      },
       // showCreate() {
       //   //显示新增对话框
       //   this.tempUser.username = "";
