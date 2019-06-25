@@ -62,7 +62,7 @@
         (#{picture}, #{title}, #{link})
     </insert>
 
-    <delete id="deleteAds">
+    <delete id="removeAdsById">
         DELETE FROM lc_ads
         WHERE ads_id = #{id}
     </delete>

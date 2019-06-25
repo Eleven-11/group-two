@@ -30,7 +30,7 @@ public interface AdsService {
     /**
      * 获取启用广告信息
      */
-    List<JSONObject> getEnableAds(JSONObject jsonObject);
+    JSONObject getEnableAds(JSONObject jsonObject);
 
     /**
      * 获取单条广告信息

@@ -40,8 +40,11 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public List<JSONObject> getEnableAds(JSONObject jsonObject) {
-        return adsDao.getEnableAds(jsonObject);
+    public JSONObject getEnableAds(JSONObject jsonObject) {
+        CommonUtil.fillPageParam(jsonObject);
+        int count = adsDao.countEnableAds();
+        List<JSONObject> list = adsDao.getEnableAds(jsonObject);
+        return CommonUtil.successPage(jsonObject, list, count);
     }
 
     @Override
@@ -65,6 +68,7 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public JSONObject removeAdsById(int id) {
-        return adsDao.removeAdsById(id);
+        adsDao.removeAdsById(id);
+        return CommonUtil.successJson();
     }
 }

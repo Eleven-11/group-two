@@ -51,6 +51,6 @@ public interface AdsDao {
     /**
      * 删除广告信息
      */
-    JSONObject removeAdsById(int id);
+    int removeAdsById(int id);
 
 }
