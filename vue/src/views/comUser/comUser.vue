@@ -50,10 +50,12 @@
     </el-table-column>
     <el-table-column align="center" label="授权时间" prop="firstTime" style="width: 60px;"></el-table-column>
     <el-table-column align="center" label="更新时间" prop="updateTime" style="width: 60px;"></el-table-column>
-    <el-table-column align="center" label="管理" width="220">
+    <el-table-column align="center" label="管理" width="300">
       <template slot-scope="scope">
         <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
        <el-button type="danger" icon="delete"  @click="updateState(scope.$index)">封禁？</el-button>
+        <el-button type="primary" icon="edit"  @click="jump(scope.$index)">查看</el-button>
+
       </template>
     </el-table-column>
   </el-table>
@@ -139,7 +141,6 @@
     },
     created() {
       this.getList();
-      /*this.getAllState();*/
     },
     computed: {
       ...mapGetters([
@@ -147,14 +148,12 @@
       ])
     },
     methods: {
-   /*   getAllState() {
-        this.api({
-          url: "/comUser/getAllState",
-          method: "get"
-        }).then(data => {
-          this.states = data.list;
-        })
-      },*/
+        jump($index){
+          let user = this.list[$index];
+          //this.$router.push("/cart")
+          //传递的参数用{{ $route.query.onUserId }}获取
+          this.$router.push({path: "/userfans",query:{onUserId:user.userId}});
+      },
       getList() {
         //查询列表
         this.listQuery.userName = this.userName
@@ -167,7 +166,6 @@
           this.listLoading = false;
           this.list = data.list;
           this.totalCount = data.totalCount;
-         /* this.listQuery.userName = this.userName*/
         })
       },
       handleSizeChange(val) {

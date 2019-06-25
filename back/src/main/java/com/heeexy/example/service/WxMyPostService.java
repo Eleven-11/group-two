@@ -37,6 +37,13 @@ public interface WxMyPostService {
      */
     JSONObject getMyPostListById(JSONObject jsonObject);
     /**
+     * @methodsName: countMyPostByUserId
+     * @description: 计算该用户发帖数量
+     * @param:  JSONObject
+     * @return: JSONObject
+     */
+    JSONObject countMyPostByUserId(JSONObject jsonObject);
+    /**
      * @methodsName: updateByPostIdMany
      * @description: 批量删除帖子
      * @param:  JSONObject

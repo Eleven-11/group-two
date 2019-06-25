@@ -109,6 +109,7 @@ public class CommonUtil {
 					}
 					sb.append(pv[i]);
 				}
+				System.out.println(pv[i]);
 			}
 			requestJson.put(paramName, sb.toString());
 		}
