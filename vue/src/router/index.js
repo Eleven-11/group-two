@@ -8,7 +8,7 @@ const _import = require('./_import_' + process.env.NODE_ENV)
 Vue.use(Router)
 export const constantRouterMap = [
   {path: '/login', component: _import('login/index'), hidden: true},
-  {path: '/userfans', component: _import('comUser/userfans'), hidden: true},//添加
+  {path: '/userfans', component: _import('comUser/userfans'), hidden: true},
   {path: '/404', component: _import('404'), hidden: true},
   {
     path: '/',
@@ -147,42 +147,42 @@ export const asyncRouterMap = [
         name: '普通用户列表',
         component: _import('comUser/comUser'),
         meta: {title: '普通用户列表', icon: 'user'},
-        menu: 'comUser'
+        menu: 'comuser'
       },
       {
         path: 'fans',
         name: '用户关注列表',
         component: _import('comUser/fans'),
         meta: {title: '用户关注列表', icon: 'user'},
-        menu: 'fans'
+        menu: 'comuserfans'
       },
       {
         path: 'myPost',
         name: '用户帖子列表',
         component: _import('comUser/myPost'),
         meta: {title: '用户帖子列表', icon: 'user'},
-        menu: 'myPost'
+        menu: 'comuserpost'
       },
       {
         path: 'like',
         name: '用户点赞列表',
         component: _import('comUser/like'),
         meta: {title: '用户点赞列表', icon: 'user'},
-        menu: 'like'
+        menu: 'comuserlike'
       },
       {
         path: 'comment',
         name: '用户帖子评论列表',
         component: _import('comUser/comment'),
         meta: {title: '用户帖子评论列表', icon: 'user'},
-        menu: 'comment'
+        menu: 'comusercomment'
       },
       {
         path: 'browse',
         name: '用户浏览记录列表',
         component: _import('comUser/browse'),
         meta: {title: '用户浏览记录列表', icon: 'user'},
-        menu: 'browse'
+        menu: 'comuserbrowse'
       },
     ]
   },

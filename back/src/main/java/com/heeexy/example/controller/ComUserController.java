@@ -38,8 +38,6 @@ public class ComUserController {
     @RequiresPermissions("comuser:list")
     @GetMapping("/listUser")
     public JSONObject getListUser( HttpServletRequest request) {
-
-
         return wxUserService.getListUser(CommonUtil.request2Json(request));
     }
     /**
@@ -145,9 +143,9 @@ public class ComUserController {
      * 计算用户粉丝数
       */
     @GetMapping("/getUserFans")
-    public JSONObject getUserFans(@RequestBody JSONObject requestJson){
-        CommonUtil.hasAllRequired(requestJson, " onUserId");
-        return wxUserService.countFansByUserId(requestJson);
+    public JSONObject getUserFans(HttpServletRequest request){
+        return wxUserService.countFansByUserId(CommonUtil.request2Json(request));
+
     }
     /**
      * 用户详情页数量部分数据

@@ -1,26 +1,48 @@
 <template>
   <div class="app-container">
-    <div v-for="item in onUserfans">
-      <p>关注人：{{ item.userName }}</p>
+
+    <p>======================================================</p>
+    <div v-for="item3 in onUserfans">
+      <p>关注ID：{{ item3.FansId }}</p>
+      <p>关注人：{{ item3.userName }}</p>
   </div>
-    <div v-for="item in onUserLike">
-      <p>
-        点赞内容：{{ item.postContent }}
-      </p>
-
-      <p>发帖人：{{ item.userName }}</p>
+    <p>------------------------------------------------</p>
+    <div v-for="item4 in onUserLike">
+      <p>点赞ID：{{ item4.likeId }}</p>
+      <p>帖子ID：{{ item4.postId }}</p>
+      <p>点赞内容：{{ item4.postContent }}</p>
+      <p>发帖人：{{ item4.userName }}</p>
     </div>
-    <div v-for="item in onUserBrowse">
-      <p>浏览内容：{{ item.postContent }}</p>
+    <p>------------------------------------------------</p>
+    <div v-for="item5 in onUserBrowse">
+      <p>浏览ID：{{ item5.browseId }}</p>
+      <p>浏览帖子ID：{{ item5.postId }}</p>
+      <p>浏览时间：{{ item5.createTime }}</p>
     </div>
-    <div v-for="item in onUserPost">
-      <p>帖子内容：{{ item.postContent }}</p>
+    <p>------------------------------------------------</p>
+    <div v-for="item6 in onUserPost">
+      <p>帖子ID：{{ item6.postId }}</p>
+      <p>帖子内容：{{ item6.postContent }}</p>
+      <p>帖子创建时间：{{ item6.createTime }}</p>
     </div>
-    <div v-for="item in onUsercomment">
-      <p>评论内容：{{ item.commentContent }}</p>
+    <p>------------------------------------------------</p>
+    <div v-for="item7 in onUsercomment">
+      <p>评论ID：{{ item7.commentId }}</p>
+      <p>评论的帖子ID：{{ item7.postId }}</p>
+      <p>帖子内容：{{ item7.postContent }}</p>
+      <p>评论者：{{ item7.onUserName }}</p>
+      <p>被评论者：{{ item7.toCommentUserName }}</p>
+      <p>评论内容：{{ item7.commentContent }}</p>
+      <p>评论时间：{{ item7.createTime }}</p>
+    </div>
+    <p>==========================</p>
+    <div v-for="item1 in UserFansNumber">
+      <p>粉丝数：{{ item1.fansToal}}</p>
+    </div>
+    <div v-for="item2 in MyPostNumber">
+      <p>发帖数量：{{ item2.postNumber}}</p>
     </div>
     </div>
-
 </template>
 
 <script>
@@ -32,8 +54,9 @@
           onUserLike:[],
           onUserBrowse:[],
           onUserPost:[],
+          MyPostNumber:[],
+          UserFansNumber:[],
         }
-
       },
       created() {
         this.getUserFans();
@@ -41,6 +64,8 @@
         this.getUserPost();
         this.getUserbrowse();
         this.getUsercomment();
+        this.getUserFansNumber();
+        this.getMyPostNumber();
       },
       methods: {
         getUserFans() {
@@ -96,9 +121,6 @@
           })
         },
         getUsercomment() {
-          // this.listQuery.onUserId=this.$route.query.onUserId,
-          // alert(this.listQuery.onUserId);
-          // console.log(this.listQuery)
           let param5 = {
             "onUserId":this.$route.query.onUserId,
           }
@@ -111,8 +133,33 @@
             this.onUsercomment = data.list;
           })
         },
+        getMyPostNumber() {
+          let param6 = {
+            "onUserId":this.$route.query.onUserId,
+          }
+          console.log(param6);
+          this.api({
+            url: "/comUserPost/countMyPostNumber",
+            method: "get",
+            params: param6
+          }).then(data => {
+            this.MyPostNumber = data.list;
+          })
+        },
+        getUserFansNumber() {
+          let param7 = {
+            "onUserId":this.$route.query.onUserId,
+          }
+          console.log(param7);
+          this.api({
+            url: "/comUser/getUserFans",
+            method: "get",
+            params: param7
+          }).then(data => {
+            this.UserFansNumber = data.list;
+          })
+        },
       }
-
     }
 </script>
 

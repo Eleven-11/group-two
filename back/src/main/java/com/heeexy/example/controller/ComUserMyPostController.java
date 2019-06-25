@@ -81,7 +81,7 @@ public class ComUserMyPostController {
     /**
      * 网页就算某用户发帖数量
      */
-    @GetMapping("/countMyPostByUserId")
+    @GetMapping("/countMyPostNumber")
     public JSONObject countMyPostByUserId(HttpServletRequest request){
 
         return wxMyPostService.countMyPostByUserId(CommonUtil.request2Json(request));
