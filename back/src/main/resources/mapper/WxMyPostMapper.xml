@@ -39,7 +39,7 @@
     </select>
     <!--前台本人发帖数量-->
     <select id="countMyPostByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-        select count(0) from tyn_post where post_owner =#{onUserId}
+        select count(0) postNumber,tyn_post.post_owner userId from tyn_post where post_owner =#{onUserId}
     </select>
     <!--批量删除帖子-->
     <update id="updateByPostIdMany" parameterType="java.util.Map">
