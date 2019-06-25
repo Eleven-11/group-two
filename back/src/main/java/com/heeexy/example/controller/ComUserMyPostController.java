@@ -6,6 +6,7 @@ import com.heeexy.example.service.WxBrowserService;
 import com.heeexy.example.service.WxLikeService;
 import com.heeexy.example.service.WxMyPostService;
 import com.heeexy.example.util.CommonUtil;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,29 +31,59 @@ public class ComUserMyPostController {
      * 网页展示用户帖子列表
      */
     @GetMapping("/listUserPostById")
-    public JSONObject getListUserPost(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "onUserId");
-        return wxMyPostService.getMyPostListById(requestJson);
+    public JSONObject getListUserPost(HttpServletRequest request) {
+
+        return wxMyPostService.getMyPostListById(CommonUtil.request2Json(request));
+
     }
     /**
      * 删除用户帖子(修改帖子隐藏显示状态)
      */
+    @RequiresPermissions("comuserpost:update")
     @PostMapping("/updateUserPost")
-    public JSONObject updateFans(@RequestBody JSONObject requestJson) {
+    public JSONObject updatePost(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "postId,myPostState");
+        return wxMyPostService.updateMyPostById(requestJson);
+    }
+    /**
+     * 前台删除用户帖子(修改帖子隐藏显示状态)
+     */
+    @PostMapping("/updatePostByUser")
+    public JSONObject updatePostByUser(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "postId,myPostState");
         return wxMyPostService.updateMyPostById(requestJson);
     }
     /**
      * 删除用户帖子(批量修改帖子隐藏显示状态)
      */
+    @RequiresPermissions("comuserpost:update")
     @PostMapping("/updateUserPostMany")
     public JSONObject updatePostMany(@RequestBody JSONObject requestJson) {
-//        CommonUtil.hasAllRequired(requestJson, "posts");/
         ArrayList<Map<String,String>> posts = (ArrayList<Map<String,String>>)requestJson.get("posts");
         for (Map<String, String> post : posts) {
             System.out.println(post);
-          wxMyPostService.updateByPostIdMany(post);
+            wxMyPostService.updateByPostIdMany(post);
         }
-      return CommonUtil.successJson();
+        return CommonUtil.successJson();
+    }
+    /**
+     * 前台删除用户帖子(批量修改帖子隐藏显示状态)
+     */
+    @PostMapping("/updatePostManyByUser")
+    public JSONObject updatePostManyByUser(@RequestBody JSONObject requestJson) {
+        ArrayList<Map<String,String>> posts = (ArrayList<Map<String,String>>)requestJson.get("posts");
+        for (Map<String, String> post : posts) {
+            System.out.println(post);
+            wxMyPostService.updateByPostIdMany(post);
+        }
+        return CommonUtil.successJson();
+    }
+    /**
+     * 网页就算某用户发帖数量
+     */
+    @GetMapping("/countMyPostByUserId")
+    public JSONObject countMyPostByUserId(HttpServletRequest request){
+
+        return wxMyPostService.countMyPostByUserId(CommonUtil.request2Json(request));
     }
 }

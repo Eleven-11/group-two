@@ -26,8 +26,9 @@ public class ComUserCommentController {
     *展示用户评论记录列表
      */
     @GetMapping("/listUserCommentByUserId")
-    public JSONObject getlistUserComment(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "onUserId");
-        return wxMyCommentService.getMyCommentList(requestJson);
+    public JSONObject getlistUserComment(HttpServletRequest request) {
+
+        return wxMyCommentService.getMyCommentListById(CommonUtil.request2Json(request));
+
     }
 }

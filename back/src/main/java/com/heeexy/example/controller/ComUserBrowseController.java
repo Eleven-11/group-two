@@ -35,9 +35,10 @@ public class ComUserBrowseController {
      * 前台展示用户浏览记录列表
      */
     @GetMapping("/listBrowseByUser")
-    public JSONObject getListUserBrowse(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "onUserId");
-        return wxBrowserService.getBrowseByUser(requestJson);
+    public JSONObject getListUserBrowse(HttpServletRequest request) {
+
+        return wxBrowserService.getBrowseByUser(CommonUtil.request2Json(request));
+
     }
 
 }
