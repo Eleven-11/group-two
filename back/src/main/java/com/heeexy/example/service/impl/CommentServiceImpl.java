@@ -3,6 +3,7 @@ package com.heeexy.example.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.CommentDao;
 import com.heeexy.example.service.CommentService;
+import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,57 +21,67 @@ public class CommentServiceImpl implements CommentService {
     private CommentDao commentDao;
 
     @Override
-    public List<JSONObject> getAllComment(JSONObject jsonObject) {
-        return commentDao.getAllComment(jsonObject);
+    public JSONObject getAllComment(JSONObject jsonObject) {
+        CommonUtil.fillPageParam(jsonObject);
+        int count = commentDao.countAllComment();
+        List<JSONObject> list = commentDao.getAllComment(jsonObject);
+        return CommonUtil.successPage(jsonObject, list, count);
     }
 
     @Override
-    public List<JSONObject> getComment(JSONObject jsonObject) {
-        return commentDao.getComment(jsonObject);
+    public JSONObject getComment(JSONObject jsonObject) {
+        CommonUtil.fillPageParam(jsonObject);
+        int count = commentDao.countComment();
+        List<JSONObject> list = commentDao.getComment(jsonObject);
+        return CommonUtil.successPage(jsonObject, list, count);
     }
 
     @Override
-    public List<JSONObject> getAllCommentByPostId(JSONObject jsonObject) {
-        return getAllCommentByPostId(jsonObject);
+    public JSONObject getAllCommentByPostId(JSONObject jsonObject) {
+        CommonUtil.fillPageParam(jsonObject);
+        int count = commentDao.countAllCommentByPostId(jsonObject);
+        List<JSONObject> list = commentDao.getAllCommentByPostId(jsonObject);
+        return CommonUtil.successPage(jsonObject, list, count);
     }
 
     @Override
-    public List<JSONObject> getAllCommentByUserId(JSONObject jsonObject) {
-        return getAllCommentByUserId(jsonObject);
+    public JSONObject getAllCommentByUserId(JSONObject jsonObject) {
+        CommonUtil.fillPageParam(jsonObject);
+        int count = commentDao.countAllCommentByUserId(jsonObject);
+        List<JSONObject> list = commentDao.getAllCommentByUserId(jsonObject);
+        return CommonUtil.successPage(jsonObject, list, count);
     }
 
     @Override
-    public List<JSONObject> getCommentByPostId(JSONObject jsonObject) {
-        return commentDao.getCommentByPostId(jsonObject);
+    public JSONObject getCommentByPostId(JSONObject jsonObject) {
+        CommonUtil.fillPageParam(jsonObject);
+        int count = commentDao.countUnreadCommentByPostId(jsonObject);
+        List<JSONObject> list = commentDao.getCommentByPostId(jsonObject);
+        return CommonUtil.successPage(jsonObject, list, count);
     }
 
     @Override
-    public List<JSONObject> getCommentByUserId(JSONObject jsonObject) {
-        return commentDao.getCommentByUserId(jsonObject);
+    public JSONObject getCommentByUserId(JSONObject jsonObject) {
+        CommonUtil.fillPageParam(jsonObject);
+        int count = commentDao.countUnreadCommentByUserId(jsonObject);
+        List<JSONObject> list = commentDao.getCommentByUserId(jsonObject);
+        return CommonUtil.successPage(jsonObject, list, count);
     }
 
     @Override
     public JSONObject getCommentById(int id) {
-        return commentDao.getCommentById(id);
+        return CommonUtil.successJson(commentDao.getCommentById(id));
     }
 
     @Override
-    public JSONObject countAllComment(int id) {
-        return commentDao.countAllComment(id);
+    public JSONObject addComment(JSONObject jsonObject) {
+        commentDao.addComment(jsonObject);
+        return CommonUtil.successJson();
     }
 
     @Override
-    public JSONObject countUnreadComment(int id) {
-        return commentDao.countUnreadComment(id);
-    }
-
-    @Override
-    public int addComment(JSONObject jsonObject) {
-        return commentDao.addComment(jsonObject);
-    }
-
-    @Override
-    public int updateComment(JSONObject jsonObject) {
-        return commentDao.updateComment(jsonObject);
+    public JSONObject updateComment(JSONObject jsonObject) {
+        commentDao.updateComment(jsonObject);
+        return CommonUtil.successJson();
     }
 }

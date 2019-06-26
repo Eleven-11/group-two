@@ -44,6 +44,16 @@ public interface CommentDao {
     List<JSONObject> getCommentByUserId(JSONObject jsonObject);
 
     /**
+     * 获取所有评论数
+     */
+    int countAllComment();
+
+    /**
+     * 获取可见评论数
+     */
+    int countComment();
+
+    /**
      * 根据id获取评论
      */
     JSONObject getCommentById(int id);
@@ -51,12 +61,22 @@ public interface CommentDao {
     /**
      * 根据帖子id获取所有评论数
      */
-    JSONObject countAllComment(int id);
+    int countAllCommentByPostId(JSONObject jsonObject);
 
     /**
      * 根据帖子id获取未读评论数
      */
-    JSONObject countUnreadComment(int id);
+    int countUnreadCommentByPostId(JSONObject jsonObject);
+
+    /**
+     * 根据用户id获取所有评论数
+     */
+    int countAllCommentByUserId(JSONObject jsonObject);
+
+    /**
+     * 根据用户id获取未读评论数
+     */
+    int countUnreadCommentByUserId(JSONObject jsonObject);
 
     /**
      * 新增评论

@@ -40,13 +40,6 @@ export const asyncRouterMap = [
         meta: {title: '文章', icon: 'example'},
         menu: 'article'
       },
-      {
-        path: 'ads',
-        name: '广告',
-        component: _import('ads/ads'),
-        meta: {title: '广告', icon: 'form'},
-        menu: 'ads'
-      }
     ]
   },
   {
@@ -76,7 +69,14 @@ export const asyncRouterMap = [
     meta: {title: '帖子管理', icon: 'table'},
     children: [
       {
-        path: '', name: '帖子列表', component: _import('post/post'), meta: {title: '帖子列表', icon: 'post'}, menu: 'post'
+        path: '',
+        name: '帖子列表',
+        component: _import('post/post'),
+        meta: {
+          title: '帖子列表',
+          icon: 'example'
+        },
+        menu: 'post'
       },
       {
         path: 'role',
@@ -84,6 +84,13 @@ export const asyncRouterMap = [
         component: _import('user/role'),
         meta: {title: '权限管理', icon: 'password'},
         menu: 'role'
+      },
+      {
+        path: 'comment',
+        name: '评论管理',
+        component: _import('comment/comment'),
+        meta: {title: '评论管理', icon: 'form'},
+        menu: 'comment'
       },
     ]
   },
@@ -132,6 +139,13 @@ export const asyncRouterMap = [
         meta: {title: '帖子标签管理', icon: 'user'},
         menu: 'BusinessSubway'
       },
+      {
+        path: 'ads',
+        name: '广告',
+        component: _import('ads/ads'),
+        meta: {title: '广告', icon: 'form'},
+        menu: 'ads'
+      }
     ]
   },
   {
