@@ -94,8 +94,8 @@ public class WxUserServiceImpl implements WxUserService {
 
         //用户详情发帖计数和粉丝计数
 
-        JSONObject detailUserById = wxUserDao.getDetailUserById(jsonObject);
-        return detailUserById;
+        List<JSONObject> detailUserById = wxUserDao.getDetailUserById(jsonObject);
+        return CommonUtil.successPage(detailUserById);
     }
 
 }

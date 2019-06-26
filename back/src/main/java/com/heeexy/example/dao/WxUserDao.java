@@ -89,7 +89,7 @@ public interface WxUserDao {
                * @methodsName: getDetailUserById
                * @description: 用户详情发帖计数和粉丝计数
                * @param:  JSONObject
-               * @return: JSONObject
+               * @return: List<JSONObject>
                */
-         JSONObject getDetailUserById(JSONObject jsonObject);
+         List<JSONObject> getDetailUserById(JSONObject jsonObject);
     }

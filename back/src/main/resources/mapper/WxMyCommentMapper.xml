@@ -22,13 +22,17 @@
     <!--前台用户自己对帖子的评论记录-->
     <select id="getMyCommentListById" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
 
-         select comment.comment_id commentId,comment.post_id postId,
+         select
+         comment.comment_id commentId,comment.post_id postId,
          post.post_content postContent ,comment.from_user_id onUserId,
-        u.user_name onUserName,comment.to_comment_id toCommentId,uu.user_name toCommentUserName,comment.comment_status commentState,
+        u.user_name onUserName,comment.to_comment_id toCommentId,
+        users.user_name toCommentUserName,comment.comment_status commentState,
         comment.comment_content commentContent,
         DATE_FORMAT(comment.comment_time, '%Y.%m.%d %T')  createTime
-        from lc_comment comment,tyn_post post,fly_user u,fly_user uu
-        where comment.post_id = post.id and u.user_id =comment.from_user_id and uu.user_id =comment.to_comment_id
+        from lc_comment comment,tyn_post post,
+        fly_user u,fly_user users,lc_comment l
+        where comment.post_id = post.id and u.user_id =comment.from_user_id
+        and users.user_id =l.from_user_id and l.to_comment_id =comment.comment_id
         and comment.from_user_id = #{onUserId}
     </select>
 </mapper>
