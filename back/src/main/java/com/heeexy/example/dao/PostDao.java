@@ -51,6 +51,16 @@ public interface PostDao {
 
     List<JSONObject> getAllSorts();
 
+    int updatePost(JSONObject jsonObject);
+    /*
+     * @Author lover_tyn
+     * @Description //TODO
+     * @Date  2019/6/25 20:13
+     * @Param [jsonObject]
+     * @return int
+     */
+
+
 
 
 

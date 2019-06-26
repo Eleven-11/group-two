@@ -28,7 +28,6 @@ public class PostController {
     @PostMapping("/updatePostState")
     public JSONObject updateUser(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "deleteState,postId");
-
         return postService.updatePostState(requestJson);
     }
 
@@ -41,5 +40,12 @@ public class PostController {
     @GetMapping("/getAllSorts")
     public JSONObject getAllSorts() {
         return postService.getAllSorts();
+    }
+
+    @PostMapping("/updatePost")
+    public JSONObject updatePost(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "sortId,postContent, likeOff,collectOff,viewOff, postId");
+        System.out.println(requestJson);
+        return postService.updatePost(requestJson);
     }
 }

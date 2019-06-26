@@ -24,7 +24,7 @@
                     clearable="true" style="width: 300px"  ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search"  @click="getList">搜索
+          <el-button type="primary" icon="el-icon-search"  @click="handleFilter">搜索
           </el-button>
         </el-form-item>
       </el-form>
@@ -79,6 +79,9 @@
     </el-pagination>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="tempPost" label-position="left" label-width="180px">
+        <el-form-item v-if="false" v-model="tempPost.postId" required>
+          {{tempPost.postId}}
+        </el-form-item>
         <el-form-item label="发帖者账号:"  v-if="dialogStatus=='detail'" v-model="tempPost.ownerId" required>
              {{tempPost.ownerId}}
         </el-form-item>
@@ -100,7 +103,7 @@
               </el-select>
           </div>
         </el-form-item>
-        <el-form-item label="帖子标签:"  required>
+        <el-form-item label="帖子标签:" v-if="dialogStatus=='detail'" required>
           <div v-if="dialogStatus=='detail'" v-model="tempPost.tags">
             <div v-for="tag in tempPost.tags">
               <div v-text="'#'+tag" style="float: left;"></div>
@@ -114,18 +117,24 @@
           <div v-else>
             <el-input
               type="textarea"
+              :maxlength="200"
+              show-word-limit
               autosize
               v-model="tempPost.postContent">
             </el-input>
           </div>
         </el-form-item>
-        <el-form-item  style="overflow: hidden;">
-          <div v-if="dialogStatus=='detail'" v-model="tempPost.imgs">
+        <el-form-item  v-model="tempPost.imgs" style="overflow: hidden;">
+          <div v-if="dialogStatus=='detail'" >
             <div  v-for="oneImg in tempPost.imgs" style="float: left; margin-left: 20px;">
-              <img :src="oneImg" style="width: 120px;">
+              <img :src="oneImg" style="width: 120px;" >
             </div>
           </div>
-
+          <div v-else>
+            <div v-for="oneImg in tempPost.imgs" style="float: left;margin-left: 20px">
+              <el-checkbox-button><img :src="oneImg" style="width: 120px;"></el-checkbox-button>
+            </div>
+          </div>
       </el-form-item>
         <el-form-item label="位置:" required v-if="dialogStatus=='detail'" v-model="tempPost.postLocation">
             {{tempPost.postLocation}}
@@ -142,6 +151,18 @@
             {{tempPost.timeStart}}
             <span v-if="tempPost.timeEnd!=null" v-model="tempPost.timeEnd">~~{{tempPost.timeEnd}}</span>
           </div>
+        </el-form-item>
+        <el-form-item label="点赞数浮动值:" required v-if="dialogStatus=='update'" v-model="tempPost.likeOff">
+          <el-input-number  v-model="tempPost.likeOff" @change="checkNumber" >
+          </el-input-number>
+        </el-form-item>
+        <el-form-item label="收藏数浮动值:" required v-if="dialogStatus=='update'" v-model="tempPost.collectOff">
+          <el-input-number v-model="tempPost.collectOff" @change="checkNumber">
+          </el-input-number>
+        </el-form-item>
+        <el-form-item label="浏览数浮动值:" required v-if="dialogStatus=='update'" v-model="tempPost.viewOff">
+          <el-input-number v-model="tempPost.viewOff" @change="checkNumber">
+          </el-input-number>
         </el-form-item>
       </el-form>
 <!--      <el-form-item label="标签" required>-->
@@ -171,7 +192,6 @@
 </template>
 <script>
   import {mapGetters} from 'vuex'
-
   export default {
     data() {
       return {
@@ -180,6 +200,7 @@
         theOwnerName:'',
         theOthers:'',  //搜索参数
         listTop:[],    //置顶模块
+        allListTop:[], //可选置顶模块
         peerPost:[],
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
@@ -249,7 +270,6 @@
         this.listQuery.theEnd =this.theEnd;
         this.listQuery.theOwnerName = this.theOwnerName;
         this.listQuery.theOthers = this.theOthers;
-        console.log(this.listQuery);
         this.api({
           url: "/post/list",
           method: "get",
@@ -343,6 +363,7 @@
         }).then(data => {
           this.listLoading = false;
           let oPost=data.thePost;
+          this.tempPost.postId = oPost.postId;
           this.tempPost.sortId = oPost.sortId;
           this.tempPost.sortName = oPost.sortName;
           this.tempPost.postContent = oPost.postContent;
@@ -364,11 +385,11 @@
         this.api({
           url: "/post/updatePost",
           method: "post",
-          data: this.tempUser
+          data: this.tempPost
         }).then(() => {
           let msg = "修改成功";
           this.dialogFormVisible = false
-          if (this.userId === this.tempUser.userId) {
+          if (this.postId === this.tempPost.postId) {
             msg = '修改成功,部分信息重新登录后生效'
           }
           this.$message({
@@ -381,39 +402,6 @@
           })
         })
       },
-      // showCreate() {
-      //   //显示新增对话框
-      //   this.tempUser.username = "";
-      //   this.tempUser.password = "";
-      //   this.tempUser.nickname = "";
-      //   this.tempUser.roleId = "";
-      //   this.tempUser.userId = "";
-      //   this.dialogStatus = "create"
-      //   this.dialogFormVisible = true
-      // },
-      // showUpdate($index) {
-      //   let user = this.list[$index];
-      //   this.tempUser.username = post.username;
-      //   this.tempUser.nickname = post.nickname;
-      //   this.tempUser.roleId = post.roleId;
-      //   this.tempUser.userId = post.userId;
-      //   this.tempUser.deleteStatus = '1';
-      //   this.tempUser.password = '';
-      //   this.dialogStatus = "update"
-      //   this.dialogFormVisible = true
-      // },
-      // createUser() {
-      //   //添加新用户
-      //   this.api({
-      //     url: "/user/addUser",
-      //     method: "post",
-      //     data: this.tempUser
-      //   }).then(() => {
-      //     this.getList();
-      //     this.dialogFormVisible = false
-      //   })
-      // },
-
       recoverPost($index) {
         let _vue = this;
         this.$confirm('确定恢复此帖子的显示?', '提示', {
@@ -454,6 +442,10 @@
           })
         })
       },
+        checkNumber(value){
+         if(value<0)
+           this.$alert("浮动值不能为负");
+        }
     }
   }
 </script>

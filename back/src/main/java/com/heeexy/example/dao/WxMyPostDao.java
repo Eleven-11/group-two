@@ -1,7 +1,7 @@
 package com.heeexy.example.dao;
 
 import com.alibaba.fastjson.JSONObject;
-import netscape.javascript.JSObject;
+
 
 import java.util.List;
 import java.util.Map;

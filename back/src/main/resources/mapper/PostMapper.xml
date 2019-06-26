@@ -172,4 +172,16 @@
         WHERE display=1
     </select>
 
+    <update id="updatePost">
+        update  tyn_post
+        set
+        post_sort= #{sortId},
+        post_content= #{postContent},
+        like_offset= #{likeOff},
+        collect_offset= #{collectOff},
+        view_offset= #{viewOff}
+        where
+        id= #{postId}
+    </update>
+
 </mapper>
