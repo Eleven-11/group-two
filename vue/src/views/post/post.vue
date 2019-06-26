@@ -17,11 +17,11 @@
         </div>
         </el-form-item>
       <el-form-item>
-        <el-input type="text" v-model="theOwnerName" placeholder="搜索发帖人" clearable="true" style="width: 180px"></el-input>
+        <el-input type="text" v-model="theOwnerName" placeholder="搜索发帖人" :clearable="true" style="width: 180px"></el-input>
       </el-form-item>
         <el-form-item>
           <el-input type="text" v-model="theOthers" placeholder="其他搜索条件:分类，标签，内容等" maxlength="20"
-                    clearable="true" style="width: 300px"  ></el-input>
+                    :clearable="true" style="width: 300px"  ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search"  @click="handleFilter">搜索
@@ -96,15 +96,13 @@
           {{tempPost.postId}}
         </el-form-item>
         <el-form-item label="请选择置顶模块" v-if="dialogStatus=='makeTop' " v-model="tempPost.tops" required>
-
-                <el-checkbox-group v-model="tempPost.tops" style="display: inline-block;margin-left:20px;" >
-
-                  <el-checkbox   label="人气"  border></el-checkbox>
-                    <el-checkbox   label="地铁周边"  border></el-checkbox>
-                  <el-checkbox   label="热门商圈"  border></el-checkbox>
-                  <el-checkbox   label="推荐"  border></el-checkbox>
-
-                </el-checkbox-group>
+          <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll"
+                       @change="handleCheckAllChange">全选</el-checkbox>
+          <el-checkbox-group v-model="tempPost.tops" @change="handleCheckedCitiesChange" style="display: inline-block;margin-left: 10px" >
+            <el-checkbox v-for="top in allTops" :label="top" :key="top">
+              {{top}}
+            </el-checkbox>
+          </el-checkbox-group>
 
         </el-form-item>
         <el-form-item label="发帖者账号:"  v-if="dialogStatus=='detail'" v-model="tempPost.ownerId" required>
@@ -143,7 +141,7 @@
             <el-input
               type="textarea"
               :maxlength="200"
-              show-word-limit
+              :show-word-limit="true"
               autosize
               v-model="tempPost.postContent">
             </el-input>
@@ -203,21 +201,23 @@
   export default {
     data() {
       return {
-        theStart:'',
-        theEnd:'',
-        theOwnerName:'',
-        theOthers:'',  //搜索参数
-        allTops:['人气','地铁周边','热门商圈','推荐'], //可选置顶模块
+        theStart: '',
+        theEnd: '',
+        theOwnerName: '',
+        theOthers: '',  //搜索参数
+        allTops: ['推荐', '地铁周边', '热门商圈', '人气'], //可选置顶模块
+        checkAll:false,
+        isIndeterminate: false,
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
         listQuery: {
           pageNum: 1,//页码
           pageRow: 50,//每页条数
-          theStart:'',
-          theEnd:'',
-          theOwnerName:'',
-          theOthers:''
+          theStart: '',
+          theEnd: '',
+          theOwnerName: '',
+          theOthers: ''
         },
         sorts: [],//分类列表
         dialogStatus: 'detail',
@@ -225,28 +225,28 @@
         textMap: {
           update: '编辑',
           detail: '详情',
-          makeTop:'置顶'
+          makeTop: '置顶'
         },
         tempPost: {
           postId: '',
           ownerId: '',
           postTime: '',
-          sortId:'',
+          sortId: '',
           sortName: '',
-          postContent:'',
-          postLocation:'',
-          postPhone:'',
-          priceLow:'',
-          priceHigh:'',
-          timeStart:'',
-          timeEnd:'',
-          isTop:'',
-          likeOff:'',
-          collectOff:'',
-          viewOff:'',
-          tags:[],
-          imgs:[],
-          tops:[]
+          postContent: '',
+          postLocation: '',
+          postPhone: '',
+          priceLow: '',
+          priceHigh: '',
+          timeStart: '',
+          timeEnd: '',
+          isTop: '',
+          likeOff: '',
+          collectOff: '',
+          viewOff: '',
+          tags: [],
+          imgs: [],
+          tops: []
         },
       }
     },
@@ -262,214 +262,238 @@
         'postId'
       ])
     },
-      methods: {
-        getAllSorts() {
-          this.api({
-            url: "/post/getAllSorts",
-            method: "get"
-          }).then(data => {
-            this.sorts = data.list;
-          })
-        },
-        getList() {
-          //查询列表
-          this.listLoading = true;
-          this.listQuery.theStart = this.theStart;
-          this.listQuery.theEnd = this.theEnd;
-          this.listQuery.theOwnerName = this.theOwnerName;
-          this.listQuery.theOthers = this.theOthers;
-          this.api({
-            url: "/post/list",
-            method: "get",
-            params: this.listQuery
-          }).then(data => {
-            this.listLoading = false;
-            this.list = data.list;
-            for (let i = 0; i < data.list.length; i++) {
-              let listTop = new Array();
-              let temp = parseInt(data.list[i].isTop);
-              if (data.list[i].isTop == 2222) {
-                listTop.push('未置顶')
-              } else {
-                for (let j = 3; j >= 0; j--) {
-                  if (temp % 10 < 2)
-                    listTop.push(this.allTops[j])
-                  temp = parseInt(temp / 10);
-                }
-              }
-              this.list[i].tops = listTop;
-              if (this.list[i].deleteState == 1) {
-                this.list[i].deleteState = '正常';
-              } else {
-                this.list[i].deleteState = "隐藏";
-              }
-              this.list[i].alike += '/' + this.list[i].likeOff;
-              this.list[i].acollect += '/' + this.list[i].collectOff;
-              this.list[i].aview += '/' + this.list[i].viewOff;
+    methods: {
+      getAllSorts() {
+        this.api({
+          url: "/post/getAllSorts",
+          method: "get"
+        }).then(data => {
+          this.sorts = data.list;
+        })
+      },
+      getList() {
+        //查询列表
+        this.listLoading = true;
+        this.listQuery.theStart = this.theStart;
+        this.listQuery.theEnd = this.theEnd;
+        this.listQuery.theOwnerName = this.theOwnerName;
+        this.listQuery.theOthers = this.theOthers;
+        this.api({
+          url: "/post/list",
+          method: "get",
+          params: this.listQuery
+        }).then(data => {
+          this.listLoading = false;
+          this.list = data.list;
+          for (let i = 0; i < data.list.length; i++) {
+            let listTop = new Array();
+            let j=3;
+            let temp = parseInt(data.list[i].isTop);
+            while (temp > 0) {
+              if(temp % 10 == 1)
+                listTop.unshift(this.allTops[j]);
+              j--;
+              temp = parseInt(temp/10);
             }
+            this.list[i].tops = listTop;
+            if (this.list[i].deleteState == 1)
+              this.list[i].deleteState = '正常';
+             else
+              this.list[i].deleteState = "隐藏";
+            this.list[i].alike += '/' + this.list[i].likeOff;
+            this.list[i].acollect += '/' + this.list[i].collectOff;
+            this.list[i].aview += '/' + this.list[i].viewOff;
+          }
 
+        })
+      },
+      handleSizeChange(val) {
+        //改变每页数量
+        this.listQuery.pageRow = val
+        this.handleFilter();
+      },
+      handleCurrentChange(val) {
+        //改变页码
+        this.listQuery.pageNum = val
+        this.getList();
+      },
+      handleFilter() {
+        //查询事件
+        this.listQuery.pageNum = 1
+        this.getList()
+      },
+      getIndex($index) {
+        //表格序号
+        return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
+      },
+      showDetail($index) {
+        let _vue = this;
+        let onePost = _vue.list[$index];
+        this.api({
+          url: "/post/getOnePost",
+          method: "post",
+          data: onePost
+        }).then(data => {
+          this.listLoading = false;
+          let oPost = data.thePost;
+          this.tempPost.ownerId = oPost.ownerId;
+          this.tempPost.postTime = oPost.postTime;
+          this.tempPost.sortName = oPost.sortName;
+          this.tempPost.postContent = oPost.postContent;
+          this.tempPost.postLocation = oPost.postLocation;
+          this.tempPost.postPhone = oPost.postPhone;
+          this.tempPost.priceLow = oPost.priceLow;
+          this.tempPost.priceHigh = oPost.priceHigh;
+          this.tempPost.timeStart = oPost.timeStart;
+          this.tempPost.timeEnd = oPost.timeEnd;
+          this.tempPost.tags = oPost.tagList;
+          this.tempPost.imgs = oPost.imgList;
+          this.dialogStatus = "detail";
+          this.dialogFormVisible = true;
+        })
+      },
+      showUpdate($index) {
+        let _vue = this;
+        let onePost = _vue.list[$index];
+        this.api({
+          url: "/post/getOnePost",
+          method: "post",
+          data: onePost
+        }).then(data => {
+          this.listLoading = false;
+          let oPost = data.thePost;
+          this.tempPost.postId = oPost.postId;
+          this.tempPost.sortId = oPost.sortId;
+          this.tempPost.sortName = oPost.sortName;
+          this.tempPost.postContent = oPost.postContent;
+          this.tempPost.postLocation = oPost.postLocation;
+          this.tempPost.postPhone = oPost.postPhone;
+          this.tempPost.tags = oPost.tagList;
+          this.tempPost.imgs = oPost.imgList;
+          this.tempPost.likeOff = oPost.likeOff;
+          this.tempPost.collectOff = oPost.collectOff;
+          this.tempPost.viewOff = oPost.viewOff;
+          this.tempPost.isTop = oPost.isTop;
+          this.dialogStatus = "update";
+          this.dialogFormVisible = true;
+        })
+      },
+      updatePost() {
+        //修改用户信息
+        let _vue = this;
+        this.api({
+          url: "/post/updatePost",
+          method: "post",
+          data: this.tempPost
+        }).then(() => {
+          let msg = "修改成功";
+          this.dialogFormVisible = false;
+          if (this.postId === this.tempPost.postId) {
+            msg = '修改成功,部分信息重新登录后生效'
+          }
+          this.$message({
+            message: msg,
+            type: 'success',
+            duration: 1 * 1000,
+            onClose: () => {
+              _vue.getList();
+            }
           })
-        },
-        handleSizeChange(val) {
-          //改变每页数量
-          this.listQuery.pageRow = val
-          this.handleFilter();
-        },
-        handleCurrentChange(val) {
-          //改变页码
-          this.listQuery.pageNum = val
-          this.getList();
-        },
-        handleFilter() {
-          //查询事件
-          this.listQuery.pageNum = 1
-          this.getList()
-        },
-        getIndex($index) {
-          //表格序号
-          return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
-        },
-        showDetail($index) {
-          let _vue = this;
+        })
+      },
+      showTop($index) {
+        let post = this.list[$index];
+        this.tempPost.postId = post.postId;
+        this.tempPost.tops = post.tops;
+        this.tempPost.isTop= post.isTop;
+        this.dialogStatus = "makeTop"
+        this.dialogFormVisible = true
+      },
+      updatePostTop() {
+        let _vue = this;
+        this.api({
+          url: "/post/updatePostTop",
+          method: "post",
+          data: this.tempPost
+        }).then(() => {
+          let msg = "修改成功";
+          this.dialogFormVisible = false;
+          if (this.postId === this.tempPost.postId) {
+            msg = '修改成功,部分信息重新登录后生效'
+          }
+          this.$message({
+            message: msg,
+            type: 'success',
+            duration: 1 * 1000,
+            onClose: () => {
+              _vue.getList();
+            }
+          })
+        })
+
+      },
+      recoverPost($index) {
+        let _vue = this;
+        this.$confirm('确定恢复此帖子的显示?', '提示', {
+          confirmButtonText: '确定',
+          showCancelButton: false,
+          type: 'warning'
+        }).then(() => {
           let onePost = _vue.list[$index];
-          this.api({
-            url: "/post/getOnePost",
+          onePost.deleteState = 1;
+          _vue.api({
+            url: "/post/updatePostState",
             method: "post",
             data: onePost
-          }).then(data => {
-            this.listLoading = false;
-            let oPost = data.thePost;
-            this.tempPost.ownerId = oPost.ownerId;
-            this.tempPost.postTime = oPost.postTime;
-            this.tempPost.sortName = oPost.sortName;
-            this.tempPost.postContent = oPost.postContent;
-            this.tempPost.postLocation = oPost.postLocation;
-            this.tempPost.postPhone = oPost.postPhone;
-            this.tempPost.priceLow = oPost.priceLow;
-            this.tempPost.priceHigh = oPost.priceHigh;
-            this.tempPost.timeStart = oPost.timeStart;
-            this.tempPost.timeEnd = oPost.timeEnd;
-            this.tempPost.tags = oPost.tagList;
-            this.tempPost.imgs = oPost.imgList;
-            this.dialogStatus = "detail";
-            this.dialogFormVisible = true;
+          }).then(() => {
+            _vue.getList()
+          }).catch(() => {
+            _vue.$message.error("恢复失败")
           })
-        },
-        showUpdate($index) {
-          let _vue = this;
+        })
+      },
+      deletePost($index) {
+        let _vue = this;
+        this.$confirm('确定隐藏此帖子?', '提示', {
+          confirmButtonText: '确定',
+          showCancelButton: false,
+          type: 'warning'
+        }).then(() => {
           let onePost = _vue.list[$index];
-          this.api({
-            url: "/post/getOnePost",
+          onePost.deleteState = 2;
+          _vue.api({
+            url: "/post/updatePostState",
             method: "post",
             data: onePost
-          }).then(data => {
-            this.listLoading = false;
-            let oPost = data.thePost;
-            this.tempPost.postId = oPost.postId;
-            this.tempPost.sortId = oPost.sortId;
-            this.tempPost.sortName = oPost.sortName;
-            this.tempPost.postContent = oPost.postContent;
-            this.tempPost.postLocation = oPost.postLocation;
-            this.tempPost.postPhone = oPost.postPhone;
-            this.tempPost.tags = oPost.tagList;
-            this.tempPost.imgs = oPost.imgList;
-            this.tempPost.likeOff = oPost.likeOff;
-            this.tempPost.collectOff = oPost.collectOff;
-            this.tempPost.viewOff = oPost.viewOff;
-            this.tempPost.isTop = oPost.isTop;
-            this.dialogStatus = "update";
-            this.dialogFormVisible = true;
-          })
-        },
-        updatePost() {
-          //修改用户信息
-          let _vue = this;
-          this.api({
-            url: "/post/updatePost",
-            method: "post",
-            data: this.tempPost
           }).then(() => {
-            let msg = "修改成功";
-            this.dialogFormVisible = false
-            if (this.postId === this.tempPost.postId) {
-              msg = '修改成功,部分信息重新登录后生效'
-            }
-            this.$message({
-              message: msg,
-              type: 'success',
-              duration: 1 * 1000,
-              onClose: () => {
-                _vue.getList();
-              }
-            })
+            _vue.getList()
+          }).catch(() => {
+            _vue.$message.error("隐藏失败")
           })
-        },
-        showTop($index) {
-          let post = this.list[$index];
-          this.tempPost.postId = post.postId;
-          this.tempPost.tops = post.tops;
+        })
+      },
+      handleCheckAllChange(val) {
+        this.tempPost.tops = val ? this.allTops : [];
+        this.isIndeterminate = false;
+        if(val==true)
+          this.tempPost.isTop=1111;
+        else this.tempPost.isTop=0;
+      },
+      handleCheckedCitiesChange(value) {
 
-          this.dialogStatus = "makeTop"
-          this.dialogFormVisible = true
-        },
-        updatePostTop() {
+        let checkedCount = value.length;
+        this.checkAll = checkedCount === this.allTops.length;
+        this.isIndeterminate = checkedCount > 0 && checkedCount < this.allTops.length;
+        this.tempPost.isTop=0;
+        for(let i=0;i<value.length;i++) {
+          for(let j=0;j<4;j++){
+            if(value[i]==this.allTops[j])
+            {this.tempPost.isTop+=Math.pow(10,(3-j)); break;}
 
-        },
-        recoverPost($index) {
-          let _vue = this;
-          this.$confirm('确定恢复此帖子的显示?', '提示', {
-            confirmButtonText: '确定',
-            showCancelButton: false,
-            type: 'warning'
-          }).then(() => {
-            let onePost = _vue.list[$index];
-            onePost.deleteState = 1;
-            _vue.api({
-              url: "/post/updatePostState",
-              method: "post",
-              data: onePost
-            }).then(() => {
-              _vue.getList()
-            }).catch(() => {
-              _vue.$message.error("恢复失败")
-            })
-          })
-        },
-        deletePost($index) {
-          let _vue = this;
-          this.$confirm('确定隐藏此帖子?', '提示', {
-            confirmButtonText: '确定',
-            showCancelButton: false,
-            type: 'warning'
-          }).then(() => {
-            let onePost = _vue.list[$index];
-            onePost.deleteState = 2;
-            _vue.api({
-              url: "/post/updatePostState",
-              method: "post",
-              data: onePost
-            }).then(() => {
-              _vue.getList()
-            }).catch(() => {
-              _vue.$message.error("隐藏失败")
-            })
-          })
-        },
-        //     checkRequired(top) {
-        //       //本方法会在勾选状态改变之后触发
-        //
-        //       if (this.tempRole.tops.indexOf(top) > -1) {
-        //         //选中事件
-        //         //如果之前未勾选本权限,现在勾选完之后,tempRole里就会包含本id
-        //         //那么就要将必选的权限勾上
-        //         this.makeReuqiredPermissionChecked(top);
-        //       }
-        //     },
-        //     checkNumber(value){
-        //      if(value<0)
-        //        this.$alert("浮动值不能为负");
-        //     }
-        // }
+          }
+        }
       }
+
+    }
   }
 </script>
