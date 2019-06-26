@@ -3,7 +3,7 @@
   <div class="filter-container">
     <el-form >
       <el-form-item label="用户名"  >
-        <el-input type="text" v-model="userName" style="width: 200px;margin-right: 30px;">
+        <el-input type="text" v-model="userName"  onkeyup="value=value.replace(/[^\w\u4E00-\u9FA5]/g, '')" style="width: 200px;margin-right: 30px;">
         </el-input>
         <el-button type="primary"  icon="plus"  @click="selectUser">查询</el-button>
       </el-form-item>
@@ -77,11 +77,11 @@
         </el-input>
       </el-form-item>
       <el-form-item label="用户名"  >
-        <el-input type="text" v-model="tempUser.userName">
+        <el-input type="text" :disabled="true" v-model="tempUser.userName">
         </el-input>
       </el-form-item>
       <el-form-item label="性别"  >
-        <el-input type="text" v-model="tempUser.userSex">
+        <el-input type="text" :disabled="true" v-model="tempUser.userSex">
         </el-input>
       </el-form-item>-->
       <el-form-item label="粉丝数" required >
