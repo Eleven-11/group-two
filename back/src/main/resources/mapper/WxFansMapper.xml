@@ -13,19 +13,19 @@
     <!--查找关注用户列表(小程序显示列表)-->
     <select id="getListByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
          select
-t1.FansId,t1.onusername onUserName ,t2.username userName,t1.state state,DATE_FORMAT(t1.createTime1, '%Y.%m.%d %T') createTime,DATE_FORMAT(t1.updateTime1, '%Y.%m.%d %T') updateTime
+t1.fans_id fansId,t1.onusername onUserName ,t2.username userName,t1.state state,DATE_FORMAT(t1.createTime1, '%Y.%m.%d %T') createTime,DATE_FORMAT(t1.updateTime1, '%Y.%m.%d %T') updateTime
  from
 (select
-          fans.fans_id fansId,fans.onuser_id,users.user_name onusername ,fans.state state,DATE_FORMAT(fans.create_time, '%Y.%m.%d %T') createTime1,DATE_FORMAT(fans.update_time, '%Y.%m.%d %T') updateTime1
+          fans.fans_id,fans.onuser_id,users.user_name onusername ,fans.state state,DATE_FORMAT(fans.create_time, '%Y.%m.%d %T') createTime1,DATE_FORMAT(fans.update_time, '%Y.%m.%d %T') updateTime1
        	 from  fly_fans fans,fly_user users
 
 		where   users.user_id =fans.onuser_id ) t1,
 (select
-          fans.fans_id FansId,fans.user_id,users.user_name username
+          fans.fans_id,fans.user_id,users.user_name username
        	 from  fly_fans fans,fly_user users
 
 		where   users.user_id =fans.user_id ) t2
-where t1.FansId =t2.fansId and t1.onuser_id =#{onUserId} and t1.state = 1
+where t1.fans_id =t2.fans_id and t1.onuser_id =#{onUserId} and t1.state = 1
 
 ;
     </select>
@@ -49,19 +49,19 @@ where t1.FansId =t2.fansId and t1.onuser_id =#{onUserId} and t1.state = 1
     <!--查找所有用户粉丝关注表（后台显示）-->
     <select id="getListFans" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
        select
-t1.FansId,t1.onusername onUserName ,t2.username userName,t1.state state,DATE_FORMAT(t1.createTime1, '%Y.%m.%d %T') createTime,DATE_FORMAT(t1.updateTime1, '%Y.%m.%d %T') updateTime
+t1.fans_id fansId,t1.onusername onUserName ,t2.username userName,t1.state state,DATE_FORMAT(t1.createTime1, '%Y.%m.%d %T') createTime,DATE_FORMAT(t1.updateTime1, '%Y.%m.%d %T') updateTime
  from
 (select
-          fans.fans_id fansId,fans.onuser_id,users.user_name onusername ,fans.state state,DATE_FORMAT(fans.create_time, '%Y.%m.%d %T') createTime1,DATE_FORMAT(fans.update_time, '%Y.%m.%d %T') updateTime1
+          fans.fans_id ,fans.onuser_id,users.user_name onusername ,fans.state state,DATE_FORMAT(fans.create_time, '%Y.%m.%d %T') createTime1,DATE_FORMAT(fans.update_time, '%Y.%m.%d %T') updateTime1
        	 from  fly_fans fans,fly_user users
 
 		where   users.user_id =fans.onuser_id ) t1,
 (select
-          fans.fans_id FansId,fans.user_id,users.user_name username
+          fans.fans_id,fans.user_id,users.user_name username
        	 from  fly_fans fans,fly_user users
 
 		where   users.user_id =fans.user_id ) t2
-where t1.FansId =t2.fansId
+where t1.fans_id =t2.fans_id
         LIMIT #{offSet}, #{pageRow};
     </select>
     <!--计算用户数(后台)-->

@@ -85,7 +85,7 @@
         </el-input>
       </el-form-item>-->
       <el-form-item label="粉丝数" required >
-        <el-input type="text" v-model="tempUser.userFansf">
+        <el-input type="number"  oninput="javascript:this.value=this.value.replace(/[^\d]/g,'')"  v-model="tempUser.userFansf" >
         </el-input>
       </el-form-item>
      <!-- <el-form-item label="封禁状态" required>

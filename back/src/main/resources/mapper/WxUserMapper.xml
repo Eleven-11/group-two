@@ -36,7 +36,7 @@
     </update>
     <!--查找总粉丝数-->
     <select id="countFansByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-        select sum(user_fans+user_fans_f) from fly_user where user_id =#{userId};
+        select sum(user_fans+user_fans_f) fansToal,fly_user.user_name username from fly_user where user_id =#{userId};
     </select>
 
     <!--查找所有用户-->
