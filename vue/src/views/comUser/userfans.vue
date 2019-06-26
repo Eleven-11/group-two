@@ -1,47 +1,53 @@
 <template>
   <div class="app-container">
 
-    <p>======================================================</p>
+    <p>===========================关注人==================</p>
     <div v-for="item3 in onUserfans">
-      <p>关注ID：{{ item3.FansId }}</p>
+      <p>关注ID：{{ item3.fansId }}</p>
       <p>关注人：{{ item3.userName }}</p>
   </div>
-    <p>------------------------------------------------</p>
+    <p>-----------------------点赞-------------------------</p>
     <div v-for="item4 in onUserLike">
       <p>点赞ID：{{ item4.likeId }}</p>
       <p>帖子ID：{{ item4.postId }}</p>
       <p>点赞内容：{{ item4.postContent }}</p>
       <p>发帖人：{{ item4.userName }}</p>
     </div>
-    <p>------------------------------------------------</p>
+    <p>-------------------------浏览-----------------------</p>
     <div v-for="item5 in onUserBrowse">
       <p>浏览ID：{{ item5.browseId }}</p>
       <p>浏览帖子ID：{{ item5.postId }}</p>
+
+      <p>浏览帖子ID：{{ item5.postContent }}</p>
       <p>浏览时间：{{ item5.createTime }}</p>
     </div>
-    <p>------------------------------------------------</p>
+    <p>-----------------------帖子-------------------------</p>
     <div v-for="item6 in onUserPost">
       <p>帖子ID：{{ item6.postId }}</p>
       <p>帖子内容：{{ item6.postContent }}</p>
       <p>帖子创建时间：{{ item6.createTime }}</p>
     </div>
-    <p>------------------------------------------------</p>
+    <p>------------------------评论------------------------</p>
     <div v-for="item7 in onUsercomment">
       <p>评论ID：{{ item7.commentId }}</p>
       <p>评论的帖子ID：{{ item7.postId }}</p>
       <p>帖子内容：{{ item7.postContent }}</p>
       <p>评论者：{{ item7.onUserName }}</p>
-      <p>被评论者：{{ item7.toCommentUserName }}</p>
+      <div v-if="item7.toCommentId !=0">
+        <p>被评论者：{{ item7.toCommentUserName }}</p>
+      </div>
       <p>评论内容：{{ item7.commentContent }}</p>
       <p>评论时间：{{ item7.createTime }}</p>
     </div>
-    <p>==========================</p>
-    <div v-for="item1 in UserFansNumber">
-      <p>粉丝数：{{ item1.fansToal}}</p>
+    <p>==============粉丝============</p>
+    <div v-for="item1 in userFansNumber">
+      <p>粉丝数：{{ item1.fansNumber}}</p>
+      <p>发帖数量：{{ item1.postNumber}}</p>
     </div>
-    <div v-for="item2 in MyPostNumber">
+   <!-- <p>==============帖子数============</p>
+    <div v-for="item2 in myPostNumber">
       <p>发帖数量：{{ item2.postNumber}}</p>
-    </div>
+    </div>-->
     </div>
 </template>
 
@@ -54,8 +60,8 @@
           onUserLike:[],
           onUserBrowse:[],
           onUserPost:[],
-          MyPostNumber:[],
-          UserFansNumber:[],
+          myPostNumber:[],
+          userFansNumber:[],
         }
       },
       created() {
@@ -65,7 +71,7 @@
         this.getUserbrowse();
         this.getUsercomment();
         this.getUserFansNumber();
-        this.getMyPostNumber();
+        // this.getMyPostNumber();
       },
       methods: {
         getUserFans() {
@@ -143,7 +149,7 @@
             method: "get",
             params: param6
           }).then(data => {
-            this.MyPostNumber = data.list;
+            this.myPostNumber = data.list;
           })
         },
         getUserFansNumber() {
@@ -152,11 +158,11 @@
           }
           console.log(param7);
           this.api({
-            url: "/comUser/getUserFans",
+            url: "/comUser/getDetailUserById",
             method: "get",
             params: param7
           }).then(data => {
-            this.UserFansNumber = data.list;
+            this.userFansNumber = data.list;
           })
         },
       }
