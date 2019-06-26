@@ -61,7 +61,9 @@
           </template>
         </el-table-column>
         <el-table-column align="center" prop="uname" label="发布用户" style="width: 60px;">
-          <span>{{scope.row.uname}}</span>
+          <template slot-scope="scope">
+            <span>{{scope.row.uname}}</span>
+          </template>
         </el-table-column>
         <el-table-column align="center" prop="tcid" label="被回复评论ID" style="width: 60px;">
           <template slot-scope="scope">
