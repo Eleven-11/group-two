@@ -50,4 +50,11 @@ public interface WxLikeService {
      * @return: JSONObject
      */
    JSONObject updateLikeByUserId(JSONObject jsonObject);
+    /**
+     * @methodsName: addLikeByUserId
+     * @description: 重新添加点赞状态
+     * @param:  JSONObject
+     * @return: JSONObject
+     */
+    JSONObject addLikeByUserId(JSONObject jsonObject);
 }

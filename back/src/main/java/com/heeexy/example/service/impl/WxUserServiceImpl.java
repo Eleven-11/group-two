@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ Author     ：良优
@@ -98,4 +99,10 @@ public class WxUserServiceImpl implements WxUserService {
         return CommonUtil.successPage(detailUserById);
     }
 
+    @Override
+    public JSONObject updateFansById(Map map) {
+        //修改真实粉丝数
+         wxUserDao.updateFansById(map);
+        return CommonUtil.successJson();
+    }
 }

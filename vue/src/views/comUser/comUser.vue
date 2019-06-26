@@ -5,7 +5,7 @@
       <el-form-item label="用户名"  >
         <el-input type="text" v-model="userName"  onkeyup="value=value.replace(/[^\w\u4E00-\u9FA5]/g, '')" style="width: 200px;margin-right: 30px;">
         </el-input>
-        <el-button type="primary"  icon="plus"  @click="selectUser">查询</el-button>
+        <el-button type="primary"  icon="el-icon-search"  @click="selectUser">查询</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -53,8 +53,8 @@
     <el-table-column align="center" label="管理" width="300">
       <template slot-scope="scope">
         <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
-       <el-button type="danger" icon="delete"  @click="updateState(scope.$index)">封禁？</el-button>
-        <el-button type="primary" icon="edit"  @click="jump(scope.$index)">查看</el-button>
+       <el-button type="danger" icon="danger"  @click="updateState(scope.$index)">封禁？</el-button>
+        <el-button type="primary" icon="info"  @click="jump(scope.$index)">查看</el-button>
 
       </template>
     </el-table-column>

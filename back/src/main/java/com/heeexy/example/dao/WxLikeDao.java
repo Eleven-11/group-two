@@ -56,4 +56,11 @@ public interface WxLikeDao {
           * @return: int
           */
     int updateLikeByUserId(JSONObject jsonObject);
+     /**
+          * @methodsName: addLikeByUserId
+          * @description: 重新添加点赞状态
+          * @param:  JSONObject
+          * @return: int
+          */
+    int addLikeByUserId(JSONObject jsonObject);
 }

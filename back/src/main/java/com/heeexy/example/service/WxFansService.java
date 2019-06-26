@@ -29,6 +29,13 @@ public interface WxFansService{
      */
     JSONObject updateFansByUserId(JSONObject jsonObject);
     /**
+     * @methodsName: updateFansStateByUserId
+     * @description: 重新修改关注状态
+     * @param:  JSONObject
+     * @return: int
+     */
+    JSONObject updateFansStateByUserId(JSONObject jsonObject);
+    /**
      * @methodsName: addByFans
      * @description: 添加粉丝关注用户
      * @param:  JSONObject
