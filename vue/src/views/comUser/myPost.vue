@@ -99,13 +99,11 @@
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-
             rows.forEach(element =>{
               _vue.ids.push(element);
               let param = {
                 "posts":_vue.ids,
               }
-
               _vue.api({
                 url: "/comUserPost/updateUserPostMany",
                 method: "post",
@@ -115,7 +113,6 @@
               }).catch(() => {
                 _vue.$message.error("删除失败")
               })
-
             })
           console.log(this.postId);
           }).catch(() => {
