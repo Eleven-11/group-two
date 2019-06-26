@@ -7,7 +7,7 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-
+      <el-table-column align="center" label="用户ID" prop="onUserId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="用户名" prop="onUserName" style="width: 60px;"></el-table-column>
       <el-table-column  align="center" label="帖子ID" prop="postId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="帖子内容" prop="postContent" style="width: 60px;"></el-table-column>
@@ -26,9 +26,8 @@
       <el-table-column align="center" label="更新时间" prop="updateTime" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
-          <el-button type="danger" icon="edit" v-if="scope.row.likeId!=likeId "
-                     @click="removeUser(scope.$index)">修改
-          </el-button>
+          <el-button type="primary" icon="edit" v-if="scope.row.likeState=='0'" @click="addlikes(scope.$index)">点赞</el-button>
+          <el-button type="danger" icon="delete" v-if="scope.row.likeState=='1'" @click="removeUser(scope.$index)">取消</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -49,7 +48,6 @@
   export default {
     data() {
       return {
-
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
@@ -64,6 +62,7 @@
           update: '编辑',
         },
         tempLike: {
+          onUserId:'',
           postContent:'',
           onUserName: '',
           postId:'',
@@ -115,42 +114,29 @@
         //表格序号
         return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
       },
-      selectUser(){
+      addlikes($index) {
 
-        this.getList();
-      },
-      showUpdate($index) {
-        let user = this.list[$index];
-
-        this.dialogStatus = "update"
-        this.dialogFormVisible = true
-      },
-      updateUser() {
-        //修改用户信息
         let _vue = this;
-        this.api({
-          url: "/comUser/updateUserLike",
-          method: "post",
-          data: this.tempFans
+        this.$confirm('确定点赞该帖子?', '提示', {
+          confirmButtonText: '确定',
+          showCancelButton: false,
+          type: 'warning'
         }).then(() => {
-          let msg = "修改成功";
-          this.dialogFormVisible = false
-          if (this.fansId === this.tempFans.fansId) {
-            msg = '修改成功,部分信息重新登录后生效'
-          }
-          this.$message({
-            message: msg,
-            type: 'success',
-            duration: 1 * 1000,
-            onClose: () => {
-              _vue.getList();
-            }
+          let user = _vue.list[$index];
+          _vue.api({
+            url: "/comUserLike/addUserLikes",
+            method: "post",
+            data: user
+          }).then(() => {
+            _vue.getList()
+          }).catch(() => {
+            _vue.$message.error("修改失败")
           })
         })
       },
       removeUser($index) {
         let _vue = this;
-        this.$confirm('确定修改此用户关注?', '提示', {
+        this.$confirm('确定取消点赞?', '提示', {
           confirmButtonText: '确定',
           showCancelButton: false,
           type: 'warning'

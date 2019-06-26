@@ -19,8 +19,12 @@
     <!--增加游客用户-->
     <insert id="addGuestUser" parameterType="com.alibaba.fastjson.JSONObject">
     insert  into  fly_user (user_uuid userUuid,user_name, user_photo, user_sex, user_fans, user_fans_f, guest, user_state)
-    values (0,#{userName},#{userPhoto},#{userSex},0,0,1,0);
+    values (0,'游客','http://img.duoziwang.com/2018/17/05282053226540.jpg','男',0,0,1,0);
     </insert>
+    <!--修改真实粉丝数-->
+    <update id="updateFansById" parameterType="java.util.Map" >
+        update fly_user set user_fans = #{userFans} where  user_id = #{userId};
+    </update>
     <!--修改虚假粉丝数-->
     <update id="updateFansfById" parameterType="com.alibaba.fastjson.JSONObject" >
         update fly_user set user_fans_f = #{userFansf} where  user_id = #{userId};
@@ -37,6 +41,11 @@
     <!--查找总粉丝数-->
     <select id="countFansByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
         select fly_user.user_fans+fly_user.user_fans_f fansToal,fly_user.user_name username from fly_user where user_id =#{onUserId};
+        select fly_user.user_fans+fly_user.user_fans_f fansToal,fly_user.user_name username from fly_user where user_id =#{onUserId};
+    </select>
+    <!--查找真实粉丝数-->
+    <select id="getFansByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
+        select user_fans from fly_user where user_id =#{userId};
     </select>
 
     <!--查找所有用户-->
@@ -86,7 +95,7 @@
     </select>
     <!--用户详情页-->
 <select id="getDetailUserById" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-        select  count(p.post_owner) postNumber,u.user_fans_f+u.user_fans fansNumber
+        select  count(p.post_owner) postNumber, u.user_fans_f+u.user_fans fansNumber
         from tyn_post p,fly_user u
         where u.user_id =p.post_owner  and u.user_id =#{onUserId}
 </select>

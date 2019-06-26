@@ -4,6 +4,7 @@ package com.heeexy.example.service;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ Author     ：良优
@@ -89,4 +90,11 @@ public interface WxUserService {
      * @return: JSONObject
      */
     JSONObject getDetailUserById(JSONObject jsonObject);
+    /**
+     * @methodsName: updateFansById
+     * @description: 修改真实粉丝数
+     * @param:  Map
+     * @return: JSONObject
+     */
+    JSONObject updateFansById(Map map);
 }

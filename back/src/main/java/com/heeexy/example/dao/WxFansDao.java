@@ -37,6 +37,13 @@ public interface WxFansDao {
            * @return: int
            */
      int updateFansByUserId(JSONObject jsonObject);
+      /**
+           * @methodsName: updateFansStateByUserId
+           * @description: 重新修改关注状态
+           * @param:  JSONObject
+           * @return: int
+           */
+     int updateFansStateByUserId(JSONObject jsonObject);
 
       /**
            * @methodsName: addByFans
