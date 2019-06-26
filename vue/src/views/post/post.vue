@@ -37,9 +37,13 @@
         </template>
       </el-table-column>
       <el-table-column  align="center" label="帖子ID" prop="postId" style="width: 60px;" v-if="false"></el-table-column>
-      <el-table-column align="center" label="发帖人" prop="ownerName"  sortable></el-table-column>
+      <el-table-column align="center" label="发帖人"  prop="ownerName"  sortable></el-table-column>
       <el-table-column align="center" label="发帖时间" prop="postTime" width="100" sortable></el-table-column>
-      <el-table-column align="center" label="所属分类" prop="sortName" width="110" sortable></el-table-column>
+      <el-table-column align="center" label="所属分类"  width="110" sortable>
+        <template slot-scope="scope">
+            <el-tag v-text="scope.row.sortName" style="float: left;margin-left: 5px"></el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="标签" width="270">
         <template slot-scope="scope">
           <div v-for="tag in scope.row.tagList">
@@ -47,21 +51,30 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="置顶状态" prop="isTop" width="170"></el-table-column>
+      <el-table-column align="center" label="置顶模块" width="200">
+        <template slot-scope="scope">
+          <div v-for="top in scope.row.tops">
+            <el-tag v-text="top" style="float: left;margin-left: 5px"></el-tag>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="显示状态" prop="deleteState" width="120" sortable></el-table-column>
       <el-table-column align="center" label="点赞数/偏移量" prop="alike" width="150" sortable></el-table-column>
       <el-table-column align="center" label="收藏数/偏移量" prop="acollect" width="150" sortable></el-table-column>
       <el-table-column align="center" label="浏览数/偏移量" prop="aview" width="150" sortable></el-table-column>
       <el-table-column align="center" label="管理" width="300" >
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit"
+          <el-button type="primary"
                      @click="showDetail(scope.$index)"><i class="el-icon-info"></i></el-button>
-          <el-button type="primary" icon="edit"
+          <el-button type="primary"
                      @click="showUpdate(scope.$index)"><i class="el-icon-edit"></i></el-button>
-          <el-button type="danger" icon="delete" v-if="scope.row.deleteState=='隐藏'"
+          <el-button type="primary"
+                     @click="showTop(scope.$index)"><i class="el-icon-caret-top"></i>
+          </el-button>
+          <el-button type="danger"  v-if="scope.row.deleteState=='隐藏'"
                      @click="recoverPost(scope.$index)"><i class="el-icon-circle-plus"></i>
           </el-button>
-          <el-button type="danger" icon="delete" v-if="scope.row.deleteState=='正常显示'"
+          <el-button type="danger"  v-if="scope.row.deleteState=='正常'"
                      @click="deletePost(scope.$index)"><i class="el-icon-remove"></i>
           </el-button>
         </template>
@@ -82,13 +95,25 @@
         <el-form-item v-if="false" v-model="tempPost.postId" required>
           {{tempPost.postId}}
         </el-form-item>
+        <el-form-item label="请选择置顶模块" v-if="dialogStatus=='makeTop' " v-model="tempPost.tops" required>
+
+                <el-checkbox-group v-model="tempPost.tops" style="display: inline-block;margin-left:20px;" >
+
+                  <el-checkbox   label="人气"  border></el-checkbox>
+                    <el-checkbox   label="地铁周边"  border></el-checkbox>
+                  <el-checkbox   label="热门商圈"  border></el-checkbox>
+                  <el-checkbox   label="推荐"  border></el-checkbox>
+
+                </el-checkbox-group>
+
+        </el-form-item>
         <el-form-item label="发帖者账号:"  v-if="dialogStatus=='detail'" v-model="tempPost.ownerId" required>
              {{tempPost.ownerId}}
         </el-form-item>
         <el-form-item label="发帖时间:"  v-if="dialogStatus=='detail'" v-model="tempPost.postTime" required>
             {{tempPost.postTime}}
         </el-form-item>
-        <el-form-item label="所属分类:"  v-model="tempPost.sortName" required>
+        <el-form-item label="所属分类:"  v-if="dialogStatus!='makeTop' " v-model="tempPost.sortName" required>
           <div v-if="dialogStatus=='detail'" >
             {{tempPost.sortName}}
           </div>
@@ -103,14 +128,14 @@
               </el-select>
           </div>
         </el-form-item>
-        <el-form-item label="帖子标签:" v-if="dialogStatus=='detail'" required>
+        <el-form-item label="帖子标签:"   v-if="dialogStatus!='makeTop' " required>
           <div v-if="dialogStatus=='detail'" v-model="tempPost.tags">
             <div v-for="tag in tempPost.tags">
-              <div v-text="'#'+tag" style="float: left;"></div>
+              <el-tag v-text="tag" style="float: left;margin-left: 5px"></el-tag>
            </div>
           </div>
         </el-form-item>
-        <el-form-item label="帖子内容:"  required>
+        <el-form-item label="帖子内容:"  v-if="dialogStatus!='makeTop' " required>
           <div v-if="dialogStatus=='detail'" v-model="tempPost.postContent">
             {{tempPost.postContent}}
           </div>
@@ -124,7 +149,7 @@
             </el-input>
           </div>
         </el-form-item>
-        <el-form-item  v-model="tempPost.imgs" style="overflow: hidden;">
+        <el-form-item   v-if="dialogStatus!='makeTop' " v-model="tempPost.imgs" style="overflow: hidden;">
           <div v-if="dialogStatus=='detail'" >
             <div  v-for="oneImg in tempPost.imgs" style="float: left; margin-left: 20px;">
               <img :src="oneImg" style="width: 120px;" >
@@ -165,27 +190,10 @@
           </el-input-number>
         </el-form-item>
       </el-form>
-<!--      <el-form-item label="标签" required>-->
-<!--        <div v-for=" (menu,_index) in allPermission" :key="menu.menuName">-->
-<!--            <span style="width: 100px;display: inline-block;">-->
-<!--              <el-button :type="isMenuNone(_index)?'':(isMenuAll(_index)?'success':'primary')" size="mini"-->
-<!--                         style="width:80px;"-->
-<!--                         @click="checkAll(_index)">{{menu.menuName}}</el-button>-->
-<!--            </span>-->
-<!--          <div style="display: inline-block;margin-left:20px;">-->
-<!--            <el-checkbox-group v-model="tempRole.permissions">-->
-<!--              <el-checkbox v-for="perm in menu.permissions" :label="perm.id" @change="checkRequired(perm,_index)"-->
-<!--                           :key="perm.id">-->
-<!--                <span :class="{requiredPerm:perm.requiredPerm===1}">{{perm.permissionName}}</span>-->
-<!--              </el-checkbox>-->
-<!--            </el-checkbox-group>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <p style="color:#848484;">说明:红色权限为对应菜单内的必选权限</p>-->
-<!--      </el-form-item>-->
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">返回</el-button>
         <el-button v-if="dialogStatus=='update'"  @click="updatePost">修 改</el-button>
+        <el-button v-if="dialogStatus=='makeTop'"  @click="updatePostTop">置 顶</el-button>
       </div>
     </el-dialog>
   </div>
@@ -199,9 +207,7 @@
         theEnd:'',
         theOwnerName:'',
         theOthers:'',  //搜索参数
-        listTop:[],    //置顶模块
-        allListTop:[], //可选置顶模块
-        peerPost:[],
+        allTops:['人气','地铁周边','热门商圈','推荐'], //可选置顶模块
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
@@ -211,14 +217,15 @@
           theStart:'',
           theEnd:'',
           theOwnerName:'',
-          theOthers:'',
+          theOthers:''
         },
         sorts: [],//分类列表
         dialogStatus: 'detail',
         dialogFormVisible: false,
         textMap: {
           update: '编辑',
-          detail: '详情'
+          detail: '详情',
+          makeTop:'置顶'
         },
         tempPost: {
           postId: '',
@@ -238,7 +245,8 @@
           collectOff:'',
           viewOff:'',
           tags:[],
-          imgs:[]
+          imgs:[],
+          tops:[]
         },
       }
     },
@@ -263,80 +271,74 @@
             this.sorts = data.list;
           })
         },
-      getList() {
-        //查询列表
-        this.listLoading = true;
-        this.listQuery.theStart = this.theStart;
-        this.listQuery.theEnd =this.theEnd;
-        this.listQuery.theOwnerName = this.theOwnerName;
-        this.listQuery.theOthers = this.theOthers;
-        this.api({
-          url: "/post/list",
-          method: "get",
-          params: this.listQuery
-        }).then(data => {
-          this.listLoading = false;
-          this.list = data.list;
-          this.totalCount = data.totalCount;
-          for ( var i=0;i<data.list.length;i++){
-            this.peerPost=data.list[i];
-            var temp=parseInt(this.peerPost.isTop);
-            if(this.peerPost.isTop==2222) {this.peerPost.isTop='未置顶' }
-            else{
-              if(temp%10<2) {
-                this.peerPost.isTop = '人气模块/'
-              }else{this.peerPost.isTop=''}
-              var temp1=parseInt(temp/10);
-              if(temp1%10<2) {
-                this.peerPost.isTop = '地铁周边模块/'+this.peerPost.isTop;
+        getList() {
+          //查询列表
+          this.listLoading = true;
+          this.listQuery.theStart = this.theStart;
+          this.listQuery.theEnd = this.theEnd;
+          this.listQuery.theOwnerName = this.theOwnerName;
+          this.listQuery.theOthers = this.theOthers;
+          this.api({
+            url: "/post/list",
+            method: "get",
+            params: this.listQuery
+          }).then(data => {
+            this.listLoading = false;
+            this.list = data.list;
+            for (let i = 0; i < data.list.length; i++) {
+              let listTop = new Array();
+              let temp = parseInt(data.list[i].isTop);
+              if (data.list[i].isTop == 2222) {
+                listTop.push('未置顶')
+              } else {
+                for (let j = 3; j >= 0; j--) {
+                  if (temp % 10 < 2)
+                    listTop.push(this.allTops[j])
+                  temp = parseInt(temp / 10);
+                }
               }
-              var temp2=parseInt(temp1/10);
-              if(temp2%10<2) {
-                this.peerPost.isTop = '热门商圈模块/'+this.peerPost.isTop;
+              this.list[i].tops = listTop;
+              if (this.list[i].deleteState == 1) {
+                this.list[i].deleteState = '正常';
+              } else {
+                this.list[i].deleteState = "隐藏";
               }
-              var temp3=parseInt(temp2/10);
-              if(temp3%10<2) {
-                this.peerPost.isTop = '推荐模块/'+this.peerPost.isTop;
-              }
+              this.list[i].alike += '/' + this.list[i].likeOff;
+              this.list[i].acollect += '/' + this.list[i].collectOff;
+              this.list[i].aview += '/' + this.list[i].viewOff;
             }
-            if(this.peerPost.deleteState==1){
-              this.peerPost.deleteState='正常显示';
-            }else{this.peerPost.deleteState="隐藏";}
-            this.peerPost.alike=this.peerPost.alike+'/'+this.peerPost.likeOff;
-              this.peerPost.acollect=this.peerPost.acollect+'/'+this.peerPost.collectOff;
-                this.peerPost.aview=this.peerPost.aview+'/'+this.peerPost.viewOff;
-          }
-        })
-      },
-      handleSizeChange(val) {
-        //改变每页数量
-        this.listQuery.pageRow = val
-        this.handleFilter();
-      },
-      handleCurrentChange(val) {
-        //改变页码
-        this.listQuery.pageNum = val
-        this.getList();
-      },
-      handleFilter() {
-        //查询事件
-        this.listQuery.pageNum = 1
-        this.getList()
-      },
-      getIndex($index) {
-        //表格序号
-        return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
-      },
-      showDetail($index){
-        let _vue = this;
-        let onePost = _vue.list[$index];
+
+          })
+        },
+        handleSizeChange(val) {
+          //改变每页数量
+          this.listQuery.pageRow = val
+          this.handleFilter();
+        },
+        handleCurrentChange(val) {
+          //改变页码
+          this.listQuery.pageNum = val
+          this.getList();
+        },
+        handleFilter() {
+          //查询事件
+          this.listQuery.pageNum = 1
+          this.getList()
+        },
+        getIndex($index) {
+          //表格序号
+          return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
+        },
+        showDetail($index) {
+          let _vue = this;
+          let onePost = _vue.list[$index];
           this.api({
             url: "/post/getOnePost",
             method: "post",
             data: onePost
           }).then(data => {
             this.listLoading = false;
-            let oPost=data.thePost;
+            let oPost = data.thePost;
             this.tempPost.ownerId = oPost.ownerId;
             this.tempPost.postTime = oPost.postTime;
             this.tempPost.sortName = oPost.sortName;
@@ -352,100 +354,122 @@
             this.dialogStatus = "detail";
             this.dialogFormVisible = true;
           })
-      },
-      showUpdate($index){
-        let _vue = this;
-        let onePost = _vue.list[$index];
-        this.api({
-          url: "/post/getOnePost",
-          method: "post",
-          data: onePost
-        }).then(data => {
-          this.listLoading = false;
-          let oPost=data.thePost;
-          this.tempPost.postId = oPost.postId;
-          this.tempPost.sortId = oPost.sortId;
-          this.tempPost.sortName = oPost.sortName;
-          this.tempPost.postContent = oPost.postContent;
-          this.tempPost.postLocation = oPost.postLocation;
-          this.tempPost.postPhone = oPost.postPhone;
-          this.tempPost.tags = oPost.tagList;
-          this.tempPost.imgs = oPost.imgList;
-          this.tempPost.likeOff = oPost.likeOff;
-          this.tempPost.collectOff = oPost.collectOff;
-          this.tempPost.viewOff = oPost.viewOff;
-          this.tempPost.isTop = oPost.isTop;
-          this.dialogStatus = "update";
-          this.dialogFormVisible = true;
-        })
-      },
-      updatePost() {
-        //修改用户信息
-        let _vue = this;
-        this.api({
-          url: "/post/updatePost",
-          method: "post",
-          data: this.tempPost
-        }).then(() => {
-          let msg = "修改成功";
-          this.dialogFormVisible = false
-          if (this.postId === this.tempPost.postId) {
-            msg = '修改成功,部分信息重新登录后生效'
-          }
-          this.$message({
-            message: msg,
-            type: 'success',
-            duration: 1 * 1000,
-            onClose: () => {
-              _vue.getList();
+        },
+        showUpdate($index) {
+          let _vue = this;
+          let onePost = _vue.list[$index];
+          this.api({
+            url: "/post/getOnePost",
+            method: "post",
+            data: onePost
+          }).then(data => {
+            this.listLoading = false;
+            let oPost = data.thePost;
+            this.tempPost.postId = oPost.postId;
+            this.tempPost.sortId = oPost.sortId;
+            this.tempPost.sortName = oPost.sortName;
+            this.tempPost.postContent = oPost.postContent;
+            this.tempPost.postLocation = oPost.postLocation;
+            this.tempPost.postPhone = oPost.postPhone;
+            this.tempPost.tags = oPost.tagList;
+            this.tempPost.imgs = oPost.imgList;
+            this.tempPost.likeOff = oPost.likeOff;
+            this.tempPost.collectOff = oPost.collectOff;
+            this.tempPost.viewOff = oPost.viewOff;
+            this.tempPost.isTop = oPost.isTop;
+            this.dialogStatus = "update";
+            this.dialogFormVisible = true;
+          })
+        },
+        updatePost() {
+          //修改用户信息
+          let _vue = this;
+          this.api({
+            url: "/post/updatePost",
+            method: "post",
+            data: this.tempPost
+          }).then(() => {
+            let msg = "修改成功";
+            this.dialogFormVisible = false
+            if (this.postId === this.tempPost.postId) {
+              msg = '修改成功,部分信息重新登录后生效'
             }
+            this.$message({
+              message: msg,
+              type: 'success',
+              duration: 1 * 1000,
+              onClose: () => {
+                _vue.getList();
+              }
+            })
           })
-        })
-      },
-      recoverPost($index) {
-        let _vue = this;
-        this.$confirm('确定恢复此帖子的显示?', '提示', {
-          confirmButtonText: '确定',
-          showCancelButton: false,
-          type: 'warning'
-        }).then(() => {
-          let onePost = _vue.list[$index];
-          onePost.deleteState =1;
-          _vue.api({
-            url: "/post/updatePostState",
-            method: "post",
-            data: onePost
+        },
+        showTop($index) {
+          let post = this.list[$index];
+          this.tempPost.postId = post.postId;
+          this.tempPost.tops = post.tops;
+
+          this.dialogStatus = "makeTop"
+          this.dialogFormVisible = true
+        },
+        updatePostTop() {
+
+        },
+        recoverPost($index) {
+          let _vue = this;
+          this.$confirm('确定恢复此帖子的显示?', '提示', {
+            confirmButtonText: '确定',
+            showCancelButton: false,
+            type: 'warning'
           }).then(() => {
-            _vue.getList()
-          }).catch(() => {
-            _vue.$message.error("恢复失败")
+            let onePost = _vue.list[$index];
+            onePost.deleteState = 1;
+            _vue.api({
+              url: "/post/updatePostState",
+              method: "post",
+              data: onePost
+            }).then(() => {
+              _vue.getList()
+            }).catch(() => {
+              _vue.$message.error("恢复失败")
+            })
           })
-        })
-      },
-      deletePost($index) {
-        let _vue = this;
-        this.$confirm('确定隐藏此帖子?', '提示', {
-          confirmButtonText: '确定',
-          showCancelButton: false,
-          type: 'warning'
-        }).then(() => {
-          let onePost = _vue.list[$index];
-          onePost.deleteState =2;
-          _vue.api({
-            url: "/post/updatePostState",
-            method: "post",
-            data: onePost
+        },
+        deletePost($index) {
+          let _vue = this;
+          this.$confirm('确定隐藏此帖子?', '提示', {
+            confirmButtonText: '确定',
+            showCancelButton: false,
+            type: 'warning'
           }).then(() => {
-            _vue.getList()
-          }).catch(() => {
-            _vue.$message.error("隐藏失败")
+            let onePost = _vue.list[$index];
+            onePost.deleteState = 2;
+            _vue.api({
+              url: "/post/updatePostState",
+              method: "post",
+              data: onePost
+            }).then(() => {
+              _vue.getList()
+            }).catch(() => {
+              _vue.$message.error("隐藏失败")
+            })
           })
-        })
-      },
-        checkNumber(value){
-         if(value<0)
-           this.$alert("浮动值不能为负");
-        }
-    }
+        },
+        //     checkRequired(top) {
+        //       //本方法会在勾选状态改变之后触发
+        //
+        //       if (this.tempRole.tops.indexOf(top) > -1) {
+        //         //选中事件
+        //         //如果之前未勾选本权限,现在勾选完之后,tempRole里就会包含本id
+        //         //那么就要将必选的权限勾上
+        //         this.makeReuqiredPermissionChecked(top);
+        //       }
+        //     },
+        //     checkNumber(value){
+        //      if(value<0)
+        //        this.$alert("浮动值不能为负");
+        //     }
+        // }
+      }
   }
 </script>
