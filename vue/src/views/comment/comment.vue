@@ -60,8 +60,15 @@
             <span v-text="getIndex(scope.$index)">{{scope.row.id}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="uname" label="发布用户" style="width: 60px;"></el-table-column>
-        <el-table-column align="center" prop="tcid" label="被回复评论ID" style="width: 60px;"></el-table-column>
+        <el-table-column align="center" prop="uname" label="发布用户" style="width: 60px;">
+          <span>{{scope.row.uname}}</span>
+        </el-table-column>
+        <el-table-column align="center" prop="tcid" label="被回复评论ID" style="width: 60px;">
+          <template slot-scope="scope">
+            <el-button type="text" @click="showCommentTable(scope.row.tcid)" v-if="scope.row.tcid>0">{{scope.row.tcid}}</el-button>
+            <span v-else>无</span>
+          </template>
+        </el-table-column>
         <el-table-column align="center" prop="content" label="评论内容" style="width: 60px;"></el-table-column>
         <el-table-column align="center" label="发布时间" width="170">
           <template slot-scope="scope">
@@ -86,7 +93,7 @@
         layout="total, sizes, prev, pager, next, jumper">
       </el-pagination>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="postDialogVisible = false">确定</el-button>
+        <el-button @click="postDialogVisible = false">关闭</el-button>
       </span>
     </el-dialog>
 
@@ -104,7 +111,12 @@
           </template>
         </el-table-column>
         <el-table-column align="center" prop="pid" label="所在帖子" style="width: 60px;"></el-table-column>
-        <el-table-column align="center" prop="tcid" label="被回复评论ID" style="width: 60px;"></el-table-column>
+        <el-table-column align="center" prop="tcid" label="被回复评论ID" style="width: 60px;">
+          <template slot-scope="scope">
+            <el-button type="text" @click="showCommentTable(scope.row.tcid)" v-if="scope.row.tcid>0">{{scope.row.tcid}}</el-button>
+            <span v-else>无</span>
+          </template>
+        </el-table-column>
         <el-table-column align="center" prop="content" label="评论内容" style="width: 60px;"></el-table-column>
         <el-table-column align="center" label="发布时间" width="170">
           <template slot-scope="scope">
@@ -129,7 +141,12 @@
         layout="total, sizes, prev, pager, next, jumper">
       </el-pagination>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="userDialogVisible = false">确定</el-button>
+        当前用户状态：
+        <span v-if="!dialogList[0].ustate">正常</span>
+        <span v-else>封禁</span>
+        <el-button type="danger"  icon="edit" v-if="!dialogList[0].ustate" @click="changeUserState(dialogList[0].fuid, 0)">封禁</el-button>
+        <el-button type="success" icon="edit" v-else @click="changeUserState(dialogList[0].fuid, 1)">解封</el-button>
+        <el-button @click="userDialogVisible = false">关闭</el-button>
       </span>
     </el-dialog>
 
@@ -159,7 +176,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="commentDialogVisible = false">确定</el-button>
+        <el-button @click="commentDialogVisible = false">关闭</el-button>
       </div>
     </el-dialog>
 
@@ -202,6 +219,10 @@
           ctime: "",
           status: "",
           uname: ""
+        },
+        tempUser: {
+          userId : "",
+          userState: ""
         }
       }
     },
@@ -244,6 +265,23 @@
           url: "/comment/updateComment",
           method: "post",
           data: this.tempComment
+        }).then(() => {
+          this.$message.success("修改成功");
+          this.getList();
+          this.dialogFormVisible = false;
+          this.userDialogVisible = false;
+          this.postDialogVisible = false;
+          this.commentDialogVisible = false;
+        })
+      },
+      changeUserState(id, val) {
+        this.tempUser.userId = id;
+        this.tempUser.userState = val;
+        //修改用户状态
+        this.api({
+          url: "/comUser/updateUserState",
+          method: "post",
+          data: this.tempUser
         }).then(() => {
           this.$message.success("修改成功");
           this.getList();

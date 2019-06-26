@@ -12,7 +12,8 @@
             c.comment_content content,
             date_format(c.comment_time, '%Y.%m.%d %T')    ctime,
             c.comment_status  status,
-            u.user_name       uname
+            u.user_name       uname,
+            u.user_state      ustate
         FROM lc_comment c, fly_user u
         WHERE c.from_user_id = u.user_id
         ORDER BY c.comment_id
@@ -28,7 +29,8 @@
             c.comment_content content,
             date_format(c.comment_time, '%Y.%m.%d %T')    ctime,
             c.comment_status  status,
-            u.user_name       uname
+            u.user_name       uname,
+            u.user_state      ustate
         FROM lc_comment c, fly_user u
         WHERE c.from_user_id = u.user_id AND c.comment_status = #{status}
         ORDER BY c.comment_id
@@ -44,7 +46,8 @@
             c.comment_content content,
             date_format(c.comment_time, '%Y.%m.%d %T')    ctime,
             c.comment_status  status,
-            u.user_name       uname
+            u.user_name       uname,
+            u.user_state      ustate
         FROM lc_comment c, fly_user u
         WHERE c.from_user_id = u.user_id AND c.from_user_id = #{id}
         ORDER BY c.comment_id
@@ -76,7 +79,8 @@
             c.comment_content content,
             date_format(c.comment_time, '%Y.%m.%d %T')    ctime,
             c.comment_status  status,
-            u.user_name       uname
+            u.user_name       uname,
+            u.user_state      ustate
         FROM lc_comment c, fly_user u
         WHERE c.from_user_id = u.user_id AND c.from_user_id = #{id} AND c.comment_status = #{status}
         ORDER BY c.comment_id
@@ -92,7 +96,8 @@
             c.comment_content content,
             date_format(c.comment_time, '%Y.%m.%d %T')    ctime,
             c.comment_status  status,
-            u.user_name       uname
+            u.user_name       uname,
+            u.user_state      ustate
         FROM lc_comment c, fly_user u
         WHERE c.from_user_id = u.user_id AND c.post_id = #{id} AND c.comment_status = #{status}
         ORDER BY c.comment_id
@@ -119,7 +124,8 @@
             c.comment_content content,
             date_format(c.comment_time, '%Y.%m.%d %T')    ctime,
             c.comment_status  status,
-            u.user_name       uname
+            u.user_name       uname,
+            u.user_state      ustate
         FROM lc_comment c, fly_user u
         WHERE c.from_user_id = u.user_id AND c.comment_id = #{id}
     </select>
