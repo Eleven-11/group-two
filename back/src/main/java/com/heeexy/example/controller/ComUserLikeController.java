@@ -7,9 +7,11 @@ import com.heeexy.example.service.WxLikeService;
 import com.heeexy.example.service.WxUserService;
 import com.heeexy.example.util.CommonUtil;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -29,37 +31,48 @@ public class ComUserLikeController {
      * 展示用户点赞列表
      */
     @GetMapping("/listUserLike")
-    public JSONObject getListUserLike(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "onUserId");
-        return wxLikeService.getLikeByUserId(requestJson);
+    public JSONObject getListUserLike(HttpServletRequest request) {
+
+        return wxLikeService.getLikeByUserId(CommonUtil.request2Json(request));
+
     }
     /**
      * 添加用户帖子点赞
      */
-    @PostMapping("/addLike")
-    public JSONObject addFans(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "onUserId,userId,userUuId");
-        JSONObject userByUsername = wxUserService.getUserByUsername(requestJson);
-        String userState = userByUsername.getString("userState");
-        if (userState =="1"){
-            return null;
-        }else {
-            return wxLikeService.addLike(requestJson);
-        }
+    @PostMapping("/addUserLikes")
+    public JSONObject addLike(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "onUserId,likeId,postId");
+//       JSONObject userByUsername = wxUserService.getUserByUsername(requestJson);
+//        String userState = userByUsername.getString("userState");
+//        if (userState =="1"){
+//            return null;
+//        }else {
+//            return wxLikeService.addLike(requestJson);
+//        }
+        return wxLikeService.addLike(requestJson);
     }
     /**
      * 修改用户帖子点赞状态
      */
+    @RequiresPermissions("comuserlike:update")
     @PostMapping("/updateUserLike")
-    public JSONObject updateFans(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "likeId,likeState");
+    public JSONObject updateLike(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "likeId");
+        return wxLikeService.updateLikeByUserId(requestJson);
+    }
+    /**
+     * 前台修改用户帖子点赞状态
+     */
+    @PostMapping("/updateLikeByUser")
+    public JSONObject updateLikeByUser(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "likeId,onUserId");
         return wxLikeService.updateLikeByUserId(requestJson);
     }
     /**
      * 查找是否点赞该帖子信息
      */
     @PostMapping("/selectLike")
-    public JSONObject selectFans(@RequestBody JSONObject requestJson) {
+    public JSONObject selectLike(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "onUserId,userId,postId");
         return wxLikeService.getLikeUserPost(requestJson);
     }

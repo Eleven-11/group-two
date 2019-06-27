@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.WxMyCommentDao;
 import com.heeexy.example.service.*;
 import com.heeexy.example.util.CommonUtil;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,15 +35,15 @@ public class ComUserController {
     /**
      * 展示用户列表
      */
+    @RequiresPermissions("comuser:list")
     @GetMapping("/listUser")
     public JSONObject getListUser( HttpServletRequest request) {
-
-
         return wxUserService.getListUser(CommonUtil.request2Json(request));
     }
     /**
      * 展示用户关注列表
       */
+    @RequiresPermissions("comuserfans:list")
     @GetMapping("/listUserFans")
     public JSONObject getListUserFans(HttpServletRequest request) {
 
@@ -52,6 +52,7 @@ public class ComUserController {
     /**
      * 展示用户点赞列表
      * */
+    @RequiresPermissions("comuserlike:list")
     @GetMapping("/listUserLike")
     public JSONObject getListUserLike(HttpServletRequest request) {
 
@@ -60,6 +61,7 @@ public class ComUserController {
     /**
      * 后台展示用户浏览记录列表
      */
+    @RequiresPermissions("comuserbrowse:list")
     @GetMapping("/listUserBrowse")
     public JSONObject getListUserBrowse(HttpServletRequest request) {
 
@@ -68,6 +70,7 @@ public class ComUserController {
     /**
      * 展示用户帖子列表
      */
+    @RequiresPermissions("comuserpost:list")
     @GetMapping("/listUserPost")
     public JSONObject getListUserPost(HttpServletRequest request) {
 
@@ -76,6 +79,7 @@ public class ComUserController {
     /**
      * 展示用户评论记录列表
      */
+    @RequiresPermissions("comusercomment:list")
     @GetMapping("/listUserComment")
     public JSONObject getlistUserComment(HttpServletRequest request) {
 
@@ -100,8 +104,6 @@ public class ComUserController {
         }else {
             return wxUserService.addByUser(requestJson);
         }
-
-
     }
     /**
      * 添加游客用户
@@ -114,6 +116,7 @@ public class ComUserController {
         /**
         *修改用户粉丝数
         * */
+    @RequiresPermissions("comuser:updatefans")
     @PostMapping("/updateUserFans")
     public JSONObject updateUserFans(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, " userId,userFansf");
@@ -122,6 +125,7 @@ public class ComUserController {
     /**
      *修改用户封禁状态
      * */
+    @RequiresPermissions("comuser:updatestate")
     @PostMapping("/updateUserState")
     public JSONObject updateUserState(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, " userId,userState");
@@ -139,16 +143,17 @@ public class ComUserController {
      * 计算用户粉丝数
       */
     @GetMapping("/getUserFans")
-    public JSONObject getUserFans(@RequestBody JSONObject requestJson){
-        CommonUtil.hasAllRequired(requestJson, " onUserId");
-        return wxUserService.countFansByUserId(requestJson);
+    public JSONObject getUserFans(HttpServletRequest request){
+        return wxUserService.countFansByUserId(CommonUtil.request2Json(request));
+
     }
     /**
      * 用户详情页数量部分数据
      */
     @GetMapping("/getDetailUserById")
-    public JSONObject getDetailUserById(@RequestBody JSONObject requestJson){
-        return  wxUserService.getDetailUserById(requestJson);
+    public JSONObject getDetailUserById(HttpServletRequest request){
+        return wxUserService.getDetailUserById(CommonUtil.request2Json(request));
+
     }
 
 }

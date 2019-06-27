@@ -3,9 +3,9 @@
   <div class="filter-container">
     <el-form >
       <el-form-item label="用户名"  >
-        <el-input type="text" v-model="userName" style="width: 200px;margin-right: 30px;">
+        <el-input type="text" v-model="userName"  onkeyup="value=value.replace(/[^\w\u4E00-\u9FA5]/g, '')" style="width: 200px;margin-right: 30px;">
         </el-input>
-        <el-button type="primary"  icon="plus"  @click="selectUser">查询</el-button>
+        <el-button type="primary"  icon="el-icon-search"  @click="selectUser">查询</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -50,10 +50,12 @@
     </el-table-column>
     <el-table-column align="center" label="授权时间" prop="firstTime" style="width: 60px;"></el-table-column>
     <el-table-column align="center" label="更新时间" prop="updateTime" style="width: 60px;"></el-table-column>
-    <el-table-column align="center" label="管理" width="220">
+    <el-table-column align="center" label="管理" width="300">
       <template slot-scope="scope">
         <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
-       <el-button type="danger" icon="delete"  @click="updateState(scope.$index)">封禁？</el-button>
+       <el-button type="danger" icon="danger"  @click="updateState(scope.$index)">封禁？</el-button>
+        <el-button type="primary" icon="info"  @click="jump(scope.$index)">查看</el-button>
+
       </template>
     </el-table-column>
   </el-table>
@@ -75,15 +77,15 @@
         </el-input>
       </el-form-item>
       <el-form-item label="用户名"  >
-        <el-input type="text" v-model="tempUser.userName">
+        <el-input type="text" :disabled="true" v-model="tempUser.userName">
         </el-input>
       </el-form-item>
       <el-form-item label="性别"  >
-        <el-input type="text" v-model="tempUser.userSex">
+        <el-input type="text" :disabled="true" v-model="tempUser.userSex">
         </el-input>
       </el-form-item>-->
       <el-form-item label="粉丝数" required >
-        <el-input type="text" v-model="tempUser.userFansf">
+        <el-input type="number"  oninput="javascript:this.value=this.value.replace(/[^\d]/g,'')"  v-model="tempUser.userFansf" >
         </el-input>
       </el-form-item>
      <!-- <el-form-item label="封禁状态" required>
@@ -139,7 +141,6 @@
     },
     created() {
       this.getList();
-      this.getAllState();
     },
     computed: {
       ...mapGetters([
@@ -147,16 +148,15 @@
       ])
     },
     methods: {
-   /*   getAllState() {
-        this.api({
-          url: "/comUser/getAllState",
-          method: "get"
-        }).then(data => {
-          this.states = data.list;
-        })
-      },*/
+        jump($index){
+          let user = this.list[$index];
+          //this.$router.push("/cart")
+          //传递的参数用{{ $route.query.onUserId }}获取
+          this.$router.push({path: "/userfans",query:{onUserId:user.userId}});
+      },
       getList() {
         //查询列表
+        this.listQuery.userName = this.userName
         this.listLoading = true;
         this.api({
           url: "/comUser/listUser",
@@ -166,7 +166,6 @@
           this.listLoading = false;
           this.list = data.list;
           this.totalCount = data.totalCount;
-          this.listQuery.userName = this.userName
         })
       },
       handleSizeChange(val) {
