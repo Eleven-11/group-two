@@ -86,8 +86,8 @@
         select
       t1.user_id  userId,t1.user_uuid userUuid,t1.user_name userName,t1.user_photo userPhoto,
       t1.user_sex  userSex,t1.user_fans userFans,t1.user_fans_f userFansf,
-      t1.guest guest, t2.close_name userState,DATE_FORMAT(first_time, '%Y.%m.%d %T') firstTime,DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
-      from  fly_user t1,fly_userstate t2 where user_uuid =#{userUuId};
+      t1.guest guest,t1.user_state userState,DATE_FORMAT(t1.first_time, '%Y.%m.%d %T') firstTime,DATE_FORMAT(t1.update_time, '%Y.%m.%d %T') updateTime
+      from  fly_user t1 where t1.user_id =#{onUserId};
     </select>
     <!--查看该用户的封禁状态-->
     <select id="getStateByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">

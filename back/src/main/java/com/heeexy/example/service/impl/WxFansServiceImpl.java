@@ -7,6 +7,7 @@ import com.heeexy.example.service.WxFansService;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ public class WxFansServiceImpl implements WxFansService {
     }
     /*对用户关注状态的修改取消*/
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject updateFansByUserId(JSONObject jsonObject) {
          wxFansDao.updateFansByUserId(jsonObject);
         int count = wxUserDao.getFansByUserId(jsonObject);
@@ -54,6 +56,7 @@ public class WxFansServiceImpl implements WxFansService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject addByFans(JSONObject jsonObject) {
         //     添加粉丝关注用户
         JSONObject userFans = wxFansDao.getUserFans(jsonObject);
@@ -75,7 +78,7 @@ public class WxFansServiceImpl implements WxFansService {
 
     @Override
     public JSONObject getUserFans(JSONObject jsonObject) {
-        //查看是否有关注用户
+        //查看两用户之间是否有关注信息
         JSONObject user = wxFansDao.getUserFans(jsonObject);
         return user;
     }
