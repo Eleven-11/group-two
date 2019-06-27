@@ -5,16 +5,14 @@
 
     <select id="countAds" resultType="Integer">
         SELECT COUNT(0)
-        FROM lc_ads
-    </select>
-
-    <select id="countEnableAds" resultType="Integer">
-        SELECT COUNT(0)
         FROM lc_ads a
-        WHERE a.ads_status = 1
+        WHERE 1 = 1
+        <if test="status != null and status != ''">
+            AND a.ads_status = #{status}
+        </if>
     </select>
 
-    <select id="getAllAds" resultType="com.alibaba.fastjson.JSONObject">
+    <select id="getAds" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
           a.ads_id        id,
           a.ads_picture   picture,
@@ -22,18 +20,10 @@
           a.ads_link      link,
           a.ads_status    status
         FROM lc_ads a
-        ORDER BY a.ads_id
-    </select>
-
-    <select id="getEnableAds" resultType="com.alibaba.fastjson.JSONObject">
-        SELECT
-          a.ads_id        id,
-          a.ads_picture   picture,
-          a.ads_title     title,
-          a.ads_link      link,
-          a.ads_status    status
-        FROM lc_ads a
-        WHERE a.ads_status = 1
+        WHERE 1 = 1
+        <if test="status != null and status != ''">
+            AND a.ads_status = #{status}
+        </if>
         ORDER BY a.ads_id
         LIMIT #{offSet}, #{pageRow}
     </select>

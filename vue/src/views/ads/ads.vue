@@ -137,7 +137,7 @@
         //查询列表
         this.listLoading = true;
         this.api({
-          url: "/ads/getAllAds",
+          url: "/ads/getAds",
           method: "get",
           params: this.listQuery
         }).then(data => {

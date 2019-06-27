@@ -19,19 +19,9 @@ public interface AdsDao {
     int countAds();
 
     /**
-     * 获取启用广告数量
-     */
-    int countEnableAds();
-
-    /**
      * 获取所有广告信息
      */
-    List<JSONObject> getAllAds(JSONObject jsonObject);
-
-    /**
-     * 获取启用广告信息
-     */
-    List<JSONObject> getEnableAds(JSONObject jsonObject);
+    List<JSONObject> getAds(JSONObject jsonObject);
 
     /**
      * 获取单条广告信息

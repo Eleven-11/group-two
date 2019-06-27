@@ -22,28 +22,10 @@ public class AdsServiceImpl implements AdsService {
     private AdsDao adsDao;
 
     @Override
-    public int countAds() {
-        return adsDao.countAds();
-    }
-
-    @Override
-    public int countEnableAds() {
-        return adsDao.countEnableAds();
-    }
-
-    @Override
-    public JSONObject getAllAds(JSONObject jsonObject) {
+    public JSONObject getAds(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
         int count = adsDao.countAds();
-        List<JSONObject> list = adsDao.getAllAds(jsonObject);
-        return CommonUtil.successPage(jsonObject, list, count);
-    }
-
-    @Override
-    public JSONObject getEnableAds(JSONObject jsonObject) {
-        CommonUtil.fillPageParam(jsonObject);
-        int count = adsDao.countEnableAds();
-        List<JSONObject> list = adsDao.getEnableAds(jsonObject);
+        List<JSONObject> list = adsDao.getAds(jsonObject);
         return CommonUtil.successPage(jsonObject, list, count);
     }
 

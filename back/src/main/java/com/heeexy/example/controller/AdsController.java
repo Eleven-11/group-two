@@ -31,17 +31,9 @@ public class AdsController {
     /**
      * 展示所有广告信息
      */
-    @GetMapping("/getAllAds")
+    @GetMapping("/getAds")
     public JSONObject getAllAds(HttpServletRequest request){
-        return adsService.getAllAds(CommonUtil.request2Json(request));
-    }
-
-    /**
-     * 展示启用的广告信息
-     */
-    @GetMapping("/getEnableAds")
-    public  JSONObject getEnableAds(HttpServletRequest request){
-        return  adsService.getEnableAds(CommonUtil.request2Json(request));
+        return adsService.getAds(CommonUtil.request2Json(request));
     }
 
     /**
