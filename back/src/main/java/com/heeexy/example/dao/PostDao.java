@@ -60,6 +60,8 @@ public interface PostDao {
      * @return int
      */
 
+    int updatePostTop(JSONObject jsonObject);
+
 
 
 

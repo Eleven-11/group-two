@@ -58,6 +58,16 @@ public interface PostService {
      * @return com.alibaba.fastjson.JSONObject
      */
 
+    JSONObject updatePostTop(JSONObject jsonObject);
+    /*
+     * @Author lover_tyn
+     * @Description //TODO
+     * @Date  2019/6/27 1:09
+     * @Param [jsonObject]
+     * @return com.alibaba.fastjson.JSONObject
+     */
+
+
 
 
 

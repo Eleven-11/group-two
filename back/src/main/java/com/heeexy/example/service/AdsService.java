@@ -12,28 +12,14 @@ import java.util.List;
  * @Version : 1.0
  **/
 public interface AdsService {
-    /**
-     * 获取所有广告数量
-     */
-    int countAds();
 
     /**
-     * 获取启用广告数量
+     * 获取广告列表
      */
-    int countEnableAds();
+    JSONObject getAds(JSONObject jsonObject);
 
     /**
-     * 获取所有广告信息
-     */
-    JSONObject getAllAds(JSONObject jsonObject);
-
-    /**
-     * 获取启用广告信息
-     */
-    List<JSONObject> getEnableAds(JSONObject jsonObject);
-
-    /**
-     * 获取单条广告信息
+     * 根据id获取单条广告信息
      */
     JSONObject getAdsById(int id);
 

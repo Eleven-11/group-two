@@ -19,22 +19,12 @@ public interface AdsDao {
     int countAds();
 
     /**
-     * 获取启用广告数量
+     * 获取广告列表
      */
-    int countEnableAds();
+    List<JSONObject> getAds(JSONObject jsonObject);
 
     /**
-     * 获取所有广告信息
-     */
-    List<JSONObject> getAllAds(JSONObject jsonObject);
-
-    /**
-     * 获取启用广告信息
-     */
-    List<JSONObject> getEnableAds(JSONObject jsonObject);
-
-    /**
-     * 获取单条广告信息
+     * 根据id获取单条广告信息
      */
     JSONObject getAdsById(int id);
 
@@ -51,6 +41,6 @@ public interface AdsDao {
     /**
      * 删除广告信息
      */
-    JSONObject removeAdsById(int id);
+    int removeAdsById(int id);
 
 }

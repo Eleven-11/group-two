@@ -15,20 +15,30 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="picture" label="图片" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" prop="title" label="标题" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" prop="link" label="链接" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="状态" style="width: 60px;">
+      <el-table-column align="center" prop="picture" label="图片" style="width: 60px;">
         <template slot-scope="scope">
-          <span v-if="scope.row.status">启用</span>
-          <span v-if="!scope.row.status">禁用</span>
+          <img :src="scope.row.picture"  width="200" height="160" alt="加载中..."/>
+          <!--<el-image-->
+            <!--style="width: 300px; height: 240px"-->
+            <!--:src="scope.row.picture">-->
+            <!--<div slot="placeholder" class="image-slot">-->
+              <!--加载中<span class="dot">...</span>-->
+            <!--</div>-->
+          <!--</el-image>-->
         </template>
       </el-table-column>
-      <el-table-column align="center" label="管理" width="200" >
+      <el-table-column align="center" prop="title" label="标题" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" prop="link" label="链接" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="状态" width="200">
         <template slot-scope="scope">
-          <el-button type="danger"  icon="edit" v-if="scope.row.status" @click="changeStatus(scope.$index, 0)">禁用</el-button>
-          <el-button type="success" icon="edit" v-if="!scope.row.status" @click="changeStatus(scope.$index, 1)">启用</el-button>
+          <el-button type="danger"  icon="edit" v-if="!scope.row.status" @click="changeStatus(scope.$index, 1)">禁用</el-button>
+          <el-button type="success" icon="edit" v-if="scope.row.status" @click="changeStatus(scope.$index, 0)">启用</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="管理" style="width: 200px;" >
+        <template slot-scope="scope">
           <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
+          <el-button type="danger" icon="delete" @click="deleteAds(scope.$index)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -48,16 +58,31 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="tempAds" label-position="left" label-width="60px"
                style='width: 300px; margin-left:50px;'>
-        <el-form-item label="图片">
+
+        <el-form-item label="图片" v-if="!imgUrl">
+
           <el-upload
             action="api/ads/upload"
             :show-file-list="false"
             :on-success="handleSuccess"
             :on-error="handleError"
+            :before-upload="handleBeforeUpload"
             :on-progress="handleProgress"
           >
             <el-button type="primary" size="medium">上传图片</el-button>
           </el-upload>
+        </el-form-item>
+        <el-form-item label="图片" v-if="imgUrl">
+            <el-upload
+              action="api/ads/upload"
+              :show-file-list="false"
+              :on-success="handleSuccess"
+              :on-error="handleError"
+              :before-upload="handleBeforeUpload"
+              :on-progress="handleProgress"
+            >
+              <el-button type="primary" size="medium">修改图片</el-button>
+            </el-upload>
 
         </el-form-item>
         <el-form-item label="标题">
@@ -66,6 +91,7 @@
         <el-form-item label="链接">
           <el-input type="text" v-model="tempAds.link"></el-input>
         </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -99,7 +125,8 @@
           title: "",
           link: "",
           status: ""
-        }
+        },
+        imgUrl: "",
       }
     },
     created() {
@@ -110,7 +137,7 @@
         //查询列表
         this.listLoading = true;
         this.api({
-          url: "/ads/getAllAds",
+          url: "/ads/getAds",
           method: "get",
           params: this.listQuery
         }).then(data => {
@@ -147,6 +174,7 @@
         this.tempAds.picture = this.list[$index].picture;
         this.tempAds.title = this.list[$index].title;
         this.tempAds.link = this.list[$index].link;
+        this.tempAds.status = this.list[$index].status;
         this.dialogStatus = "update"
         this.dialogFormVisible = true
       },
@@ -157,6 +185,7 @@
           method: "post",
           data: this.tempAds
         }).then(() => {
+          this.imgUrl = false;
           this.getList();
           this.dialogFormVisible = false
         })
@@ -168,26 +197,69 @@
           method: "post",
           data: this.tempAds
         }).then(() => {
+          this.imgUrl = false;
           this.getList();
           this.dialogFormVisible = false
         })
       },
+      //变更启用状态
       changeStatus($index, val) {
         this.tempAds.id = this.list[$index].id;
         this.tempAds.picture = this.list[$index].picture;
         this.tempAds.title = this.list[$index].title;
         this.tempAds.link = this.list[$index].link;
         this.tempAds.status = val;
-        //修改广告
         this.api({
           url: "/ads/updateAds",
           method: "post",
           data: this.tempAds
         }).then(() => {
+          this.$message.success("修改成功");
           this.getList();
           this.dialogFormVisible = false
         })
       },
+      //图片上传成功
+      handleSuccess(response, file, fileList) {
+        this.$message.success(response.msg);
+        this.tempAds.picture = response.url;
+        this.imgUrl = true;
+      },
+      handleError() {
+        this.$message.error("上传失败,请重新上传图片!");
+      },
+      handleBeforeUpload(file) {
+        const isImage = file.type.includes("image");
+        if (!isImage) {
+          this.$message.error("上传文件类型必须是图片!");
+        }
+        const isLt5M = file.size / 1024 / 1024 < 5;
+        if (!isLt5M) {
+          this.$message.error("上传图片大小不能超过 5MB!");
+        }
+        return isImage && isLt5M;
+      },
+      handleProgress(event, file, fileList) {
+        this.loading = true;  //  上传时执行loading事件
+      },
+      deleteAds($index){
+        this.$confirm('此操作将永久删除该广告, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.tempAds.id = this.list[$index].id;
+          this.api({
+            url: "/ads/removeAdsById/"+this.tempAds.id,
+            method: "get"
+          }).then(() => {
+            this.$message.success("删除成功");
+            this.getList();
+            this.dialogFormVisible = false
+          })
+        })
+      }
     }
+
   }
 </script>

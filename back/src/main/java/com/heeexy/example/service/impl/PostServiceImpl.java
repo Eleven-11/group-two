@@ -50,4 +50,10 @@ public class PostServiceImpl implements PostService {
         postDao.updatePost(jsonObject);
         return CommonUtil.successJson();
     }
+
+    @Override
+    public JSONObject updatePostTop(JSONObject jsonObject) {
+        postDao.updatePostTop(jsonObject);
+        return CommonUtil.successJson();
+    }
 }

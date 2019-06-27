@@ -183,5 +183,11 @@
         where
         id= #{postId}
     </update>
+    <update id="updatePostTop">
+        UPDATE tyn_post
+        SET
+        is_top = #{isTop}
+        WHERE id = #{postId}
+    </update>
 
 </mapper>
