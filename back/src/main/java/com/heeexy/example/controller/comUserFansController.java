@@ -47,6 +47,15 @@ public class comUserFansController {
         return wxFansService.updateFansByUserId(requestJson);
     }
     /**
+     * 前台添加用户关注
+     */
+    @PostMapping("/addFansByUser")
+    public JSONObject addFans1(@RequestBody JSONObject requestJson) {
+
+        CommonUtil.hasAllRequired(requestJson, "onUserId,userId");
+        return wxFansService.addByFans(requestJson);
+    }
+    /**
      * 前台修改用户关注状态
      */
     @PostMapping("/updateFansByUser")

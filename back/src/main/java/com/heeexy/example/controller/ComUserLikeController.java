@@ -37,8 +37,9 @@ public class ComUserLikeController {
 
     }
     /**
-     * 添加用户帖子点赞
+     * 后台添加用户帖子点赞
      */
+    @RequiresPermissions("comuserlike:add")
     @PostMapping("/addUserLikes")
     public JSONObject addLike(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "onUserId,likeId,postId");
@@ -52,16 +53,30 @@ public class ComUserLikeController {
         return wxLikeService.addLike(requestJson);
     }
     /**
-     * 修改用户帖子点赞状态
+     * 后台修改用户帖子点赞状态
      */
-    @RequiresPermissions("comuserlike:update")
+    @RequiresPermissions("comuserlike:delete")
     @PostMapping("/updateUserLike")
     public JSONObject updateLike(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "likeId");
         return wxLikeService.updateLikeByUserId(requestJson);
     }
     /**
-     * 前台修改用户帖子点赞状态
+     * 前台添加用户帖子点赞
+     */
+    @PostMapping("/addLikesByUser")
+    public JSONObject addLikeByUser(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "onUserId,likeId,postId");
+       JSONObject userByUsername = wxUserService.getUserByUsername(requestJson);
+        String userState = userByUsername.getString("userState");
+        if (userState =="1"){
+            return null;
+        }else {
+            return wxLikeService.addLike(requestJson);
+        }
+    }
+    /**
+     * 前台修改用户帖子点赞状态（取消）
      */
     @PostMapping("/updateLikeByUser")
     public JSONObject updateLikeByUser(@RequestBody JSONObject requestJson) {
