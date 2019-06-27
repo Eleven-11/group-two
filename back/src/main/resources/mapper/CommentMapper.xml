@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.CommentDao">
+
+    <select id="getComment" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+            c.comment_id      id,
+            c.post_id         pid,
+            c.from_user_id    fuid,
+            c.to_comment_id   tcid,
+            c.comment_content content,
+            date_format(c.comment_time, '%Y.%m.%d %T')    ctime,
+            c.comment_status  status,
+            u.user_name       uname,
+            u.user_state      ustate
+        FROM lc_comment c, fly_user u
+        WHERE c.from_user_id = u.user_id
+        <if test="status != null and status != ''">
+            AND c.comment_status = #{status}
+        </if>
+        <if test="uid != null and uid != ''">
+            AND c.from_user_id = #{uid}
+        </if>
+        <if test="pid != null and pid != ''">
+            AND c.post_id = #{pid}
+        </if>
+        ORDER BY c.comment_id
+        LIMIT #{offSet}, #{pageRow}
+    </select>
+
+    <select id="countComment" resultType="Integer">
+      SELECT COUNT(0)
+        FROM lc_comment c, fly_user u
+        WHERE c.from_user_id = u.user_id
+        <if test="status != null and status != ''">
+            AND c.comment_status = #{status}
+        </if>
+        <if test="uid != null and uid != ''">
+            AND c.from_user_id = #{uid}
+        </if>
+        <if test="pid != null and pid != ''">
+            AND c.post_id = #{pid}
+        </if>
+    </select>
+
+    <select id="getCommentById" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+            c.comment_id      id,
+            c.post_id         pid,
+            c.from_user_id    fuid,
+            c.to_comment_id   tcid,
+            c.comment_content content,
+            date_format(c.comment_time, '%Y.%m.%d %T')    ctime,
+            c.comment_status  status,
+            u.user_name       uname,
+            u.user_state      ustate
+        FROM lc_comment c, fly_user u
+        WHERE c.from_user_id = u.user_id AND c.comment_id = #{id}
+    </select>
+
+    <insert id="addComment" parameterType="com.alibaba.fastjson.JSONObject">
+      INSERT INTO lc_comment
+      (post_id, from_user_id, to_comment_id, comment_content)
+      VALUES
+      (#{pid}, #{fuid}, #{tcid}, #{content})
+    </insert>
+
+    <update id="updateComment" parameterType="com.alibaba.fastjson.JSONObject">
+      UPDATE lc_comment
+      SET lc_comment.comment_status = #{status}
+      WHERE lc_comment.comment_id = #{id}
+    </update>
+
+</mapper>

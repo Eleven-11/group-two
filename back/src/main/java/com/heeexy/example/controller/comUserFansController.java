@@ -24,13 +24,14 @@ public class comUserFansController {
     *前台展示用户关注列表
     */
     @GetMapping("/listUserFans")
-    public JSONObject listUserFans(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "onUserId");
-        return wxFansService.getListByUserId(requestJson);
+    public JSONObject listUserFans(HttpServletRequest request) {
+
+        return wxFansService.getListByUserId(CommonUtil.request2Json(request));
     }
     /**
-     * 添加用户关注
+     * 后台添加用户关注
      */
+    @RequiresPermissions("comuserfans:add")
     @PostMapping("/addFans")
     public JSONObject addFans(@RequestBody JSONObject requestJson) {
 
@@ -38,10 +39,28 @@ public class comUserFansController {
         return wxFansService.addByFans(requestJson);
     }
     /**
-     * 修改用户关注状态
+     * 后台修改用户关注状态
      */
+    @RequiresPermissions("comuserfans:delete")
     @PostMapping("/updateUserFans")
     public JSONObject updateFans(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "state,fansId");
+        return wxFansService.updateFansByUserId(requestJson);
+    }
+    /**
+     * 前台添加用户关注
+     */
+    @PostMapping("/addFansByUser")
+    public JSONObject addFans1(@RequestBody JSONObject requestJson) {
+
+        CommonUtil.hasAllRequired(requestJson, "onUserId,userId");
+        return wxFansService.addByFans(requestJson);
+    }
+    /**
+     * 前台修改用户关注状态
+     */
+    @PostMapping("/updateFansByUser")
+    public JSONObject updateFans1(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "state,fansId");
         return wxFansService.updateFansByUserId(requestJson);
     }

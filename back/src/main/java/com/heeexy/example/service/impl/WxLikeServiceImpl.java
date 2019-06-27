@@ -23,7 +23,13 @@ public class WxLikeServiceImpl implements WxLikeService {
     /*用户添加点赞记录*/
     @Override
     public JSONObject addLike(JSONObject jsonObject) {
-        wxLikeDao.addLike(jsonObject);
+
+        JSONObject likeUserPost = wxLikeDao.getLikeUserPost(jsonObject);
+        if (likeUserPost.isEmpty()){
+            wxLikeDao.addLike(jsonObject);
+        }else {
+            wxLikeDao.addLikeByUserId(jsonObject);
+        }
         return CommonUtil.successJson();
     }
 
@@ -57,6 +63,12 @@ public class WxLikeServiceImpl implements WxLikeService {
     public JSONObject updateLikeByUserId(JSONObject jsonObject) {
 
         wxLikeDao.updateLikeByUserId(jsonObject);
+        return CommonUtil.successJson();
+    }
+
+    @Override
+    public JSONObject addLikeByUserId(JSONObject jsonObject) {
+        wxLikeDao.addLikeByUserId(jsonObject);
         return CommonUtil.successJson();
     }
 }

@@ -1,8 +1,10 @@
 package com.heeexy.example.dao;
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ Author     ：良优
@@ -89,7 +91,21 @@ public interface WxUserDao {
                * @methodsName: getDetailUserById
                * @description: 用户详情发帖计数和粉丝计数
                * @param:  JSONObject
-               * @return: JSONObject
+               * @return: List<JSONObject>
                */
-         JSONObject getDetailUserById(JSONObject jsonObject);
+         List<JSONObject> getDetailUserById(JSONObject jsonObject);
+          /**
+               * @methodsName: updateFansById
+               * @description: 修改真实粉丝数
+               * @param:  Map
+               * @return: int
+               */
+         int updateFansById(Map map);
+          /**
+               * @methodsName: getFansByUserId
+               * @description: 获取用户真实粉丝数
+               * @param:  JSONObject
+               * @return: int
+               */
+         int getFansByUserId(JSONObject jsonObject);
     }

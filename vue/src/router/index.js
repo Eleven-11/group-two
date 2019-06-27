@@ -8,6 +8,7 @@ const _import = require('./_import_' + process.env.NODE_ENV)
 Vue.use(Router)
 export const constantRouterMap = [
   {path: '/login', component: _import('login/index'), hidden: true},
+  {path: '/userfans', component: _import('comUser/userfans'), hidden: true},
   {path: '/404', component: _import('404'), hidden: true},
   {
     path: '/',
@@ -29,7 +30,7 @@ export const asyncRouterMap = [
   {
     path: '/system',
     component: Layout,
-    redirect: '/system/article',
+    redirect: '/system/',
     name: '功能模块',
     meta: {title: '功能模块', icon: 'tree'},
     children: [
@@ -58,7 +59,7 @@ export const asyncRouterMap = [
         component: _import('user/role'),
         meta: {title: '权限管理', icon: 'password'},
         menu: 'role'
-      },
+      }
     ]
   },
   {
@@ -69,14 +70,21 @@ export const asyncRouterMap = [
     meta: {title: '帖子管理', icon: 'table'},
     children: [
       {
-        path: '', name: '帖子列表', component: _import('post/post'), meta: {title: '帖子列表', icon: 'post'}, menu: 'post'
+        path: '',
+        name: '帖子列表',
+        component: _import('post/post'),
+        meta: {
+          title: '帖子列表',
+          icon: 'example'
+        },
+        menu: 'post'
       },
       {
-        path: 'role',
-        name: '权限管理',
-        component: _import('user/role'),
-        meta: {title: '权限管理', icon: 'password'},
-        menu: 'role'
+        path: 'comment',
+        name: '评论管理',
+        component: _import('comment/comment'),
+        meta: {title: '评论管理', icon: 'form'},
+        menu: 'comment'
       },
     ]
   },
@@ -125,6 +133,13 @@ export const asyncRouterMap = [
         meta: {title: '帖子标签管理', icon: 'user'},
         menu: 'BusinessSubway'
       },
+      {
+        path: 'ads',
+        name: '广告',
+        component: _import('ads/ads'),
+        meta: {title: '广告', icon: 'form'},
+        menu: 'ads'
+      }
     ]
   },
   {
@@ -139,42 +154,49 @@ export const asyncRouterMap = [
         name: '普通用户列表',
         component: _import('comUser/comUser'),
         meta: {title: '普通用户列表', icon: 'user'},
-        menu: 'comUser'
+        menu: 'comuser'
       },
+    /*  {
+        path: 'comuserrole',
+        name: '权限管理',
+        component: _import('comUser/comuserrole'),
+        meta: {title: '权限管理', icon: 'password'},
+        menu: 'comrole'
+      },*/
       {
         path: 'fans',
         name: '用户关注列表',
         component: _import('comUser/fans'),
         meta: {title: '用户关注列表', icon: 'user'},
-        menu: 'fans'
+        menu: 'comuserfans'
       },
       {
         path: 'myPost',
         name: '用户帖子列表',
         component: _import('comUser/myPost'),
         meta: {title: '用户帖子列表', icon: 'user'},
-        menu: 'myPost'
+        menu: 'comuserpost'
       },
       {
         path: 'like',
         name: '用户点赞列表',
         component: _import('comUser/like'),
         meta: {title: '用户点赞列表', icon: 'user'},
-        menu: 'like'
+        menu: 'comuserlike'
       },
       {
         path: 'comment',
         name: '用户帖子评论列表',
         component: _import('comUser/comment'),
         meta: {title: '用户帖子评论列表', icon: 'user'},
-        menu: 'comment'
+        menu: 'comusercomment'
       },
       {
         path: 'browse',
         name: '用户浏览记录列表',
         component: _import('comUser/browse'),
         meta: {title: '用户浏览记录列表', icon: 'user'},
-        menu: 'browse'
+        menu: 'comuserbrowse'
       },
     ]
   },

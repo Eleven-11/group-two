@@ -1,7 +1,7 @@
 package com.heeexy.example.dao;
 
 import com.alibaba.fastjson.JSONObject;
-import netscape.javascript.JSObject;
+
 
 import java.util.List;
 import java.util.Map;
@@ -47,9 +47,9 @@ public interface WxMyPostDao {
           * @methodsName: countMyPostByUserId
           * @description: 计算该用户发帖数量
           * @param:  JSONObject
-          * @return: int
+          * @return: JSONObject
           */
-    int countMyPostByUserId(JSONObject jsonObject);
+     JSONObject countMyPostByUserId(JSONObject jsonObject);
      /**
           * @methodsName: updateByPostIdMany
           * @description: 批量删除帖子

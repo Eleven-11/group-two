@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ Author     ：良优
@@ -94,8 +95,15 @@ public class WxUserServiceImpl implements WxUserService {
 
         //用户详情发帖计数和粉丝计数
 
-        JSONObject detailUserById = wxUserDao.getDetailUserById(jsonObject);
-        return detailUserById;
+        List<JSONObject> detailUserById = wxUserDao.getDetailUserById(jsonObject);
+        System.out.println(detailUserById);
+        return CommonUtil.successPage(detailUserById);
     }
 
+    @Override
+    public JSONObject updateFansById(Map map) {
+        //修改真实粉丝数
+         wxUserDao.updateFansById(map);
+        return CommonUtil.successJson();
+    }
 }

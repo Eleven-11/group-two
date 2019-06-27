@@ -26,9 +26,8 @@ public class PostController {
     }
 
     @PostMapping("/updatePostState")
-    public JSONObject updateUser(@RequestBody JSONObject requestJson) {
+    public JSONObject updatePostState(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "deleteState,postId");
-
         return postService.updatePostState(requestJson);
     }
 
@@ -42,4 +41,18 @@ public class PostController {
     public JSONObject getAllSorts() {
         return postService.getAllSorts();
     }
+
+    @PostMapping("/updatePost")
+    public JSONObject updatePost(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "sortId,postContent, likeOff,collectOff,viewOff, postId");
+        System.out.println(requestJson);
+        return postService.updatePost(requestJson);
+    }
+
+    @PostMapping("/updatePostTop")
+    public JSONObject updatePostTop(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "isTop,postId");
+        return postService.updatePostTop(requestJson);
+    }
+
 }

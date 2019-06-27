@@ -26,7 +26,6 @@ public class WxMyPostServiceImpl implements WxMyPostService {
         //后台数据显示
         List<JSONObject> list = wxMyPostDao.getMyPostList(jsonObject);
         int count = wxMyPostDao.countMyPost(jsonObject);
-
         return CommonUtil.successPage(jsonObject, list, count);
     }
 
@@ -41,13 +40,20 @@ public class WxMyPostServiceImpl implements WxMyPostService {
     public JSONObject getMyPostListById(JSONObject jsonObject) {
         //前台用户展示帖子数据
         List<JSONObject> list = wxMyPostDao.getMyPostListById(jsonObject);
-        int count = wxMyPostDao.countMyPostByUserId(jsonObject);
-        return CommonUtil.successPage(jsonObject,list,count);
+
+        return CommonUtil.successPage(list);
+    }
+
+    @Override
+    public JSONObject countMyPostByUserId(JSONObject jsonObject) {
+        //计算某用户发帖数量
+        JSONObject jsonObject1 = wxMyPostDao.countMyPostByUserId(jsonObject);
+        return jsonObject1;
     }
 
     @Override
     public JSONObject updateByPostIdMany(Map map) {
-        //批量删除帖子（不成功）
+        //批量删除帖子
         wxMyPostDao.updateByPostIdMany(map);
         return CommonUtil.successJson();
     }

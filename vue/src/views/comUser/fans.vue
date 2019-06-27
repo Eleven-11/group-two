@@ -7,7 +7,9 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="用户ID" prop="onUserId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="用户名" prop="onUserName" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="被关注用户ID" prop="userId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="被关注者用户名" prop="userName" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="关注状态:1" prop="state" style="width: 60px;">
         <template slot-scope="scope">
@@ -23,9 +25,8 @@
       <el-table-column align="center" label="更新时间" prop="updateTime" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
-          <el-button type="danger" icon="delete" v-if="scope.row.fansId!=fansId "
-                     @click="removeUser(scope.$index)">修改
-          </el-button>
+          <el-button type="primary" icon="delete" v-if="scope.row.state=='0'" @click="addfans(scope.$index)">关注</el-button>
+          <el-button type="danger" icon="delete" v-if="scope.row.state=='1'" @click="removeUser(scope.$index)">取消</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -61,6 +62,8 @@
           update: '编辑',
         },
         tempFans: {
+          onUserId:'',
+          userId:'',
           onUserName: '',
           userName: '',
           state: '',
@@ -109,40 +112,22 @@
         //表格序号
         return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
       },
-      selectUser(){
-
-        this.getList();
-      },
-      showUpdate($index) {
-        let user = this.list[$index];
-        this.tempFans.fansId = user.fansId;
-        this.tempFans.onUserId = user.onUserId;
-        this.tempFans.userId = user.onUserId;
-        this.tempFans.state = user.state;
-        this.tempFans.updateTime = user.updateTime;
-        this.dialogStatus = "update"
-        this.dialogFormVisible = true
-      },
-      updateUser() {
-        //修改用户信息
+      addfans($index) {
         let _vue = this;
-        this.api({
-          url: "/comUser/updateUserFans",
-          method: "post",
-          data: this.tempFans
+        this.$confirm('确定修改此用户关注?', '提示', {
+          confirmButtonText: '确定',
+          showCancelButton: false,
+          type: 'warning'
         }).then(() => {
-          let msg = "修改成功";
-          this.dialogFormVisible = false
-          if (this.fansId === this.tempFans.fansId) {
-            msg = '修改成功,部分信息重新登录后生效'
-          }
-          this.$message({
-            message: msg,
-            type: 'success',
-            duration: 1 * 1000,
-            onClose: () => {
-              _vue.getList();
-            }
+          let user = _vue.list[$index];
+          _vue.api({
+            url: "/comUserFans/addFans",
+            method: "post",
+            data: user
+          }).then(() => {
+            _vue.getList()
+          }).catch(() => {
+            _vue.$message.error("修改失败")
           })
         })
       },
