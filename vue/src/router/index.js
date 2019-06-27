@@ -79,13 +79,6 @@ export const asyncRouterMap = [
         menu: 'post'
       },
       {
-        path: 'role',
-        name: '权限管理',
-        component: _import('user/role'),
-        meta: {title: '权限管理', icon: 'password'},
-        menu: 'role'
-      },
-      {
         path: 'comment',
         name: '评论管理',
         component: _import('comment/comment'),
