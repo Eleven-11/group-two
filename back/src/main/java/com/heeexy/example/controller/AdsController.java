@@ -31,17 +31,9 @@ public class AdsController {
     /**
      * 展示所有广告信息
      */
-    @GetMapping("/getAllAds")
+    @GetMapping("/getAds")
     public JSONObject getAllAds(HttpServletRequest request){
-        return adsService.getAllAds(CommonUtil.request2Json(request));
-    }
-
-    /**
-     * 展示启用的广告信息
-     */
-    @GetMapping("/getEnableAds")
-    public  List<JSONObject> getEnableAds(HttpServletRequest request){
-        return  adsService.getEnableAds(CommonUtil.request2Json(request));
+        return adsService.getAds(CommonUtil.request2Json(request));
     }
 
     /**
@@ -85,18 +77,14 @@ public class AdsController {
         String originalFilename = file.getOriginalFilename();
         String temp = UUID.randomUUID().toString();
         String desFilePath =
-                "D:" + File.separator+"Web Projects"
-                        + File.separator+"group-two"
-                        + File.separator+"vue"
-                        + File.separator+"src"
-                        + File.separator+"assets"
-                        + File.separator+"upload"
+                "F:" + File.separator+"OTA"
+                        + File.separator+"img"
                         + File.separator+"ads"
                         + "/" + temp
                         + originalFilename;
         System.out.println(desFilePath);
         File localFile  = new File(desFilePath);
-        String srcUrl = "http://localhost:9520/static/img/"+temp+originalFilename;
+        String srcUrl = "http://localhost:8080/OTA/img/ads/"+temp+originalFilename;
         localFile.createNewFile();
         file.transferTo(localFile);
         map.put("code", 0);

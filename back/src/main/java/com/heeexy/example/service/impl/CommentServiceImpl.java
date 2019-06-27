@@ -3,8 +3,10 @@ package com.heeexy.example.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.CommentDao;
 import com.heeexy.example.service.CommentService;
+import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,58 +21,42 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private CommentDao commentDao;
 
+    /**
+     * 获取评论列表
+     */
     @Override
-    public List<JSONObject> getAllComment(JSONObject jsonObject) {
-        return commentDao.getAllComment(jsonObject);
+    public JSONObject getComment(JSONObject jsonObject) {
+        CommonUtil.fillPageParam(jsonObject);
+        int count = commentDao.countComment(jsonObject);
+        List<JSONObject> list = commentDao.getComment(jsonObject);
+        return CommonUtil.successPage(jsonObject, list, count);
     }
 
-    @Override
-    public List<JSONObject> getComment(JSONObject jsonObject) {
-        return commentDao.getComment(jsonObject);
-    }
-
-    @Override
-    public List<JSONObject> getAllCommentByPostId(JSONObject jsonObject) {
-        return getAllCommentByPostId(jsonObject);
-    }
-
-    @Override
-    public List<JSONObject> getAllCommentByUserId(JSONObject jsonObject) {
-        return getAllCommentByUserId(jsonObject);
-    }
-
-    @Override
-    public List<JSONObject> getCommentByPostId(JSONObject jsonObject) {
-        return commentDao.getCommentByPostId(jsonObject);
-    }
-
-    @Override
-    public List<JSONObject> getCommentByUserId(JSONObject jsonObject) {
-        return commentDao.getCommentByUserId(jsonObject);
-    }
-
+    /**
+     * 根据id获取评论
+     */
     @Override
     public JSONObject getCommentById(int id) {
-        return commentDao.getCommentById(id);
+        return CommonUtil.successJson(commentDao.getCommentById(id));
     }
 
+    /**
+     * 新增评论
+     */
     @Override
-    public JSONObject countAllComment(int id) {
-        return commentDao.countAllComment(id);
+    @Transactional(rollbackFor = Exception.class)
+    public JSONObject addComment(JSONObject jsonObject) {
+        commentDao.addComment(jsonObject);
+        return CommonUtil.successJson();
     }
 
+    /**
+     * 变更评论显示状态  0：未读 1：已读 -1：删除
+     */
     @Override
-    public JSONObject countUnreadComment(int id) {
-        return commentDao.countUnreadComment(id);
-    }
-
-    @Override
-    public int addComment(JSONObject jsonObject) {
-        return commentDao.addComment(jsonObject);
-    }
-
-    @Override
-    public int updateComment(JSONObject jsonObject) {
-        return commentDao.updateComment(jsonObject);
+    @Transactional(rollbackFor = Exception.class)
+    public JSONObject updateComment(JSONObject jsonObject) {
+        commentDao.updateComment(jsonObject);
+        return CommonUtil.successJson();
     }
 }

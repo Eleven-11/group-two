@@ -21,58 +21,52 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
+    /**
+     * 获取评论列表
+     */
     @GetMapping("getAllComment")
-    public List<JSONObject> getAllComment(HttpServletRequest request){
-        return commentService.getAllComment(CommonUtil.request2Json(request));
-    }
-
-    @GetMapping("getComment")
-    public List<JSONObject> getComment(HttpServletRequest request){
+    public JSONObject getComment(HttpServletRequest request){
         return commentService.getComment(CommonUtil.request2Json(request));
     }
 
-    @GetMapping("getAllCommentByUserId")
-    public List<JSONObject> getAllCommentByUserId(HttpServletRequest request){
-        return commentService.getAllCommentByUserId(CommonUtil.request2Json(request));
-    }
-
-    @GetMapping("getAllCommentByPostId")
-    public List<JSONObject> getAllCommentByPostId(HttpServletRequest request){
-        return commentService.getAllCommentByPostId(CommonUtil.request2Json(request));
-    }
-
+    /**
+     * 获取某个用户的评论
+     */
     @GetMapping("getCommentByUserId")
-    public  List<JSONObject> getCommentByUserId(HttpServletRequest request){
-        return commentService.getCommentByUserId(CommonUtil.request2Json(request));
+    public JSONObject getCommentByUserId(HttpServletRequest request){
+        return commentService.getComment(CommonUtil.request2Json(request));
     }
 
+    /**
+     * 获取某个帖子的评论
+     */
     @GetMapping("getCommentByPostId")
-    public List<JSONObject> getCommentByPostId(HttpServletRequest request){
-        return commentService.getCommentByPostId(CommonUtil.request2Json(request));
+    public JSONObject getCommentByPostId(HttpServletRequest request){
+        return commentService.getComment(CommonUtil.request2Json(request));
     }
 
+    /**
+     * 根据id获取一条评论
+     */
     @GetMapping("getCommentById/{id}")
     public JSONObject getCommentById(@PathVariable int id){
         return commentService.getCommentById(id);
     }
 
-    @GetMapping("countAllComment/{id}")
-    public JSONObject countAllComment(@PathVariable int id){
-        return commentService.countAllComment(id);
-    }
-
-    @GetMapping("countUnreadComment/{id}")
-    public JSONObject countUnreadComment(@PathVariable int id){
-        return  commentService.countUnreadComment(id);
-    }
-
+    /**
+     * 添加一条评论
+     */
     @PostMapping("addComment")
-    public int addComment(HttpServletRequest request){
+    public JSONObject addComment(HttpServletRequest request){
         return commentService.addComment(CommonUtil.request2Json(request));
     }
 
+    /**
+     * 修改评论
+     */
     @PostMapping("updateComment")
-    public int updateComment(HttpServletRequest request){
-        return commentService.updateComment(CommonUtil.request2Json(request));
+    public JSONObject updateComment(@RequestBody JSONObject requestJson){
+        CommonUtil.hasAllRequired(requestJson, "id,status");
+        return commentService.updateComment(requestJson);
     }
 }

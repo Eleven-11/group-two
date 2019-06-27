@@ -97,4 +97,48 @@
         from   cqy_business_subway
         where  business_subway_id=#{businessSubwayId}
     </select>
+
+
+    <!--导入-->
+
+
+
+    <select id="selectSuperior" resultType="Integer">
+        select
+        business_subway_id businessSubwayId
+        from cqy_business_subway
+        where business_subway_name=#{businesssubwayname}
+    </select>
+
+    <select id="countbusinessSubwayName" resultType="Integer">
+        select count(*)
+        from cqy_business_subway
+        where business_subway_name=#{businesssubwayname}
+    </select>
+
+
+    <update id="updateUserByName" parameterType="com.heeexy.example.dao.BusinessSubwayDao">
+      update cqy_business_subway set business_subway_name=#{businesssubwayname},Superior_id=#{superiorid},
+      Display=#{display} where business_subway_id = #{businesssubwayid}
+    </update>
+
+    <insert id="addUser" parameterType="com.heeexy.example.dao.BusinessSubwayDao">
+        INSERT INTO cqy_business_subway (business_subway_name,Superior_id,Display)
+        VALUES (#{businesssubwayname},#{superiorid},1)
+    </insert>
+
+    <insert id="addbusinessSubwayName" parameterType="com.heeexy.example.dao.BusinessSubwayDao">
+        INSERT INTO cqy_business_subway
+        (business_subway_name,Superior_id,Display)
+        VALUES
+        (#{businesssubwayname},0,1)
+    </insert>
+
+    <select id="selectByName" resultType="Integer">
+        SELECT count(*) FROM cqy_business_subway WHERE business_subway_id=#{businesssubwayid}
+    </select>
+
+    <delete id="removeBusinessSubway">
+        delete from cqy_business_subway
+    </delete>
 </mapper>
