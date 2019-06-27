@@ -17,17 +17,17 @@ public interface MessageService {
     JSONObject getMessage(JSONObject jsonObject);
 
     /**
-     * 根据用户ID获取聊天
+     * 根据用户ID获取聊天列表
      */
     JSONObject getChatByUserId(JSONObject jsonObject);
 
     /**
-     * 根据用户ID获取消息
+     * 根据用户ID获取消息列表
      */
     JSONObject getMessageByUserId(JSONObject jsonObject);
 
     /**
-     * 根据用户ID获取消息
+     * 根据消息ID获取消息
      */
     JSONObject getMessageByMessageId(JSONObject jsonObject);
 

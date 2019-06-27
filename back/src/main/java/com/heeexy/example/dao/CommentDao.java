@@ -19,7 +19,7 @@ public interface CommentDao {
     List<JSONObject> getComment(JSONObject jsonObject);
 
     /**
-     * 获取所有评论数
+     * 获取评论数
      */
     int countComment(JSONObject jsonObject);
 

@@ -21,6 +21,9 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private MessageDao messageDao;
 
+    /**
+     * 获取消息列表
+     */
     @Override
     public JSONObject getMessage(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
@@ -29,6 +32,9 @@ public class MessageServiceImpl implements MessageService {
         return CommonUtil.successPage(jsonObject, list, count);
     }
 
+    /**
+     * 根据用户ID获取聊天列表
+     */
     @Override
     public JSONObject getChatByUserId(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
@@ -37,6 +43,9 @@ public class MessageServiceImpl implements MessageService {
         return CommonUtil.successPage(jsonObject, list, count);
     }
 
+    /**
+     * 根据用户ID获取消息列表
+     */
     @Override
     public JSONObject getMessageByUserId(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
@@ -45,18 +54,27 @@ public class MessageServiceImpl implements MessageService {
         return CommonUtil.successPage(jsonObject, list, count);
     }
 
+    /**
+     * 根据消息ID获取消息
+     */
     @Override
     public JSONObject getMessageByMessageId(JSONObject jsonObject) {
         JSONObject message = messageDao.getMessageByMessageId(jsonObject);
         return CommonUtil.successJson(message);
     }
 
+    /**
+     * 获取一条消息的图片路径
+     */
     @Override
     public JSONObject getPictureByMessageId(int id) {
         List<JSONObject> list = messageDao.getPictureByMessageId(id);
         return CommonUtil.successJson(list);
     }
 
+    /**
+     * 添加消息
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject addMessage(JSONObject jsonObject) {
@@ -69,6 +87,9 @@ public class MessageServiceImpl implements MessageService {
         return CommonUtil.successJson();
     }
 
+    /**
+     * 添加图片
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject addPicture(JSONObject jsonObject) {
@@ -76,6 +97,9 @@ public class MessageServiceImpl implements MessageService {
         return CommonUtil.successJson();
     }
 
+    /**
+     * 修改消息状态
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject updateMessage(JSONObject jsonObject) {

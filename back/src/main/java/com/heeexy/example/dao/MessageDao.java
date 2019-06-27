@@ -40,12 +40,12 @@ public interface MessageDao {
     List<JSONObject> getMessageByUserId(JSONObject jsonObject);
 
     /**
-     * 获取消息条数
+     * 根据用户ID获取消息条数
      */
     int countMessageByUserId(JSONObject jsonObject);
 
     /**
-     * 根据用户ID获取消息
+     * 根据消息ID获取消息
      */
     JSONObject getMessageByMessageId(JSONObject jsonObject);
 
@@ -54,15 +54,6 @@ public interface MessageDao {
      */
     List<JSONObject> getPictureByMessageId(int id);
 
-    /**
-     * 获取全部消息记录条数
-     */
-    int countAllMessageById(JSONObject jsonObject);
-
-    /**
-     * 获取指定状态消息记录条数
-     */
-    int countMessageById(JSONObject jsonObject);
 
     /**
      * 获取聊天记录编号
