@@ -16,7 +16,6 @@
     </div>
 
 
-
     <div class="filter-container">
       <el-form>
         <el-form-item>
@@ -25,6 +24,15 @@
           <el-button type="primary" icon="plus" v-if="hasPerm('user:add')" @click="showCreate">添加</el-button>
         </el-form-item>
       </el-form>
+      <!--<a href="/api/businesssubway/export"><button type="button" class="btn btn-primary">导出</button></a>-->
+      <form class="form-horizontal" id="form_table" action="/api/businesssubway/import" enctype="multipart/form-data" method="post">
+        <button type="submit" class="btn btn-primary" style="width: 80px;height: 40px;background-color: steelblue;color: #d3dce6">增量导入</button>
+        <input  class="form-input" type="file" name="filename" ></input>
+      </form>
+      <form class="form-horizontal" id="form_tables" action="/api/businesssubway/imports" enctype="multipart/form-data" method="post">
+        <button type="submit" class="btn btn-primary" style="width: 80px;height: 40px;background-color: steelblue;color: #d3dce6">覆盖导入</button>
+        <input class="form-input" type="file" name="filename" ></input>
+      </form>
     </div>
 
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
@@ -34,15 +42,15 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="帖子主键" prop="businessSubwayId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="帖子标签" prop="businessSubwayName" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="上级的编号" prop="superiorId" style="width: 60px;">
         <template slot-scope="scope">
-          <el-tag type="primary"  v-if="scope.row.superiorId===0">无上级</el-tag>
-          <el-tag type="success" v-else-if="scope.row.superiorId===1">热门商圈</el-tag>
-          <el-tag type="success"  v-else-if="scope.row.superiorId===2">地铁周边</el-tag>
-          <el-tag type="info" v-text="scope.row.superiorId" v-else></el-tag>
+          <el-tag  v-if="scope.row.superiorId==0" style="margin-right: 3px;" type="success">无上级</el-tag>
+          <div v-if="scope.row.superiorId!=1" v-for="tags in list" style="text-align: center">
+            <el-tag  v-if="scope.row.superiorId == tags.businessSubwayId" style="margin-right: 3px;" type="danger" v-text="tags.businessSubwayName"></el-tag>
+          </div>
         </template>
+
       </el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" width="170" sortable></el-table-column>
       <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170" sortable></el-table-column>
@@ -227,7 +235,7 @@
       createUser() {
         //添加新用户
         this.api({
-          url: "/businesssubway/addBusinessSubway",
+          url: "/businesssubway/import",
           method: "post",
           data: this.tempUser
         }).then(() => {
@@ -258,6 +266,24 @@
           })
         })
       },
+
+
+
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
+
+
       removeUser($index) {
         let _vue = this;
         this.$confirm('确定删除此模块?', '提示', {

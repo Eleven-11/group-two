@@ -56,27 +56,29 @@
           </el-input>
         </el-form-item>
         <el-form-item label="类别图标" >
-          <!--<el-upload-->
-            <!--class="avatar-uploader"-->
-            <!--action="/api/postcategorie/upload"-->
-            <!--:show-file-list="false"-->
-            <!--:on-success="handleAvatarSuccess"-->
-            <!--:before-upload="beforeAvatarUpload">-->
-            <!--<img v-if="imageUrl" :src="imageUrl" class="avatar">-->
-            <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
-          <!--</el-upload>-->
           <el-upload
+            ref="upload"
+            class="avatar-uploader"
             action="/api/postcategorie/upload"
-            list-type="picture-card"
-            :on-preview="handlePictureCardPreview"
-            :on-remove="handleRemove"
+            :show-file-list="false"
             :on-success="handleAvatarSuccess"
-            :limit="imgLimit" >
-            <i class="el-icon-plus"></i>
+            :before-upload="beforeAvatarUpload">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <!--<img v-if="dialogStatus=='update" :src="scope.row.categoriesImg" class="avatar">-->
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-          <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt="">
-          </el-dialog>
+          <!--<el-upload-->
+            <!--action="/api/postcategorie/upload"-->
+            <!--list-type="picture-card"-->
+            <!--:on-preview="handlePictureCardPreview"-->
+            <!--:on-remove="handleRemove"-->
+            <!--:on-success="handleAvatarSuccess"-->
+            <!--:limit="imgLimit" >-->
+            <!--<i class="el-icon-plus"></i>-->
+          <!--</el-upload>-->
+          <!--<el-dialog :visible.sync="dialogVisible">-->
+            <!--<img width="100%" :src="dialogImageUrl" alt="">-->
+          <!--</el-dialog>-->
         </el-form-item>
       </el-form>
 
@@ -119,7 +121,7 @@
           categoriesImg:'',
           display:''
         },
-        // imageUrl: ''
+        imageUrl: '',
         dialogImageUrl: '',
         dialogVisible: false,
         imgLimit: 1
@@ -145,38 +147,38 @@
           this.roles = data.list;
         })
       },
-      // handleAvatarSuccess(res, file) {
-      //   this.imageUrl = URL.createObjectURL(file.raw);
-      //   // this.categoriesImg = this.imageUrl;
-      //   // this.tempUser.categoriesImg = this.imageUrl;
-      //   // alert(this.tempUser.categoriesImg);
-      // },
-      // beforeAvatarUpload(file) {
-      //   const isJPG = file.type === 'image/jpeg';
-      //   const isLt2M = file.size / 1024 / 1024 < 2;
-      //
-      //   if (!isJPG) {
-      //     this.$message.error('上传头像图片只能是 JPG 格式!');
-      //   }
-      //   if (!isLt2M) {
-      //     this.$message.error('上传头像图片大小不能超过 2MB!');
-      //   }
-      //   return isJPG && isLt2M;
-      // },
-      handleRemove(file, fileList) {
-        this.api({
-          url:"/postcategorie/delete",
-          method:"post",
-          data:this.imgData
-
-        })
-        console.log(file, fileList);
+      handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+        // this.categoriesImg = this.imageUrl;
+        this.tempUser.categoriesImg = this.imageUrl;
+        // alert(this.tempUser.categoriesImg);
       },
-      handleAvatarSuccess(response, file, fileList) {
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
+      // handleRemove(file, fileList) {
+      //   this.api({
+      //     url:"/postcategorie/delete",
+      //     method:"post",
+      //     data:this.imgData
+      //
+      //   })
+      //   console.log(file, fileList);
+      // },
+/*      handleAvatarSuccess(response, file, fileList) {
         //response这个
         this.imgData.desFilePath = response.url;
         // console.log("传回的地址："+response.url)
-      },
+      },*/
 
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url;
@@ -222,6 +224,7 @@
         this.tempUser.categoriesImg= "";
         this.dialogStatus = "create"
         this.dialogFormVisible = true
+        this.$refs.upload.clearFiles();
       },
       showUpdate($index) {
         let postcategorie = this.list[$index];
@@ -230,6 +233,7 @@
         this.tempUser.categoriesImg = postcategorie.categoriesImg;
         this.dialogStatus = "update"
         this.dialogFormVisible = true
+        this.$refs.upload.clearFiles();
       },
       createUser() {
         //添加新用户
@@ -240,6 +244,7 @@
         }).then(() => {
           this.getList();
           this.dialogFormVisible = false
+          this.$refs.upload.clearFiles()
         })
       },
       updateUser() {
@@ -317,4 +322,3 @@
     display: block;
   }
 </style>
-
