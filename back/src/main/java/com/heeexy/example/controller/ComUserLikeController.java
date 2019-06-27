@@ -64,7 +64,7 @@ public class ComUserLikeController {
     /**
      * 前台添加用户帖子点赞
      */
-    @PostMapping("/addUserLikes")
+    @PostMapping("/addLikesByUser")
     public JSONObject addLikeByUser(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "onUserId,likeId,postId");
        JSONObject userByUsername = wxUserService.getUserByUsername(requestJson);
