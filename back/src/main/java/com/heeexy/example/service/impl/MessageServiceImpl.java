@@ -6,6 +6,7 @@ import com.heeexy.example.service.MessageService;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -57,6 +58,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject addMessage(JSONObject jsonObject) {
         if(messageDao.countChat(jsonObject)==0){
             messageDao.addChat(jsonObject);
@@ -68,12 +70,14 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject addPicture(JSONObject jsonObject) {
         messageDao.addPicture(jsonObject);
         return CommonUtil.successJson();
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject updateMessage(JSONObject jsonObject) {
         messageDao.updateMessage(jsonObject);
         return CommonUtil.successJson();

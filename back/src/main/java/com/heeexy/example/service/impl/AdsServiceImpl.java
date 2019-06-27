@@ -21,6 +21,9 @@ public class AdsServiceImpl implements AdsService {
     @Autowired
     private AdsDao adsDao;
 
+    /**
+     * 获取广告列表
+     */
     @Override
     public JSONObject getAds(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
@@ -29,11 +32,17 @@ public class AdsServiceImpl implements AdsService {
         return CommonUtil.successPage(jsonObject, list, count);
     }
 
+    /**
+     * 根据id获取单条广告信息
+     */
     @Override
     public JSONObject getAdsById(int id) {
         return adsDao.getAdsById(id);
     }
 
+    /**
+     * 修改广告信息
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject updateAds(JSONObject jsonObject) {
@@ -41,6 +50,9 @@ public class AdsServiceImpl implements AdsService {
         return CommonUtil.successJson();
     }
 
+    /**
+     * 新增广告信息
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject addAds(JSONObject jsonObject) {
@@ -48,6 +60,9 @@ public class AdsServiceImpl implements AdsService {
         return CommonUtil.successJson();
     }
 
+    /**
+     * 删除广告信息
+     */
     @Override
     public JSONObject removeAdsById(int id) {
         adsDao.removeAdsById(id);

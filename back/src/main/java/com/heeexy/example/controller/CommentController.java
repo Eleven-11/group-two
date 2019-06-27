@@ -22,47 +22,23 @@ public class CommentController {
     private CommentService commentService;
 
     /**
-     * 获取所有评论
+     * 获取评论列表
      */
     @GetMapping("getAllComment")
-    public JSONObject getAllComment(HttpServletRequest request){
-        return commentService.getComment(CommonUtil.request2Json(request));
-    }
-
-    /**
-     * 获取可见评论
-     */
-    @GetMapping("getComment")
     public JSONObject getComment(HttpServletRequest request){
         return commentService.getComment(CommonUtil.request2Json(request));
     }
 
     /**
-     * 获取某个用户的所有评论
-     */
-    @GetMapping("getAllCommentByUserId")
-    public JSONObject getAllCommentByUserId(HttpServletRequest request){
-        return commentService.getComment(CommonUtil.request2Json(request));
-    }
-
-    /**
-     * 获取某个帖子的所有评论
-     */
-    @GetMapping("getAllCommentByPostId")
-    public JSONObject getAllCommentByPostId(HttpServletRequest request){
-        return commentService.getComment(CommonUtil.request2Json(request));
-    }
-
-    /**
-     * 获取某个用户的可见评论
+     * 获取某个用户的评论
      */
     @GetMapping("getCommentByUserId")
-    public  JSONObject getCommentByUserId(HttpServletRequest request){
+    public JSONObject getCommentByUserId(HttpServletRequest request){
         return commentService.getComment(CommonUtil.request2Json(request));
     }
 
     /**
-     * 获取某个帖子的可见评论
+     * 获取某个帖子的评论
      */
     @GetMapping("getCommentByPostId")
     public JSONObject getCommentByPostId(HttpServletRequest request){

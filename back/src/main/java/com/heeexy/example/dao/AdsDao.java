@@ -19,12 +19,12 @@ public interface AdsDao {
     int countAds();
 
     /**
-     * 获取所有广告信息
+     * 获取广告列表
      */
     List<JSONObject> getAds(JSONObject jsonObject);
 
     /**
-     * 获取单条广告信息
+     * 根据id获取单条广告信息
      */
     JSONObject getAdsById(int id);
 

@@ -13,7 +13,7 @@ import java.util.List;
  **/
 public interface CommentService {
     /**
-     * 获取全部评论
+     * 获取评论列表
      */
     JSONObject getComment(JSONObject jsonObject);
 

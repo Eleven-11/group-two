@@ -297,7 +297,7 @@
       showUserTable(val){
         this.dialogListQuery.uid = val;
         this.api({
-          url: "/comment/getAllCommentByUserId",
+          url: "/comment/getCommentByUserId",
           method: "get",
           params: this.dialogListQuery
         }).then(data => {
@@ -309,7 +309,7 @@
       showPostTable(val){
         this.dialogListQuery.pid = val;
         this.api({
-          url: "/comment/getAllCommentByPostId",
+          url: "/comment/getCommentByPostId",
           method: "get",
           params: this.dialogListQuery
         }).then(data => {
