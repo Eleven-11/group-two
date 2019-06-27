@@ -61,6 +61,26 @@ public interface PostDao {
      */
 
     int updatePostTop(JSONObject jsonObject);
+    /*
+     * @Author lover_tyn
+     * @Description //TODO 
+     * @Date  2019/6/27 11:00
+     * @Param [jsonObject]
+     * @return int
+     */
+
+    List<JSONObject> getSomeTag(JSONObject jsonObject)
+    /*
+     * @Author lover_tyn
+     * @Description //TODO 
+     * @Date  2019/6/27 11:01
+     * @Param [need]
+     * @return java.util.List<com.alibaba.fastjson.JSONObject>
+     */
+    ;
+    
+    
+    
 
 
 

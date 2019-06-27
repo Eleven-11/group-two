@@ -41,7 +41,7 @@
       <el-table-column align="center" label="发帖时间" prop="postTime" width="100" sortable></el-table-column>
       <el-table-column align="center" label="所属分类"  width="110" sortable>
         <template slot-scope="scope">
-            <el-tag v-text="scope.row.sortName" style="float: left;margin-left: 5px"></el-tag>
+            <el-tag type="success" v-text="scope.row.sortName" style="float: left;margin-left: 5px"></el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="标签" width="270">
@@ -58,7 +58,16 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="显示状态" prop="deleteState" width="120" sortable></el-table-column>
+      <el-table-column align="center" label="显示状态" width="120" sortable>
+      <template slot-scope="scope">
+        <div v-if="scope.row.deleteState==1" >
+          <el-tag type="success">正常</el-tag>
+        </div>
+        <div v-else>
+          <el-tag type="warning">隐藏</el-tag>
+        </div>
+      </template>
+      </el-table-column>
       <el-table-column align="center" label="点赞数/偏移量" prop="alike" width="150" sortable></el-table-column>
       <el-table-column align="center" label="收藏数/偏移量" prop="acollect" width="150" sortable></el-table-column>
       <el-table-column align="center" label="浏览数/偏移量" prop="aview" width="150" sortable></el-table-column>
@@ -71,10 +80,10 @@
           <el-button type="primary"
                      @click="showTop(scope.$index)"><i class="el-icon-caret-top"></i>
           </el-button>
-          <el-button type="danger"  v-if="scope.row.deleteState=='隐藏'"
+          <el-button type="danger"  v-if="scope.row.deleteState==2"
                      @click="recoverPost(scope.$index)"><i class="el-icon-circle-plus"></i>
           </el-button>
-          <el-button type="danger"  v-if="scope.row.deleteState=='正常'"
+          <el-button type="danger"  v-if="scope.row.deleteState==1"
                      @click="deletePost(scope.$index)"><i class="el-icon-remove"></i>
           </el-button>
         </template>
@@ -97,8 +106,8 @@
         </el-form-item>
         <el-form-item label="请选择置顶模块" v-if="dialogStatus=='makeTop' " v-model="tempPost.tops" required>
           <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll"
-                       @change="handleCheckAllChange">全选</el-checkbox>
-          <el-checkbox-group v-model="tempPost.tops" @change="handleCheckedCitiesChange" style="display: inline-block;margin-left: 10px" >
+                       @change="checkAllTop">全选</el-checkbox>
+          <el-checkbox-group v-model="tempPost.tops" @change="checkTop" style="display: inline-block;margin-left: 10px" >
             <el-checkbox v-for="top in allTops" :label="top" :key="top">
               {{top}}
             </el-checkbox>
@@ -113,7 +122,7 @@
         </el-form-item>
         <el-form-item label="所属分类:"  v-if="dialogStatus!='makeTop' " v-model="tempPost.sortName" required>
           <div v-if="dialogStatus=='detail'" >
-            {{tempPost.sortName}}
+            <el-tag v-text="tempPost.sortName" effect="dark" style="float: left;margin-left: 5px"></el-tag>
           </div>
           <div v-else >
               <el-select v-model="tempPost.sortId" placeholder="请选择">
@@ -131,6 +140,33 @@
             <div v-for="tag in tempPost.tags">
               <el-tag v-text="tag" style="float: left;margin-left: 5px"></el-tag>
            </div>
+          </div>
+          <div v-else>
+            <el-collapse   @change="checkFirstCollapse">
+              <el-collapse-item title="已选" name="selected" >
+                <el-checkbox-group v-model="tempPost.tags" @change="checkTag" >
+                  <el-checkbox-button v-for="taged in tempPost.tags" :label="taged" :key="taged" style="margin-left: 10px">
+                    {{taged}}
+                  </el-checkbox-button>
+                </el-checkbox-group>
+              </el-collapse-item>
+              <el-collapse-item title="全部" name="all" >
+                <el-collapse accordion  @change="getSomeTag">
+                  <el-collapse-item title="地铁周边" name="地铁周边" style="margin-left: 20px" ></el-collapse-item>
+                  <el-collapse-item title="热门商圈" name="热门商圈"  style="margin-left: 20px">
+                    <el-collapse   @change="getSomeTag" >
+                      <el-collapse-item v-for="tag in someTag"   :title="tag.tagName"  :key="tag.tagId"  :name="tag.tagName" style="margin-left: 20px;">
+                        <el-checkbox-group v-if="someTag!=null&&someTag!='' " v-model="tempPost.tags" @change="checkNewTag" >
+                          <el-checkbox-button v-for="newTag in someTag" :label="newTag.tagId" :key="newTag.tagId" style="margin-left: 10px">
+                            {{newTag.tagName}}
+                          </el-checkbox-button>
+                        </el-checkbox-group>
+                      </el-collapse-item>
+                    </el-collapse>
+                  </el-collapse-item>
+                </el-collapse>
+              </el-collapse-item>
+            </el-collapse>
           </div>
         </el-form-item>
         <el-form-item label="帖子内容:"  v-if="dialogStatus!='makeTop' " required>
@@ -220,6 +256,7 @@
           theOthers: ''
         },
         sorts: [],//分类列表
+        someTag:[],
         dialogStatus: 'detail',
         dialogFormVisible: false,
         textMap: {
@@ -271,6 +308,18 @@
           this.sorts = data.list;
         })
       },
+      getSomeTag(value) {
+        console.log(value);
+        if(value!=null&&value!='') {
+          this.api({
+            url: "/post/getSomeTag",
+            method: "post",
+            data: {need: value}
+          }).then(data => {
+            this.someTag = data.list;
+          })
+        }
+      },
       getList() {
         //查询列表
         this.listLoading = true;
@@ -296,10 +345,6 @@
               temp = parseInt(temp/10);
             }
             this.list[i].tops = listTop;
-            if (this.list[i].deleteState == 1)
-              this.list[i].deleteState = '正常';
-             else
-              this.list[i].deleteState = "隐藏";
             this.list[i].alike += '/' + this.list[i].likeOff;
             this.list[i].acollect += '/' + this.list[i].collectOff;
             this.list[i].aview += '/' + this.list[i].viewOff;
@@ -472,14 +517,14 @@
           })
         })
       },
-      handleCheckAllChange(val) {
+      checkAllTop(val) {
         this.tempPost.tops = val ? this.allTops : [];
         this.isIndeterminate = false;
         if(val==true)
           this.tempPost.isTop=1111;
         else this.tempPost.isTop=0;
       },
-      handleCheckedCitiesChange(value) {
+      checkTop(value) {
 
         let checkedCount = value.length;
         this.checkAll = checkedCount === this.allTops.length;
@@ -492,6 +537,17 @@
 
           }
         }
+      },
+      checkFirstCollapse(value) {
+        console.log(value);
+      },
+      checkTag(value){
+        console.log(value);
+        let checkedCount = value.length;
+        this.checkAll = checkedCount === this.allTops.length;
+      },
+      checkNewTag(value){
+        console.log(value);
       }
 
     }
