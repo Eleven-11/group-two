@@ -21,50 +21,10 @@ public class CommentServiceImpl implements CommentService {
     private CommentDao commentDao;
 
     @Override
-    public JSONObject getAllComment(JSONObject jsonObject) {
-        CommonUtil.fillPageParam(jsonObject);
-        int count = commentDao.countAllComment();
-        List<JSONObject> list = commentDao.getAllComment(jsonObject);
-        return CommonUtil.successPage(jsonObject, list, count);
-    }
-
-    @Override
     public JSONObject getComment(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
-        int count = commentDao.countComment();
+        int count = commentDao.countComment(jsonObject);
         List<JSONObject> list = commentDao.getComment(jsonObject);
-        return CommonUtil.successPage(jsonObject, list, count);
-    }
-
-    @Override
-    public JSONObject getAllCommentByPostId(JSONObject jsonObject) {
-        CommonUtil.fillPageParam(jsonObject);
-        int count = commentDao.countAllCommentByPostId(jsonObject);
-        List<JSONObject> list = commentDao.getAllCommentByPostId(jsonObject);
-        return CommonUtil.successPage(jsonObject, list, count);
-    }
-
-    @Override
-    public JSONObject getAllCommentByUserId(JSONObject jsonObject) {
-        CommonUtil.fillPageParam(jsonObject);
-        int count = commentDao.countAllCommentByUserId(jsonObject);
-        List<JSONObject> list = commentDao.getAllCommentByUserId(jsonObject);
-        return CommonUtil.successPage(jsonObject, list, count);
-    }
-
-    @Override
-    public JSONObject getCommentByPostId(JSONObject jsonObject) {
-        CommonUtil.fillPageParam(jsonObject);
-        int count = commentDao.countUnreadCommentByPostId(jsonObject);
-        List<JSONObject> list = commentDao.getCommentByPostId(jsonObject);
-        return CommonUtil.successPage(jsonObject, list, count);
-    }
-
-    @Override
-    public JSONObject getCommentByUserId(JSONObject jsonObject) {
-        CommonUtil.fillPageParam(jsonObject);
-        int count = commentDao.countUnreadCommentByUserId(jsonObject);
-        List<JSONObject> list = commentDao.getCommentByUserId(jsonObject);
         return CommonUtil.successPage(jsonObject, list, count);
     }
 

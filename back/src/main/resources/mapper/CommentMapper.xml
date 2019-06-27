@@ -3,23 +3,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.heeexy.example.dao.CommentDao">
 
-    <select id="getAllComment" resultType="com.alibaba.fastjson.JSONObject">
-        SELECT
-            c.comment_id      id,
-            c.post_id         pid,
-            c.from_user_id    fuid,
-            c.to_comment_id   tcid,
-            c.comment_content content,
-            date_format(c.comment_time, '%Y.%m.%d %T')    ctime,
-            c.comment_status  status,
-            u.user_name       uname,
-            u.user_state      ustate
-        FROM lc_comment c, fly_user u
-        WHERE c.from_user_id = u.user_id
-        ORDER BY c.comment_id
-        LIMIT #{offSet}, #{pageRow}
-    </select>
-    
     <select id="getComment" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
             c.comment_id      id,
@@ -32,87 +15,33 @@
             u.user_name       uname,
             u.user_state      ustate
         FROM lc_comment c, fly_user u
-        WHERE c.from_user_id = u.user_id AND c.comment_status = #{status}
+        WHERE c.from_user_id = u.user_id
+        <if test="status != null and status != ''">
+            AND c.comment_status = #{status}
+        </if>
+        <if test="uid != null and uid != ''">
+            AND c.from_user_id = #{uid}
+        </if>
+        <if test="pid != null and pid != ''">
+            AND c.post_id = #{pid}
+        </if>
         ORDER BY c.comment_id
         LIMIT #{offSet}, #{pageRow}
     </select>
 
-    <select id="getAllCommentByUserId" resultType="com.alibaba.fastjson.JSONObject">
-        SELECT
-            c.comment_id      id,
-            c.post_id         pid,
-            c.from_user_id    fuid,
-            c.to_comment_id   tcid,
-            c.comment_content content,
-            date_format(c.comment_time, '%Y.%m.%d %T')    ctime,
-            c.comment_status  status,
-            u.user_name       uname,
-            u.user_state      ustate
-        FROM lc_comment c, fly_user u
-        WHERE c.from_user_id = u.user_id AND c.from_user_id = #{id}
-        ORDER BY c.comment_id
-        LIMIT #{offSet}, #{pageRow}
-    </select>
-
-    <select id="getAllCommentByPostId" resultType="com.alibaba.fastjson.JSONObject">
-        SELECT
-            c.comment_id      id,
-            c.post_id         pid,
-            c.from_user_id    fuid,
-            c.to_comment_id   tcid,
-            c.comment_content content,
-            date_format(c.comment_time, '%Y.%m.%d %T')    ctime,
-            c.comment_status  status,
-            u.user_name       uname
-        FROM lc_comment c, fly_user u
-        WHERE c.from_user_id = u.user_id AND c.post_id = #{id}
-        ORDER BY c.comment_id
-        LIMIT #{offSet}, #{pageRow}
-    </select>
-
-    <select id="getCommentByUserId" resultType="com.alibaba.fastjson.JSONObject">
-        SELECT
-            c.comment_id      id,
-            c.post_id         pid,
-            c.from_user_id    fuid,
-            c.to_comment_id   tcid,
-            c.comment_content content,
-            date_format(c.comment_time, '%Y.%m.%d %T')    ctime,
-            c.comment_status  status,
-            u.user_name       uname,
-            u.user_state      ustate
-        FROM lc_comment c, fly_user u
-        WHERE c.from_user_id = u.user_id AND c.from_user_id = #{id} AND c.comment_status = #{status}
-        ORDER BY c.comment_id
-        LIMIT #{offSet}, #{pageRow}
-    </select>
-
-    <select id="getCommentByPostId" resultType="com.alibaba.fastjson.JSONObject">
-        SELECT
-            c.comment_id      id,
-            c.post_id         pid,
-            c.from_user_id    fuid,
-            c.to_comment_id   tcid,
-            c.comment_content content,
-            date_format(c.comment_time, '%Y.%m.%d %T')    ctime,
-            c.comment_status  status,
-            u.user_name       uname,
-            u.user_state      ustate
-        FROM lc_comment c, fly_user u
-        WHERE c.from_user_id = u.user_id AND c.post_id = #{id} AND c.comment_status = #{status}
-        ORDER BY c.comment_id
-        LIMIT #{offSet}, #{pageRow}
-    </select>
-
-    <select id="countAllComment" resultType="Integer">
+    <select id="countComment" resultType="Integer">
       SELECT COUNT(0)
-      FROM lc_comment
-    </select>
-
-    <select id="countUnreadComment" resultType="Integer">
-      SELECT COUNT(0)
-      FROM lc_comment c
-      WHERE c.comment_status = #{status}
+        FROM lc_comment c, fly_user u
+        WHERE c.from_user_id = u.user_id
+        <if test="status != null and status != ''">
+            AND c.comment_status = #{status}
+        </if>
+        <if test="uid != null and uid != ''">
+            AND c.from_user_id = #{uid}
+        </if>
+        <if test="pid != null and pid != ''">
+            AND c.post_id = #{pid}
+        </if>
     </select>
 
     <select id="getCommentById" resultType="com.alibaba.fastjson.JSONObject">
@@ -128,30 +57,6 @@
             u.user_state      ustate
         FROM lc_comment c, fly_user u
         WHERE c.from_user_id = u.user_id AND c.comment_id = #{id}
-    </select>
-
-    <select id="countAllCommentByPostId" resultType="Integer">
-      SELECT COUNT(0)
-      FROM lc_comment c
-      WHERE c.post_id = #{id}
-    </select>
-
-    <select id="countUnreadCommentByPostId" resultType="Integer">
-      SELECT COUNT(0)
-      FROM lc_comment c
-      WHERE c.post_id = #{id} AND c.comment_status = 0
-    </select>
-
-    <select id="countAllCommentByUserId" resultType="Integer">
-      SELECT COUNT(0)
-      FROM lc_comment c
-      WHERE c.from_user_id = #{id}
-    </select>
-
-    <select id="countUnreadCommentByUserId" resultType="Integer">
-      SELECT COUNT(0)
-      FROM lc_comment c
-      WHERE c.from_user_id = #{id} AND c.comment_status = 0
     </select>
 
     <insert id="addComment" parameterType="com.alibaba.fastjson.JSONObject">

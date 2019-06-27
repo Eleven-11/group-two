@@ -26,7 +26,7 @@ public class CommentController {
      */
     @GetMapping("getAllComment")
     public JSONObject getAllComment(HttpServletRequest request){
-        return commentService.getAllComment(CommonUtil.request2Json(request));
+        return commentService.getComment(CommonUtil.request2Json(request));
     }
 
     /**
@@ -42,7 +42,7 @@ public class CommentController {
      */
     @GetMapping("getAllCommentByUserId")
     public JSONObject getAllCommentByUserId(HttpServletRequest request){
-        return commentService.getAllCommentByUserId(CommonUtil.request2Json(request));
+        return commentService.getComment(CommonUtil.request2Json(request));
     }
 
     /**
@@ -50,7 +50,7 @@ public class CommentController {
      */
     @GetMapping("getAllCommentByPostId")
     public JSONObject getAllCommentByPostId(HttpServletRequest request){
-        return commentService.getAllCommentByPostId(CommonUtil.request2Json(request));
+        return commentService.getComment(CommonUtil.request2Json(request));
     }
 
     /**
@@ -58,7 +58,7 @@ public class CommentController {
      */
     @GetMapping("getCommentByUserId")
     public  JSONObject getCommentByUserId(HttpServletRequest request){
-        return commentService.getCommentByUserId(CommonUtil.request2Json(request));
+        return commentService.getComment(CommonUtil.request2Json(request));
     }
 
     /**
@@ -66,7 +66,7 @@ public class CommentController {
      */
     @GetMapping("getCommentByPostId")
     public JSONObject getCommentByPostId(HttpServletRequest request){
-        return commentService.getCommentByPostId(CommonUtil.request2Json(request));
+        return commentService.getComment(CommonUtil.request2Json(request));
     }
 
     /**

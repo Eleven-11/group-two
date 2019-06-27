@@ -153,7 +153,7 @@
     </el-dialog>
 
 
-    <el-dialog title="评论" :visible.sync="commentDialogVisible">
+    <el-dialog title="被回复评论" :visible.sync="commentDialogVisible">
       <el-form class="small-space" :model="tempComment2" label-position="left" label-width="60px"
                style='width: 300px; margin-left:50px;'>
         <el-form-item label="评论id" label-width="100px">
@@ -206,7 +206,8 @@
           pageNum: 1,//页码
           pageRow: 50,//每页条数
           name: '',
-          id: 0
+          pid: '',
+          uid: ''
         },
         tempComment: {
           id: "",
@@ -294,7 +295,7 @@
         })
       },
       showUserTable(val){
-        this.dialogListQuery.id = val;
+        this.dialogListQuery.uid = val;
         this.api({
           url: "/comment/getAllCommentByUserId",
           method: "get",
@@ -306,7 +307,7 @@
         this.userDialogVisible = true;
       },
       showPostTable(val){
-        this.dialogListQuery.id = val;
+        this.dialogListQuery.pid = val;
         this.api({
           url: "/comment/getAllCommentByPostId",
           method: "get",
