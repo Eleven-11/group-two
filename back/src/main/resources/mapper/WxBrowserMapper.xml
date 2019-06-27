@@ -21,7 +21,7 @@
        select  DATE_FORMAT(browse.create_time,'%Y.%m.%d %T') createTime,browse.browse_id browseId,users.user_name onUserName,
        browse.post_id postId,p.post_content postContent
         from fly_browse  browse,fly_user users,tyn_post p
-        where  users.user_id =browse.onuser_id and p.id =browse.post_id
+        where  users.user_id =browse.onuser_id and p.id =browse.post_id order by browse.create_time desc
     </select>
     <!--后台计算浏览记录数-->
     <select id="countBrowse" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
