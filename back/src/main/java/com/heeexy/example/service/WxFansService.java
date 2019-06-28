@@ -20,6 +20,14 @@ public interface WxFansService{
      * @return: List<JSONObject>
      */
     JSONObject getListByUserId(JSONObject jsonObject);
+    /**
+     * @methodsName: countByUserId
+     * @description: 计算关注用户数
+     * @param: JSONObject
+     * @return: JSONObject
+     */
+    JSONObject countByUserId(JSONObject jsonObject);
+
 
     /**
      * @methodsName: updateFansByUserId

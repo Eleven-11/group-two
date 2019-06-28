@@ -42,8 +42,8 @@ public interface BusinessSubwayService {
     /**
      * 导入导出
      */
-    List<BusinessSubway> selectUsers();
-    boolean batchImport(String fileName, MultipartFile file) throws Exception;
 
-    boolean batchImports(String fileName, MultipartFile file) throws Exception;
+    JSONObject  batchImport(String fileName, MultipartFile file) throws Exception;
+
+    JSONObject  batchImports(String fileName, MultipartFile file) throws Exception;
 }

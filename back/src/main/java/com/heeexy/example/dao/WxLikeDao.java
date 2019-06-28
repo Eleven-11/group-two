@@ -41,6 +41,14 @@ public interface WxLikeDao {
           * @return: int
           */
     int countPostLike(JSONObject jsonObject);
+
+     /**
+          * @methodsName: countPostLikeByUserId
+          * @description: 计算某个用户的点赞数量
+          * @param:  JSONObject
+          * @return: List<JSONObject>
+          */
+     List<JSONObject> countPostLikeByUserId(JSONObject jsonObject);
      /**
           * @methodsName: getLikeUserPost
           * @description: 查找用户是否有已点赞该帖子信息

@@ -7,9 +7,9 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="用户ID" prop="onUserId" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" v-if="false" label="用户ID" prop="onUserId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="用户名" prop="onUserName" style="width: 60px;"></el-table-column>
-      <el-table-column  align="center" label="帖子ID" prop="postId" style="width: 60px;"></el-table-column>
+      <el-table-column  align="center" v-if="false" label="帖子ID" prop="postId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="帖子内容" prop="postContent" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="发帖用户名"  prop="userName" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="点赞状态:1"  prop="likeState" style="width: 60px;">

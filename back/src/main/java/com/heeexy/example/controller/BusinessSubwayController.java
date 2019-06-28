@@ -71,33 +71,18 @@ public class BusinessSubwayController {
      * 增量导入
      */
     @RequestMapping(value = "/import")
-    public String exImport(@RequestParam(value = "filename") MultipartFile file) {
-
-        boolean a = false;
+    public JSONObject exImport(@RequestParam(value = "filename") MultipartFile file) throws Exception {
 
         String fileName = file.getOriginalFilename();
-
-        try {
-            a = businessSubwayService.batchImport(fileName, file);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "redirect:index";
+        return businessSubwayService.batchImport(fileName, file);
     }
     /**
      * 覆盖导入
      */
     @RequestMapping(value = "/imports")
-    public String exImports(@RequestParam(value = "filename") MultipartFile file) {
-
-        boolean a = false;
+    public JSONObject exImports(@RequestParam(value = "filename") MultipartFile file) throws Exception{
         String fileName = file.getOriginalFilename();
-        try {
-            a = businessSubwayService.batchImports(fileName, file);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "redirect:index";
+        return businessSubwayService.batchImports(fileName, file);
     }
 
 

@@ -40,12 +40,25 @@
     </div>
     <p>==============粉丝============</p>
     <div v-for="item1 in userFansNumber">
+     <p>关注数：{{ item1.fansNumber}}</p>
+   </div>
+    <div v-for="item1 in userLikeNumber">
+    <p>点赞数：{{ item1.likeNumber}}</p>
+  </div>
+    <div v-for="item1 in FansNumber">
+      <p>粉丝数：{{ item1.fansToal}}</p>
+    </div>
+    <div v-for="item1 in userpostNumber">
+      <p>帖子数：{{ item1.postNumber}}</p>
+    </div>
+    <!--<div v-for="item1 in userFansNumber">
       <p>粉丝数：{{ item1.fansNumber}}</p>
       <p>发帖数量：{{ item1.postNumber}}</p>
-    </div>
-   <!-- <p>==============帖子数============</p>
-    <div v-for="item2 in myPostNumber">
-      <p>发帖数量：{{ item2.postNumber}}</p>
+      <p>关注数量：{{item1.fNumber}}</p>
+    </div>-->
+  <p>==============点赞数============</p>
+    <!--<div v-for="item2 in userLikeNumber">
+      <p>点赞数量：{{ item2.likeNumber}}</p>
     </div>-->
     </div>
 </template>
@@ -59,8 +72,10 @@
           onUserLike:[],
           onUserBrowse:[],
           onUserPost:[],
-          myPostNumber:[],
+          FansNumber:[],
           userFansNumber:[],
+          userLikeNumber:[],
+          userpostNumber:[],
         }
       },
       created() {
@@ -70,98 +85,138 @@
         this.getUserbrowse();
         this.getUsercomment();
         this.getUserFansNumber();
-        // this.getMyPostNumber();
+        this.getMyLikeNumber();
+        this.getFansNumber();
+        this.getpostNumber();
+      /*  this.getCellection();*/
       },
       methods: {
+        /*粉丝列表*/
         getUserFans() {
             let param1 = {
               "onUserId":this.$route.query.onUserId,
             }
             console.log(param1);
             this.api({
-              url: "/comUserFans/listUserFans",
+              url: "/comUserFansWeb/listUserFans",
               method: "get",
               params: param1
             }).then(data => {
               this.onUserfans = data.list;
             })
         },
+        /*点赞记录*/
         getUserLike() {
           let param2= {
             "onUserId":this.$route.query.onUserId,
           }
           console.log(param2);
           this.api({
-            url: "/comUserLike/listUserLike",
+            url: "/comUserLikeWeb/listUserLike",
             method: "get",
             params: param2
           }).then(data => {
             this.onUserLike = data.list;
           })
         },
+        /*帖子记录*/
         getUserPost() {
           let param3 = {
             "onUserId":this.$route.query.onUserId,
           }
           console.log(param3);
           this.api({
-            url: "/comUserPost/listUserPostById",
+            url: "/comUserPostWeb/listUserPostById",
             method: "get",
             params: param3
           }).then(data => {
             this.onUserPost = data.list;
           })
         },
+        /*浏览记录*/
         getUserbrowse() {
           let param4 = {
             "onUserId":this.$route.query.onUserId,
           }
           console.log(param4);
           this.api({
-            url: "/comUserBrowse/listBrowseByUser",
+            url: "/comUserBrowseWeb/listBrowseByUser",
             method: "get",
             params: param4
           }).then(data => {
             this.onUserBrowse = data.list;
           })
         },
+        /*评论记录*/
         getUsercomment() {
           let param5 = {
             "onUserId":this.$route.query.onUserId,
           }
           console.log(param5);
           this.api({
-            url: "/comUserComment/listUserCommentByUserId",
+            url: "/comUserCommentWeb/listUserCommentByUserId",
             method: "get",
             params: param5
           }).then(data => {
             this.onUsercomment = data.list;
           })
         },
-        getMyPostNumber() {
+        /*点赞数*/
+        getMyLikeNumber() {
           let param6 = {
             "onUserId":this.$route.query.onUserId,
           }
           console.log(param6);
           this.api({
-            url: "/comUserPost/countMyPostNumber",
+            url: "/comUserLikeWeb/userLikeNumber",
             method: "get",
             params: param6
           }).then(data => {
-            this.myPostNumber = data.list;
+
+
+            this.userLikeNumber = data.list;
           })
         },
+        /*帖子数*/
+        getpostNumber() {
+          let param9= {
+            "onUserId":this.$route.query.onUserId,
+          }
+          console.log(param9);
+          this.api({
+            url: "/comUserPostWeb/countMyPostNumber",
+            method: "get",
+            params: param9
+          }).then(data => {
+            this.userpostNumber = data.list;
+          })
+        },
+        /*关注数*/
         getUserFansNumber() {
           let param7 = {
             "onUserId":this.$route.query.onUserId,
           }
           console.log(param7);
           this.api({
-            url: "/comUser/getDetailUserById",
+            url: "/comUserFansWeb/userFansNumber",
             method: "get",
             params: param7
           }).then(data => {
             this.userFansNumber = data.list;
+          })
+        },
+        /*粉丝数*/
+        getFansNumber() {
+          let param8 = {
+            "onUserId":this.$route.query.onUserId,
+          }
+          console.log(param8);
+          this.api({
+            url: "/comUserWeb/getUserFans",
+            method: "get",
+            params: param8
+          }).then(data => {
+            this.FansNumber = data.list;
           })
         },
       }

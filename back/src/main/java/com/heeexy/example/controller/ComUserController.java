@@ -95,7 +95,7 @@ public class ComUserController {
     /**
      * 添加普通用户
      */
-    @PostMapping("/addUser")
+ /*   @PostMapping("/addUser")
     public JSONObject addUser(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "userUuid,userName,userPhoto,userSex");
         String userUuid = requestJson.getString("userUuid");
@@ -104,15 +104,15 @@ public class ComUserController {
         }else {
             return wxUserService.addByUser(requestJson);
         }
-    }
+    }*/
     /**
      * 添加游客用户
      */
-    @PostMapping("/addGuestUser")
+ /*   @PostMapping("/addGuestUser")
     public JSONObject addGuestUser(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "userUuid,userName,userPhoto,userSex");
         return wxUserService.addGuestUser(requestJson);
-    }
+    }*/
         /**
         *修改用户粉丝数
         * */
@@ -142,18 +142,18 @@ public class ComUserController {
     /**
      * 计算用户粉丝数
       */
-    @GetMapping("/getUserFans")
+ /*   @GetMapping("/getUserFans")
     public JSONObject getUserFans(HttpServletRequest request){
         return wxUserService.countFansByUserId(CommonUtil.request2Json(request));
 
-    }
+    }*/
     /**
      * 用户详情页数量部分数据
      */
-    @GetMapping("/getDetailUserById")
+   /* @GetMapping("/getDetailUserById")
     public JSONObject getDetailUserById(HttpServletRequest request){
         return wxUserService.getDetailUserById(CommonUtil.request2Json(request));
 
-    }
+    }*/
 
 }

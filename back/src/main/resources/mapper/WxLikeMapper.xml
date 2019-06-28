@@ -31,6 +31,10 @@
     <select id="countPostLike" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
         select count(0) from fly_like
     </select>
+    <!--前台某个用户点赞帖子列表计算-->
+    <select id="countPostLikeByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select count(0) likeNumber,onuser_id onUserId from fly_like where onuser_id = #{onUserId} and like_state = 1;
+    </select>
 
     <!--查找用户是否已点赞该帖子信息-->
     <select id="getLikeUserPost" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">

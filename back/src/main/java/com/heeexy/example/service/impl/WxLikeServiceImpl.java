@@ -52,6 +52,13 @@ public class WxLikeServiceImpl implements WxLikeService {
         return CommonUtil.successPage(jsonObject, list, count);
     }
 
+    @Override
+    public JSONObject countPostLikeByUserId(JSONObject jsonObject) {
+        //前台获取某用户点赞数量根据onUserId
+        List<JSONObject> likeNubmer = wxLikeDao.countPostLikeByUserId(jsonObject);
+        return CommonUtil.successPage(likeNubmer);
+    }
+
     /*查找用户是否对该帖子有点赞记录*/
     @Override
     public JSONObject getLikeUserPost(JSONObject jsonObject) {

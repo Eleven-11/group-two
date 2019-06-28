@@ -24,11 +24,11 @@ public interface WxFansDao {
 
       /**
            * @methodsName: countByUserId
-           * @description: 计算粉丝关注用户数
+           * @description: 计算关注用户数
            * @param: JSONObject
-           * @return: int
+           * @return: List<JSONObject>
            */
-     int countByUserId(JSONObject jsonObject);
+     List<JSONObject> countByUserId(JSONObject jsonObject);
 
       /**
            * @methodsName: updateFansByUserId
