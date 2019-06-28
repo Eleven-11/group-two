@@ -15,10 +15,10 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="用户ID" prop="onUserName" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="帖子ID" prop="postId" style="width: 60px;"></el-table-column>
+      <el-table-column align="center"  label="用户名" prop="onUserName" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" v-if="false" label="帖子ID" prop="postId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="发帖内容" prop="postContent" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="评论Id" prop="toCommentId" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="被评论人" prop="toCommentId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="评论内容" prop="commentContent" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="评论状态" prop="commentState" style="width: 60px;">
         <template slot-scope="scope">
