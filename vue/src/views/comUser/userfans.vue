@@ -17,7 +17,6 @@
     <div v-for="item5 in onUserBrowse">
       <p>浏览ID：{{ item5.browseId }}</p>
       <p>浏览帖子ID：{{ item5.postId }}</p>
-
       <p>浏览帖子ID：{{ item5.postContent }}</p>
       <p>浏览时间：{{ item5.createTime }}</p>
     </div>

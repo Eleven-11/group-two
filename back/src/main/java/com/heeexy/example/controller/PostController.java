@@ -55,4 +55,11 @@ public class PostController {
         return postService.updatePostTop(requestJson);
     }
 
+    @PostMapping("/getSomeTag")
+    public JSONObject getSomeTag(@RequestBody JSONObject requestJson) {
+        System.out.println(requestJson);
+        CommonUtil.hasAllRequired(requestJson, "need");
+        return postService.getSomeTag(requestJson);
+    }
+
 }

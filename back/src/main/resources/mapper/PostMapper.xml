@@ -28,7 +28,7 @@
         </where>
         ) p
         LEFT JOIN tyn_post_tag pt ON p.postId=pt.post_id
-        left join cqy_business_subway bs on pt.id=bs.business_subway_id
+        left join cqy_business_subway bs on pt.tag_id=bs.business_subway_id
         ) op,tyn_post
         <where>
             op.postId=tyn_post.id
@@ -91,7 +91,7 @@
                  LIMIT #{offSet}, #{pageRow}
              ) p
             LEFT JOIN tyn_post_tag pt ON p.postId=pt.post_id
-            left join cqy_business_subway bs on pt.id=bs.business_subway_id
+            left join cqy_business_subway bs on pt.tag_id=bs.business_subway_id
             ) op,tyn_post
             <where>
             op.postId=tyn_post.id
@@ -160,7 +160,7 @@
                  WHERE id=#{postId} and user_id=post_owner and categories_id=post_sort
              ) p
             LEFT JOIN tyn_post_tag pt ON p.postId=pt.post_id
-            left join cqy_business_subway bs on pt.id=bs.business_subway_id
+            left join cqy_business_subway bs on pt.tag_id=bs.business_subway_id
             left join tyn_post_img pi on pi.post_id=p.postId
 
     </select>
@@ -189,5 +189,17 @@
         is_top = #{isTop}
         WHERE id = #{postId}
     </update>
+    
+    <select id="getSomeTag"   resultType="com.alibaba.fastjson.JSONObject">
+        select
+        business_subway_id    tagId,
+        business_subway_name  tagName
+        from cqy_business_subway c
+        where  c.Superior_id = (
+        select business_subway_id
+        from cqy_business_subway c
+        where c.business_subway_name = #{need}
+        )
+    </select>
 
 </mapper>
