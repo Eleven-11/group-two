@@ -142,23 +142,32 @@
            </div>
           </div>
           <div v-else>
-            <el-collapse   @change="checkFirstCollapse">
+            <el-collapse  v-model="activeNames">
               <el-collapse-item title="已选" name="selected" >
-                <el-checkbox-group v-model="tempPost.tags" @change="checkTag" >
-                  <el-checkbox-button v-for="taged in tempPost.tags" :label="taged" :key="taged" style="margin-left: 10px">
+                <el-checkbox-group v-model="tempPost.tags" @change="checkSelectedTag" size="mini">
+                  <el-checkbox-button  v-for="taged in tempPost.tags" :label="taged" :key="taged" style="margin-left: 10px">
                     {{taged}}
                   </el-checkbox-button>
                 </el-checkbox-group>
               </el-collapse-item>
               <el-collapse-item title="全部" name="all" >
-                <el-collapse accordion  @change="getSomeTag">
+                <el-collapse accordion  @change="getSecondTag">
                   <el-collapse-item title="地铁周边" name="地铁周边" style="margin-left: 20px" ></el-collapse-item>
+                  <el-collapse  accordion  @change="getSomeTag" >
+                    <el-collapse-item v-for="sectag in secondTag"   :title="sectag.tagName"  :key="sectag.tagId"  :name="sectag.tagName" style="margin-left: 20px;">
+                      <el-checkbox-group  v-model="tempPost.tags" size="mini">
+                        <el-checkbox-button  v-for="tag in someTag" :label="tag.tagName" :key="tag.tagName" style="margin-left: 10px">
+                          {{tag.tagName}}
+                        </el-checkbox-button>
+                      </el-checkbox-group>
+                    </el-collapse-item>
+                  </el-collapse>
                   <el-collapse-item title="热门商圈" name="热门商圈"  style="margin-left: 20px">
-                    <el-collapse   @change="getSomeTag" >
-                      <el-collapse-item v-for="tag in someTag"   :title="tag.tagName"  :key="tag.tagId"  :name="tag.tagName" style="margin-left: 20px;">
-                        <el-checkbox-group v-if="someTag!=null&&someTag!='' " v-model="tempPost.tags" @change="checkNewTag" >
-                          <el-checkbox-button v-for="newTag in someTag" :label="newTag.tagId" :key="newTag.tagId" style="margin-left: 10px">
-                            {{newTag.tagName}}
+                    <el-collapse  accordion  @change="getSomeTag" >
+                      <el-collapse-item v-for="sectag in secondTag"   :title="sectag.tagName"  :key="sectag.tagId"  :name="sectag.tagName" style="margin-left: 20px;">
+                        <el-checkbox-group  v-model="tempPost.tags" size="mini">
+                          <el-checkbox-button  v-for="tag in someTag" :label="tag.tagName" :key="tag.tagName" style="margin-left: 10px">
+                            {{tag.tagName}}
                           </el-checkbox-button>
                         </el-checkbox-group>
                       </el-collapse-item>
@@ -256,6 +265,7 @@
           theOthers: ''
         },
         sorts: [],//分类列表
+        secondTag:[],
         someTag:[],
         dialogStatus: 'detail',
         dialogFormVisible: false,
@@ -283,7 +293,10 @@
           viewOff: '',
           tags: [],
           imgs: [],
-          tops: []
+          tops: [],
+          selectTag:[],
+          newTag:[],
+          deleteTag:[],
         },
       }
     },
@@ -308,9 +321,29 @@
           this.sorts = data.list;
         })
       },
+      getFirstTag() {
+        this.api({
+          url: "/post/getFirstTag",
+          method: "get"
+        }).then(data => {
+          this.firstTag = data.list;
+        })
+      },
+      getSecondTag(value) {
+
+        if (value != null && value != '') {
+          this.api({
+            url: "/post/getSomeTag",
+            method: "post",
+            data: {need: value}
+          }).then(data => {
+            this.secondTag = data.list;
+          })
+        }
+      },
       getSomeTag(value) {
-        console.log(value);
-        if(value!=null&&value!='') {
+
+        if (value != null && value != '') {
           this.api({
             url: "/post/getSomeTag",
             method: "post",
@@ -336,13 +369,13 @@
           this.list = data.list;
           for (let i = 0; i < data.list.length; i++) {
             let listTop = new Array();
-            let j=3;
+            let j = 3;
             let temp = parseInt(data.list[i].isTop);
             while (temp > 0) {
-              if(temp % 10 == 1)
+              if (temp % 10 == 1)
                 listTop.unshift(this.allTops[j]);
               j--;
-              temp = parseInt(temp/10);
+              temp = parseInt(temp / 10);
             }
             this.list[i].tops = listTop;
             this.list[i].alike += '/' + this.list[i].likeOff;
@@ -414,6 +447,9 @@
           this.tempPost.postLocation = oPost.postLocation;
           this.tempPost.postPhone = oPost.postPhone;
           this.tempPost.tags = oPost.tagList;
+          this.tempPost.selectTag = oPost.tagList;
+          this.tempPost.deleteTag =[];
+          this.tempPost.newTag = [];
           this.tempPost.imgs = oPost.imgList;
           this.tempPost.likeOff = oPost.likeOff;
           this.tempPost.collectOff = oPost.collectOff;
@@ -424,7 +460,26 @@
         })
       },
       updatePost() {
-        //修改用户信息
+
+        for(let i=0;i<this.tempPost.tags.length;i++){
+          let st = 1;
+          for(let j=0;j<this.tempPost.selectTag.length;j++){
+            if(this.tempPost.tags[i]==this.tempPost.selectTag[j]) {
+               st=0;   break;
+            }
+          }
+          if(st==1) {this.tempPost.newTag.push(this.tempPost.tags[i]);}
+        }
+        for(let i=0;i<this.tempPost.selectTag.length;i++){
+          let sb = 1;
+          for(let j=0;j<this.tempPost.tags.length;j++){
+            if(this.tempPost.selectTag[i]==this.tempPost.tags[j]) {
+              sb=0;   break;
+            }
+          }
+          if(sb==1) this.tempPost.deleteTag.push(this.tempPost.selectTag[i])
+        }
+
         let _vue = this;
         this.api({
           url: "/post/updatePost",
@@ -450,7 +505,7 @@
         let post = this.list[$index];
         this.tempPost.postId = post.postId;
         this.tempPost.tops = post.tops;
-        this.tempPost.isTop= post.isTop;
+        this.tempPost.isTop = post.isTop;
         this.dialogStatus = "makeTop"
         this.dialogFormVisible = true
       },
@@ -520,36 +575,24 @@
       checkAllTop(val) {
         this.tempPost.tops = val ? this.allTops : [];
         this.isIndeterminate = false;
-        if(val==true)
-          this.tempPost.isTop=1111;
-        else this.tempPost.isTop=0;
+        if (val == true)
+          this.tempPost.isTop = 1111;
+        else this.tempPost.isTop = 0;
       },
       checkTop(value) {
-
         let checkedCount = value.length;
         this.checkAll = checkedCount === this.allTops.length;
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.allTops.length;
-        this.tempPost.isTop=0;
-        for(let i=0;i<value.length;i++) {
-          for(let j=0;j<4;j++){
-            if(value[i]==this.allTops[j])
-            {this.tempPost.isTop+=Math.pow(10,(3-j)); break;}
-
+        this.tempPost.isTop = 0;
+        for (let i = 0; i < value.length; i++) {
+          for (let j = 0; j < 4; j++) {
+            if (value[i] == this.allTops[j]) {
+              this.tempPost.isTop += Math.pow(10, (3 - j));
+              break;
+            }
           }
         }
       },
-      checkFirstCollapse(value) {
-        console.log(value);
-      },
-      checkTag(value){
-        console.log(value);
-        let checkedCount = value.length;
-        this.checkAll = checkedCount === this.allTops.length;
-      },
-      checkNewTag(value){
-        console.log(value);
-      }
-
     }
   }
 </script>
