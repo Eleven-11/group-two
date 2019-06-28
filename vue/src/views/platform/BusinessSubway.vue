@@ -45,9 +45,9 @@
       <el-table-column align="center" label="帖子标签" prop="businessSubwayName" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="上级的编号" prop="superiorId" style="width: 60px;">
         <template slot-scope="scope">
-          <el-tag  v-if="scope.row.superiorId==0" style="margin-right: 3px;" type="success">无上级</el-tag>
+          <el-tag  v-if="scope.row.superiorId==0" style="margin-right: 3px;" type="danger">无上级</el-tag>
           <div v-if="scope.row.superiorId!=1" v-for="tags in list" style="text-align: center">
-            <el-tag  v-if="scope.row.superiorId == tags.businessSubwayId" style="margin-right: 3px;" type="danger" v-text="tags.businessSubwayName"></el-tag>
+            <el-tag  v-if="scope.row.superiorId == tags.businessSubwayId" style="margin-right: 3px;" type="success" v-text="tags.businessSubwayName"></el-tag>
           </div>
         </template>
 
@@ -218,6 +218,7 @@
         this.tempUser.superiorId= "";
         this.dialogStatus = "create"
         this.dialogFormVisible = true
+
       },
 
       showUpdate($index) {

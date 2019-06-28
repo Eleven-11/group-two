@@ -64,7 +64,6 @@
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <!--<img v-if="dialogStatus=='update" :src="scope.row.categoriesImg" class="avatar">-->
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
           <!--<el-upload-->
@@ -152,6 +151,8 @@
         // this.categoriesImg = this.imageUrl;
         this.tempUser.categoriesImg = this.imageUrl;
         // alert(this.tempUser.categoriesImg);
+
+
       },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg';
@@ -224,7 +225,8 @@
         this.tempUser.categoriesImg= "";
         this.dialogStatus = "create"
         this.dialogFormVisible = true
-        this.$refs.upload.clearFiles();
+        this.$refs.upload.clearFiles()
+        this.imageUrl='';
       },
       showUpdate($index) {
         let postcategorie = this.list[$index];
@@ -234,6 +236,7 @@
         this.dialogStatus = "update"
         this.dialogFormVisible = true
         this.$refs.upload.clearFiles();
+        this.imageUrl=postcategorie.categoriesImg;
       },
       createUser() {
         //添加新用户
