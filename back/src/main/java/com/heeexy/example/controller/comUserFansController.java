@@ -24,11 +24,11 @@ public class comUserFansController {
     /**
     *前台展示用户关注列表
     */
-    @GetMapping("/listUserFans")
+  /*  @GetMapping("/listUserFans")
     public JSONObject listUserFans(HttpServletRequest request) {
 
         return wxFansService.getListByUserId(CommonUtil.request2Json(request));
-    }
+    }*/
     /**
      * 添加用户关注
      */
@@ -51,26 +51,26 @@ public class comUserFansController {
     /**
      * 前台添加用户关注
      */
-    @PostMapping("/addFansByUser")
+ /*   @PostMapping("/addFansByUser")
     public JSONObject addFans1(@RequestBody JSONObject requestJson) {
 
         CommonUtil.hasAllRequired(requestJson, "onUserId,userId");
         return wxFansService.addByFans(requestJson);
-    }
+    }*/
     /**
      * 前台修改用户关注状态
      */
-    @PostMapping("/updateFansByUser")
+   /* @PostMapping("/updateFansByUser")
     public JSONObject updateFans1(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "state,fansId");
         return wxFansService.updateFansByUserId(requestJson);
-    }
+    }*/
     /**
      * 查找是否关注该用户信息
      */
-    @PostMapping("/selectFans")
+  /*  @PostMapping("/selectFans")
     public JSONObject selectFans(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "onUserId,userId");
         return wxFansService.getUserFans(requestJson);
-    }
+    }*/
 }

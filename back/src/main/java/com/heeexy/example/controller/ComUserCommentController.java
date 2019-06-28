@@ -25,10 +25,10 @@ public class ComUserCommentController {
     /**
     *展示用户评论记录列表
      */
-    @GetMapping("/listUserCommentByUserId")
+  /*  @GetMapping("/listUserCommentByUserId")
     public JSONObject getlistUserComment(HttpServletRequest request) {
 
         return wxMyCommentService.getMyCommentListById(CommonUtil.request2Json(request));
 
-    }
+    }*/
 }

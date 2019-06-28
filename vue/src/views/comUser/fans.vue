@@ -7,9 +7,9 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="用户ID" prop="onUserId" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" v-if="false" label="用户ID" prop="onUserId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="用户名" prop="onUserName" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="被关注用户ID" prop="userId" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" v-if="false" label="被关注用户ID" prop="userId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="被关注者用户名" prop="userName" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="关注状态:1" prop="state" style="width: 60px;">
         <template slot-scope="scope">

@@ -30,12 +30,12 @@ public class ComUserMyPostController {
     /**
      * 网页展示用户帖子列表
      */
-    @GetMapping("/listUserPostById")
+  /*  @GetMapping("/listUserPostById")
     public JSONObject getListUserPost(HttpServletRequest request) {
 
         return wxMyPostService.getMyPostListById(CommonUtil.request2Json(request));
 
-    }
+    }*/
     /**
      * 删除用户帖子(修改帖子隐藏显示状态)
      */
@@ -48,11 +48,11 @@ public class ComUserMyPostController {
     /**
      * 前台删除用户帖子(修改帖子隐藏显示状态)
      */
-    @PostMapping("/updatePostByUser")
+  /*  @PostMapping("/updatePostByUser")
     public JSONObject updatePostByUser(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "postId,myPostState");
         return wxMyPostService.updateMyPostById(requestJson);
-    }
+    }*/
     /**
      * 删除用户帖子(批量修改帖子隐藏显示状态)
      */
@@ -69,7 +69,7 @@ public class ComUserMyPostController {
     /**
      * 前台删除用户帖子(批量修改帖子隐藏显示状态)
      */
-    @PostMapping("/updatePostManyByUser")
+/*    @PostMapping("/updatePostManyByUser")
     public JSONObject updatePostManyByUser(@RequestBody JSONObject requestJson) {
         ArrayList<Map<String,String>> posts = (ArrayList<Map<String,String>>)requestJson.get("posts");
         for (Map<String, String> post : posts) {
@@ -77,13 +77,13 @@ public class ComUserMyPostController {
             wxMyPostService.updateByPostIdMany(post);
         }
         return CommonUtil.successJson();
-    }
+    }*/
     /**
      * 网页就算某用户发帖数量
      */
-    @GetMapping("/countMyPostNumber")
+  /*  @GetMapping("/countMyPostNumber")
     public JSONObject countMyPostByUserId(HttpServletRequest request){
 
         return wxMyPostService.countMyPostByUserId(CommonUtil.request2Json(request));
-    }
+    }*/
 }

@@ -28,14 +28,21 @@ public class ComUserLikeController {
     @Autowired
     private WxUserService wxUserService;
     /**
-     * 展示用户点赞列表
+     * 前台展示用户点赞列表
      */
-    @GetMapping("/listUserLike")
+   /* @GetMapping("/listUserLike")
     public JSONObject getListUserLike(HttpServletRequest request) {
 
         return wxLikeService.getLikeByUserId(CommonUtil.request2Json(request));
+    }*/
+    /**
+     * 前台展示用户点赞列表计数
+     */
+   /* @GetMapping("/userLikeNumber")
+    public JSONObject getuserLikeNumber(HttpServletRequest request) {
 
-    }
+        return wxLikeService.countPostLikeByUserId(CommonUtil.request2Json(request));
+    }*/
     /**
      * 后台添加用户帖子点赞
      */
@@ -64,7 +71,7 @@ public class ComUserLikeController {
     /**
      * 前台添加用户帖子点赞
      */
-    @PostMapping("/addLikesByUser")
+  /*  @PostMapping("/addLikesByUser")
     public JSONObject addLikeByUser(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "onUserId,likeId,postId");
        JSONObject userByUsername = wxUserService.getUserByUsername(requestJson);
@@ -74,21 +81,21 @@ public class ComUserLikeController {
         }else {
             return wxLikeService.addLike(requestJson);
         }
-    }
+    }*/
     /**
      * 前台修改用户帖子点赞状态（取消）
      */
-    @PostMapping("/updateLikeByUser")
+/*    @PostMapping("/updateLikeByUser")
     public JSONObject updateLikeByUser(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "likeId,onUserId");
         return wxLikeService.updateLikeByUserId(requestJson);
-    }
+    }*/
     /**
      * 查找是否点赞该帖子信息
      */
-    @PostMapping("/selectLike")
+   /* @PostMapping("/selectLike")
     public JSONObject selectLike(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "onUserId,userId,postId");
         return wxLikeService.getLikeUserPost(requestJson);
-    }
+    }*/
 }

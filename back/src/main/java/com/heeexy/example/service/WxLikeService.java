@@ -35,6 +35,13 @@ public interface WxLikeService {
      * @return:   JSONObject
      */
     JSONObject getLikeList(JSONObject jsonObject);
+    /**
+     * @methodsName: countPostLikeByUserId
+     * @description: 前台计算某个用户的点赞数量
+     * @param:  JSONObject
+     * @return: JSONObject
+     */
+    JSONObject countPostLikeByUserId(JSONObject jsonObject);
 
     /**
      * @methodsName: getLikeUserPost

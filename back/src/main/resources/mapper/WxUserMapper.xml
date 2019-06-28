@@ -38,7 +38,7 @@
             update fly_user set  user_state =0 where  user_id = #{userId};
         </if>
     </update>
-    <!--查找总粉丝数-->
+    <!--前台查找总粉丝数-->
     <select id="countFansByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
         select fly_user.user_fans+fly_user.user_fans_f fansToal,fly_user.user_name username from fly_user where user_id =#{onUserId};
     </select>
@@ -94,9 +94,14 @@
     </select>
     <!--用户详情页-->
 <select id="getDetailUserById" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-        select  count(p.post_owner) postNumber, u.user_fans_f+u.user_fans fansNumber
-        from tyn_post p,fly_user u
-        where u.user_id =p.post_owner  and u.user_id =#{onUserId}
+        select t1.postNumber1 postNumber, u.user_fans_f+u.user_fans fansNumber,t2.fNumber1 fNumber
+        from
+        (select count(tyn_post.post_owner) postNumber1,tyn_post.post_owner from tyn_post
+        where tyn_post.delete_state = 0 and tyn_post.post_owner =#{onUserId})  t1
+        ,fly_user u,(select  count(fly_fans.onuser_id) fNumber1,fly_fans.onuser_id from fly_fans
+        where  fly_fans.onuser_id =#{onUserId} and fly_fans.state =1) t2
+        where u.user_id =t1.post_owner  and t2.onuser_id =u.user_id and t1.post_owner =t2.onuser_id
+        and u.user_id =#{onUserId}
 </select>
 
 </mapper>

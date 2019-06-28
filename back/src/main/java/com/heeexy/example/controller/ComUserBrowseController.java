@@ -25,20 +25,20 @@ public class ComUserBrowseController {
     /**
      * 添加用户浏览帖记录
      */
-    @PostMapping("/addBrowse")
+/*    @PostMapping("/addBrowse")
     public JSONObject addFans(@RequestBody JSONObject requestJson) {
 
         CommonUtil.hasAllRequired(requestJson, "onUserId,postId");
         return wxBrowserService.addBrowsePost(requestJson);
-    }
+    }*/
     /**
      * 前台展示用户浏览记录列表
      */
-    @GetMapping("/listBrowseByUser")
+  /*  @GetMapping("/listBrowseByUser")
     public JSONObject getListUserBrowse(HttpServletRequest request) {
 
         return wxBrowserService.getBrowseByUser(CommonUtil.request2Json(request));
 
-    }
+    }*/
 
 }

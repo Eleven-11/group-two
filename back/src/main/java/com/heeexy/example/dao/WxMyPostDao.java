@@ -47,9 +47,9 @@ public interface WxMyPostDao {
           * @methodsName: countMyPostByUserId
           * @description: 计算该用户发帖数量
           * @param:  JSONObject
-          * @return: JSONObject
+          * @return: List<JSONObject>
           */
-     JSONObject countMyPostByUserId(JSONObject jsonObject);
+     List<JSONObject> countMyPostByUserId(JSONObject jsonObject);
      /**
           * @methodsName: updateByPostIdMany
           * @description: 批量删除帖子
