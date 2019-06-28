@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 /**
  * @ Author     ：良优
@@ -31,6 +32,7 @@ public class comUserFansController {
     /**
      * 添加用户关注
      */
+    @RequiresPermissions("comuserfans:add")
     @PostMapping("/addFans")
     public JSONObject addFans(@RequestBody JSONObject requestJson) {
 
@@ -40,7 +42,7 @@ public class comUserFansController {
     /**
      * 后台修改用户关注状态
      */
-    @RequiresPermissions("comuserfans:update")
+    @RequiresPermissions("comuserfans:delete")
     @PostMapping("/updateUserFans")
     public JSONObject updateFans(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "state,fansId");
