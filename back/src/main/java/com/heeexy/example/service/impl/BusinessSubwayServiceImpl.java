@@ -92,17 +92,11 @@ public class BusinessSubwayServiceImpl implements BusinessSubwayService {
     /**
      * 导入导出
      */
-    @Override
-    public List<BusinessSubway> selectUsers() {
-        return null;
-    }
+
 
     @Transactional(readOnly = false,rollbackFor = Exception.class)
     @Override
-    public boolean batchImport(String fileName, MultipartFile file) throws Exception {
-
-//        System.out.println(fileName);
-//        System.out.println( file );
+    public JSONObject  batchImport(String fileName, MultipartFile file) throws Exception {
 
         boolean notNull = false;
         List<BusinessSubway> userList = new ArrayList<>();
@@ -135,19 +129,22 @@ public class BusinessSubwayServiceImpl implements BusinessSubwayService {
             //sheet.getLastRowNum() 的值是 10，所以Excel表中的数据至少是10条；不然报错 NullPointerException
 
             businessSubway = new BusinessSubway();
-            if( row.getCell(1).getCellType() !=1){//循环时，得到每一行的单元格进行判断
-                throw new MyException("导入失败(第"+(r+1)+"行,用户名请设为文本格式)");
+            if( row.getCell(0).getCellType() !=1){//循环时，得到每一行的单元格进行判断
+//                throw new MyException("导入失败(第"+(r+1)+"行,用户名请设为文本格式)");
+                return CommonUtil.errorJson(ErrorEnum.E_9999);
             }
             row.getCell(0).setCellType(Cell.CELL_TYPE_STRING);
             String Superior = row.getCell(0).getStringCellValue();
             if(Superior == null || Superior.isEmpty()){
-                throw new MyException("导入失败(第"+(r+1)+"行,上级未填写)");
+//                throw new MyException("导入失败(第"+(r+1)+"行,上级未填写)");
+                return CommonUtil.errorJson(ErrorEnum.E_9999);
             }
             row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);//得到每一行的 第二个单元格的值
 
             String businesssubwayname = row.getCell(1).getStringCellValue();
             if(businesssubwayname == null || businesssubwayname.isEmpty()){
-                throw new MyException("导入失败(第"+(r+1)+"行,名字未填写)");
+//                throw new MyException("导入失败(第"+(r+1)+"行,名字未填写)");
+                return CommonUtil.errorJson(ErrorEnum.E_9999);
             }
 
 
@@ -167,20 +164,21 @@ public class BusinessSubwayServiceImpl implements BusinessSubwayService {
                     if (cnt == 0) {
                         businessSubwayDao.addUser(userResord);
                         System.out.println(" 插入 "+userResord);
-                    } else {
-                        businessSubwayDao.updateUserByName(userResord);
-                        System.out.println(" 更新 "+userResord);
                     }
+//                    else {
+//                        businessSubwayDao.updateUserByName(userResord);
+//                        System.out.println(" 更新 "+userResord);
+//                    }
                 }
                 userList.clear();
             }
         }
 
-        return notNull;
+        return CommonUtil.successJson();
     }
 
     @Override
-    public boolean batchImports(String fileName, MultipartFile file) throws Exception {
+    public JSONObject  batchImports(String fileName, MultipartFile file) throws Exception {
 
         businessSubwayDao.removeBusinessSubway();
         boolean notNull = false;
@@ -213,19 +211,22 @@ public class BusinessSubwayServiceImpl implements BusinessSubwayService {
 
 
             businessSubway = new BusinessSubway();
-            if( row.getCell(1).getCellType() !=1){//循环时，得到每一行的单元格进行判断
-                throw new MyException("导入失败(第"+(r+1)+"行,用户名请设为文本格式)");
+            if( row.getCell(0).getCellType() !=1){//循环时，得到每一行的单元格进行判断
+//                throw new MyException("导入失败(第"+(r+1)+"行,用户名请设为文本格式)");
+                return CommonUtil.errorJson(ErrorEnum.E_9999);
             }
             row.getCell(0).setCellType(Cell.CELL_TYPE_STRING);
             String Superior = row.getCell(0).getStringCellValue();
             if(Superior == null || Superior.isEmpty()){
-                throw new MyException("导入失败(第"+(r+1)+"行,上级未填写)");
+//                throw new MyException("导入失败(第"+(r+1)+"行,上级未填写)");
+                return CommonUtil.errorJson(ErrorEnum.E_9999);
             }
             row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);//得到每一行的 第二个单元格的值
 
             String businesssubwayname = row.getCell(1).getStringCellValue();
             if(businesssubwayname == null || businesssubwayname.isEmpty()){
-                throw new MyException("导入失败(第"+(r+1)+"行,名字未填写)");
+//                throw new MyException("导入失败(第"+(r+1)+"行,名字未填写)");
+                return CommonUtil.errorJson(ErrorEnum.E_9999);
             }
 
 
@@ -245,15 +246,16 @@ public class BusinessSubwayServiceImpl implements BusinessSubwayService {
                     if (cnt == 0) {
                         businessSubwayDao.addUser(userResord);
                         System.out.println(" 插入 "+userResord);
-                    } else {
-                        businessSubwayDao.updateUserByName(userResord);
-                        System.out.println(" 更新 "+userResord);
                     }
+//                    else {
+//                        businessSubwayDao.updateUserByName(userResord);
+//                        System.out.println(" 更新 "+userResord);
+//                    }
                 }
                 userList.clear();
             }
         }
-            return notNull;
+            return  CommonUtil.successJson();
         }
 
 

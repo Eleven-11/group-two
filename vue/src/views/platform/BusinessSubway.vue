@@ -23,17 +23,24 @@
           <el-button type="primary" icon="el-icon-search" @click="getList" >搜索</el-button>
           <el-button type="primary" icon="plus" v-if="hasPerm('user:add')" @click="showCreate">添加</el-button>
         </el-form-item>
+        <label>选excel表</label>
+        <input class="form-input" type="file" name="filename" @change="getFile($event)" width="100px"></input>
+        <el-button type="primary" id="my_file"  @click="uploadFileMethod($event)">增量添加</el-button>
+        <el-button type="primary" icon="plus" @click="uploadFileCoverMethod($event)" >覆盖添加</el-button>
+        <el-button type="danger" icon="delete" @click="removeUser()" v-if="hasPerm('post:delete')">删除
+        </el-button>
       </el-form>
       <!--<a href="/api/businesssubway/export"><button type="button" class="btn btn-primary">导出</button></a>-->
-      <form class="form-horizontal" id="form_table" action="/api/businesssubway/import" enctype="multipart/form-data" method="post">
-        <button type="submit" class="btn btn-primary" style="width: 80px;height: 40px;background-color: steelblue;color: #d3dce6">增量导入</button>
-        <input  class="form-input" type="file" name="filename" ></input>
-      </form>
-      <form class="form-horizontal" id="form_tables" action="/api/businesssubway/imports" enctype="multipart/form-data" method="post">
-        <button type="submit" class="btn btn-primary" style="width: 80px;height: 40px;background-color: steelblue;color: #d3dce6">覆盖导入</button>
-        <input class="form-input" type="file" name="filename" ></input>
-      </form>
+      <!--<form class="form-horizontal" id="form_table" action="/api/businesssubway/import" enctype="multipart/form-data" method="post">-->
+        <!--<button type="submit" class="btn btn-primary" style="width: 80px;height: 40px;background-color: steelblue;color: #d3dce6">增量导入</button>-->
+        <!--<input  class="form-input" type="file" name="filename" ></input>-->
+      <!--</form>-->
+      <!--<form class="form-horizontal" id="form_tables" action="/api/businesssubway/imports" enctype="multipart/form-data" method="post">-->
+        <!--<button type="submit" class="btn btn-primary" style="width: 80px;height: 40px;background-color: steelblue;color: #d3dce6">覆盖导入</button>-->
+        <!--<input class="form-input" type="file" name="filename" ></input>-->
+      <!--</form>-->
     </div>
+
 
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
@@ -270,18 +277,63 @@
 
 
 
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
+      // submitForm(formName) {
+      //   this.$refs[formName].validate((valid) => {
+      //     if (valid) {
+      //       alert('submit!');
+      //     } else {
+      //       console.log('error submit!!');
+      //       return false;
+      //     }
+      //   });
+      // },
+      // resetForm(formName) {
+      //   this.$refs[formName].resetFields();
+      // },
+      getFile(event) {
+        this.file = event.target.files[0];
+        console.log(this.file);
       },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
+      uploadFileMethod(event){
+        if(this.file == undefined){
+          this.$message.error("文件为空");
+
+        }else {
+          event.preventDefault();
+          let _vue = this;
+          let formdata = new FormData();
+          formdata.append('filename', this.file);
+          let headers = {headers: {"Content-Type": "multipart/form-data"}}
+          this.api.post("/businesssubway/import",formdata,headers).then(function(data){
+
+            _vue.getList();
+          },function(err){
+            console.log("err------: ");
+            console.log(err);
+          })
+        }
+
+
+      },
+      uploadFileCoverMethod(event){
+        if(this.file == undefined){
+          this.$message.error("文件为空");
+        }else {
+          event.preventDefault();
+          let _vue = this;
+          let formdata = new FormData();
+          formdata.append('filename', this.file);
+          let headers = {headers: {"Content-Type": "multipart/form-data"}}
+          this.api.post("/businesssubway/imports",formdata,headers).then(function(data){
+
+            _vue.getList();
+          },function(err){
+            console.log("err------: ");
+            console.log(err);
+          })
+        }
+
+
       },
 
 
