@@ -28,11 +28,17 @@ public class WxFansServiceImpl implements WxFansService {
     /*查找关注用户列表*/
     @Override
     public JSONObject getListByUserId(JSONObject jsonObject) {
-        CommonUtil.fillPageParam(jsonObject);
-        int count = wxFansDao.countByUserId(jsonObject);
         List<JSONObject> list = wxFansDao.getListByUserId(jsonObject);
-        return CommonUtil.successPage(jsonObject, list, count);
+        return CommonUtil.successPage( list);
     }
+
+    @Override
+    public JSONObject countByUserId(JSONObject jsonObject) {
+        //前台用户计算关注数
+        List<JSONObject> jsonObject1 = wxFansDao.countByUserId(jsonObject);
+        return CommonUtil.successPage( jsonObject1);
+    }
+
     /*对用户关注状态的修改取消*/
     @Override
     @Transactional(rollbackFor = Exception.class)

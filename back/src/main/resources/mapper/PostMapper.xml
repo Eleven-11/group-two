@@ -202,4 +202,37 @@
         )
     </select>
 
+    <select id="getNewTagId"   resultType="com.alibaba.fastjson.JSONObject">
+        select business_subway_id tId,
+        Superior_id fId
+        from cqy_business_subway
+        <where>
+            <foreach collection="newTag" item="name" open="business_subway_name in(" close=")" separator=",">
+                #{name}
+            </foreach>
+        </where>
+    </select>
+
+    <insert id="addPostTag">
+        insert into tyn_post_tag
+        (post_id,tag_id,tag_type)
+        values
+        (#{postId},#{tId},#{fId})
+    </insert>
+
+    <select id="getDeleteTagId"   resultType="java.lang.Integer">
+        select
+        business_subway_id tId
+        from cqy_business_subway
+        <where>
+            <foreach collection="deleteTag" item="name" open="business_subway_name in(" close=")" separator=",">
+                #{name}
+            </foreach>
+        </where>
+    </select>
+
+    <delete id="deleteTag">
+        delete from tyn_post_tag
+        where tag_id=#{tId} and post_id=#{postId}
+    </delete>
 </mapper>

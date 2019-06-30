@@ -24,7 +24,6 @@ public class WxMyCommentServiceImpl implements WxMyCommentService {
         //后台网页显示
         List<JSONObject> list = wxMyCommentDao.getMyCommentList(jsonObject);
         int count = wxMyCommentDao.countMyComment(jsonObject);
-        System.out.println(list);
         return CommonUtil.successPage(jsonObject, list, count);
     }
 
@@ -32,7 +31,6 @@ public class WxMyCommentServiceImpl implements WxMyCommentService {
     public JSONObject getMyCommentListById(JSONObject jsonObject) {
         //前台网页显示
         List<JSONObject> myCommentListById = wxMyCommentDao.getMyCommentListById(jsonObject);
-        System.out.println(myCommentListById);
         return CommonUtil.successPage(myCommentListById);
     }
 }

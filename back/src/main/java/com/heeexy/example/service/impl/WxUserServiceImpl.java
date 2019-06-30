@@ -85,8 +85,8 @@ public class WxUserServiceImpl implements WxUserService {
     @Override
     public JSONObject countFansByUserId(JSONObject jsonObject) {
         //计算用户粉丝数
-        JSONObject fans = wxUserDao.countFansByUserId(jsonObject);
-        return fans;
+        List<JSONObject> fans = wxUserDao.countFansByUserId(jsonObject);
+        return CommonUtil.successPage(fans);
     }
 
     @Override
