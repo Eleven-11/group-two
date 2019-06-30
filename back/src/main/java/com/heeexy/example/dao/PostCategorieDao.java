@@ -11,6 +11,8 @@ import java.util.List;
  * @vevsion 1.0
  */
 public interface PostCategorieDao {
+
+//   ************************ 后台************************
     /**
      * 新增帖子类别
      */
@@ -53,4 +55,16 @@ public interface PostCategorieDao {
      * 在添加/修改帖子类别的时候要使用此方法
      */
     List<JSONObject> getAllPostCategorie();
+
+
+
+//   ************************ 小程序前台************************
+
+    /**
+     * 查询帖子类别列表（不包含隐藏的）
+     */
+    List<JSONObject> RgetAllPostCategorie();
+
+
+
 }

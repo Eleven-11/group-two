@@ -101,8 +101,18 @@
         from fly_user
         where user_id= #{userId}
     </select>
-    <!--查询用户收藏的帖子-->
-    <select id="listPostCollectId" resultType="com.alibaba.fastjson.JSONObject">
-        select
+
+    <!---->
+    <select id="getAllPostCollectByUserId" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        C.post_id  postId,
+        T.post_content postContent,
+        T.post_time postTime
+        from
+        cqy_post_collect C,
+        tyn_post T
+        where C.display=1 and C.post_id=T.id and T.post_sort=1 and C.user_id=#{userId}
+        ORDER BY C.update_time
     </select>
+
 </mapper>

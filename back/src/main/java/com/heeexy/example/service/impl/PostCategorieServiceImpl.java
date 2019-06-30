@@ -22,6 +22,9 @@ public class PostCategorieServiceImpl implements PostCategorieService {
     @Autowired
     private PostCategorieDao postCategorieDao;
 
+
+//   ************************ 后台************************
+
     /**
      * 新增帖子类别
      */
@@ -76,6 +79,20 @@ public class PostCategorieServiceImpl implements PostCategorieService {
     @Override
     public JSONObject getAllPostCategorie() {
         List<JSONObject> roles = postCategorieDao.getAllPostCategorie();
+        return CommonUtil.successPage(roles);
+    }
+
+
+
+
+//   ************************ 小程序前台************************
+
+    /**
+     * 查询帖子类别列表（不包含隐藏的）
+     */
+    @Override
+    public JSONObject RgetAllPostCategorie() {
+        List<JSONObject> roles = postCategorieDao.RgetAllPostCategorie();
         return CommonUtil.successPage(roles);
     }
 }
