@@ -8,20 +8,19 @@
 
         insert into  fly_browse (onuser_id, post_id) values(#{onUserId},#{postId});
     </insert>
-    <!--查找该用户是否有该帖子的浏览记录-->
-    <select id="getBrowsePostByPostId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-        select post_id postId from fly_browse where onuser_id =#{onUserId} and post_id = #{postId};
-    </select>
-    <!--修改该用户的浏览帖子记录的时间-->
-    <!--<update id="updateBrowse" parameterType="com.alibaba.fastjson.JSONObject">
-        update fly_browse set update_time =now() where onuser_id =#{onUserId} and post_id = #{[postId}
-    </update>-->
     <!--后台显示浏览记录表-->
     <select id="getBrowseList"  parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
        select  DATE_FORMAT(browse.create_time,'%Y.%m.%d %T') createTime,browse.browse_id browseId,users.user_name onUserName,
        browse.post_id postId,p.post_content postContent
         from fly_browse  browse,fly_user users,tyn_post p
-        where  users.user_id =browse.onuser_id and p.id =browse.post_id order by browse.create_time desc
+        <where>
+            users.user_id =browse.onuser_id and p.id =browse.post_id
+            <if test="userName != null and userName != ''">
+                and  users.user_name LIKE CONCAT(CONCAT('%',#{userName}),'%')
+            </if>
+            order by browse.create_time desc
+        </where>
+        LIMIT #{offSet}, #{pageRow};
     </select>
     <!--后台计算浏览记录数-->
     <select id="countBrowse" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
@@ -29,8 +28,11 @@
     </select>
     <!--前台显示当前用户浏览记录-->
     <select id="getBrowseByUser" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-        select DATE_FORMAT(max(browse.create_time), '%Y.%m.%d %T')  createTime,browse.browse_id browseId,users.user_name onUserName,browse.post_id postId,p.post_content postContent
+        select
+            DATE_FORMAT(max(browse.create_time), '%Y.%m.%d %T')  createTime,browse.browse_id browseId,
+            users.user_name onUserName,browse.post_id postId,p.post_content postContent
         from fly_browse  browse,fly_user users,tyn_post p
-        where  users.user_id =browse.onuser_id and p.id =browse.post_id and browse.onuser_id =#{onUserId} group by post_id
+        where  users.user_id =browse.onuser_id and p.id =browse.post_id
+          and browse.onuser_id =#{onUserId} group by post_id
     </select>
 </mapper>

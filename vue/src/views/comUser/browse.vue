@@ -1,5 +1,14 @@
 <template>
   <div class="app-container">
+    <div class="filter-container">
+      <el-form >
+        <el-form-item label="用户名"  >
+          <el-input type="text" v-model="userName"  onkeyup="value=value.replace(/[^\w\u4E00-\u9FA5]/g, '')" style="width: 200px;margin-right: 30px;">
+          </el-input>
+          <el-button type="primary"  icon="el-icon-search"  @click="selectUser">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
       <el-table-column align="center" label="序号"  style="width: 60px;">
@@ -36,11 +45,12 @@
   export default {
     data() {
       return {
-
+        userName:"",//搜索框中信息
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
         listQuery: {
+          userName:this.userName,//获取输入框的值
           pageNum: 1,//页码
           pageRow: 50,//每页条数
         },
@@ -67,8 +77,12 @@
       ])
     },
     methods: {
+      selectUser(){
+        this.getList();
+      },
       getList() {
         //查询列表
+        this.listQuery.userName = this.userName
         this.listLoading = true;
         this.api({
           url: "/comUser/listUserBrowse",
@@ -98,10 +112,6 @@
       getIndex($index) {
         //表格序号
         return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
-      },
-      selectUser(){
-
-        this.getList();
       },
       showUpdate($index) {
         let user = this.list[$index];

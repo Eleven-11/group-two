@@ -29,6 +29,8 @@ public class PostCollectServiceImpl implements PostCollectService {
 
     /**
      * 添加帖子收藏
+     * @param jsonObject postId(帖子id),userId(用户id)
+     * @return
      */
     @Override
     public JSONObject addPostCollect(JSONObject jsonObject) {
@@ -48,7 +50,9 @@ public class PostCollectServiceImpl implements PostCollectService {
     }
 
     /**
-     * 删除帖子收藏
+     * 修改帖子收藏状态值
+     * @param jsonObject  postCollectId(收藏id),display(状态值)
+     * @return
      */
     @Transactional(rollbackFor = Exception.class)
     @SuppressWarnings("unchecked")
@@ -58,17 +62,19 @@ public class PostCollectServiceImpl implements PostCollectService {
         return  CommonUtil.successJson();
     }
 
-    /**
-     * 修改帖子收藏
-     */
-    @Override
-    public JSONObject updatePostCollect(JSONObject jsonObject) {
-        postCollectDao.updatePostCollect( jsonObject );
-        return CommonUtil.successJson();
-    }
+//    /**
+//     * 修改帖子收藏
+//     */
+//    @Override
+//    public JSONObject updatePostCollect(JSONObject jsonObject) {
+//        postCollectDao.updatePostCollect( jsonObject );
+//        return CommonUtil.successJson();
+//    }
 
     /**
      * 查询帖子收藏列表
+     * @param jsonObject
+     * @return
      */
     @Override
     public JSONObject listPostCollect(JSONObject jsonObject) {
@@ -81,6 +87,7 @@ public class PostCollectServiceImpl implements PostCollectService {
     /**
      * 查询所有的帖子收藏
      * 在添加/修改帖子收藏的时候要使用此方法
+     * @return
      */
     @Override
     public JSONObject getAllPostCollect() {
@@ -89,8 +96,11 @@ public class PostCollectServiceImpl implements PostCollectService {
     }
 
     //   ************************ 小程序前台************************
+
     /**
      * 根据用户查询的收藏帖子
+     * @param jsonObject  userId(用户id)
+     * @return
      */
     @Override
     public JSONObject getAllPostCollectByUserId(JSONObject jsonObject) {
@@ -98,18 +108,29 @@ public class PostCollectServiceImpl implements PostCollectService {
         return CommonUtil.successJson(roles);
     }
 
+    /**
+     * 修改帖子收藏状态值
+     * @param jsonObject  postId(帖子id),userId(用户id)
+     * @return
+     */
     @Override
     public JSONObject updatePostCollectDisplays(JSONObject jsonObject) {
-        int exist = postCollectDao.queryExistPostCollectPU( jsonObject );
-        if (exist!=0){
-            int i = postCollectDao.queryExistPostCollectDisplay( jsonObject );
-            if (i==0){
-                postCollectDao.updatePostCollectDisplayTwo( jsonObject );
-            }else if(i==1){
-                postCollectDao.updatePostCollectDisplay( jsonObject );
+        int presence = postCollectDao.queryExistPostCollectPostId( jsonObject );
+        int presences = postCollectDao.queryExistPostCollectUserId( jsonObject );
+        if(presence==1){
+            if(presences==1){
+                int exist = postCollectDao.queryExistPostCollectPU( jsonObject );
+                if (exist!=0){
+                    int exists = postCollectDao.queryExistPostCollectDisplay( jsonObject );
+                    if (exists==0){
+                        postCollectDao.updatePostCollectDisplayTwo( jsonObject );
+                    }else if(exists==1){
+                        postCollectDao.updatePostCollectDisplay( jsonObject );
+                    }
+                }else {
+                    postCollectDao.addPostCollect( jsonObject );
+                }
             }
-        }else {
-            postCollectDao.addPostCollect( jsonObject );
         }
         return CommonUtil.successJson();
     }

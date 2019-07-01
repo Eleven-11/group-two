@@ -25,24 +25,39 @@ public class WxFansServiceImpl implements WxFansService {
     private WxFansDao wxFansDao;
     @Autowired
     private WxUserDao wxUserDao;
-    /*查找关注用户列表*/
+
+
+    /**
+     * 前台查找关注用户列表信息
+     * @param jsonObject (onUserId)
+     * @return JSONObject
+     */
     @Override
     public JSONObject getListByUserId(JSONObject jsonObject) {
         List<JSONObject> list = wxFansDao.getListByUserId(jsonObject);
         return CommonUtil.successPage( list);
     }
 
+    /**
+     * 前台某个用户关注数的额计算
+     * @param jsonObject (onUserId)
+     * @return JSONObject
+     */
     @Override
     public JSONObject countByUserId(JSONObject jsonObject) {
         //前台用户计算关注数
         List<JSONObject> jsonObject1 = wxFansDao.countByUserId(jsonObject);
         return CommonUtil.successPage( jsonObject1);
     }
-
-    /*对用户关注状态的修改取消*/
+    /**
+     * 对用户关注状态的修改(取消)
+     * @param jsonObject (fansId)
+     * @return JSONObject
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject updateFansByUserId(JSONObject jsonObject) {
+        CommonUtil.fillPageParam(jsonObject);
          wxFansDao.updateFansByUserId(jsonObject);
         int count = wxUserDao.getFansByUserId(jsonObject);
         String userId = jsonObject.getString("userId");
@@ -54,13 +69,23 @@ public class WxFansServiceImpl implements WxFansService {
         return CommonUtil.successJson();
     }
 
+    /**
+     * 修改原有用户的关注状态(添加)
+     * @param jsonObject (fansId)
+     * @return
+     */
     @Override
     public JSONObject updateFansStateByUserId(JSONObject jsonObject) {
-        //修改原有的点赞状态
+        //添加原有用户的关注状态
         wxFansDao.updateFansStateByUserId(jsonObject);
         return CommonUtil.successJson();
     }
 
+    /**
+     * 添加粉丝关注用户
+     * @param jsonObject (onUserId,userId)
+     * @return JSONObject
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject addByFans(JSONObject jsonObject) {
@@ -82,6 +107,11 @@ public class WxFansServiceImpl implements WxFansService {
         return CommonUtil.successJson();
     }
 
+    /**
+     * 查找两用户之间是否有关注信息
+     * @param jsonObject (userId,onUserId)
+     * @return JSONObject
+     */
     @Override
     public JSONObject getUserFans(JSONObject jsonObject) {
         //查看两用户之间是否有关注信息
@@ -89,16 +119,19 @@ public class WxFansServiceImpl implements WxFansService {
         return user;
     }
 
+    /**
+     * 后台关注用户表格展示
+     * @param jsonObject (userName,offSet,pageRow)
+     * @return JSONObject
+     */
     @Override
     public JSONObject getListFans(JSONObject jsonObject) {
         //后台关注用户展示
         CommonUtil.fillPageParam(jsonObject);
         int count = wxFansDao.countUserFans(jsonObject);
         List<JSONObject> list = wxFansDao.getListFans(jsonObject);
-        System.out.println(list);
+
         return CommonUtil.successPage(jsonObject, list, count);
 
     }
-
-
 }

@@ -34,7 +34,7 @@ public interface WxUserDao {
           * @param:  JSONObject
           * @return: JSONObject
           */
-    JSONObject getMaxNumber(JSONObject jsonObject);
+   /* JSONObject getMaxNumber(JSONObject jsonObject);*/
      /**
           * @methodsName: addByUser
           * @description: 增加普通用户
@@ -64,7 +64,7 @@ public interface WxUserDao {
           */
     JSONObject getUserByUsername(JSONObject jsonObject);
 
-    //修改用户封禁状态
+
      /**
           * @methodsName: updateStateByUserId
           * @description: 修改用户封禁状态
@@ -72,14 +72,6 @@ public interface WxUserDao {
           * @return: int
           */
     int updateStateByUserId(JSONObject jsonObject);
-
-     /**
-          * @methodsName: listUserState
-          * @description: 查找封禁状态集合
-          * @param:
-          * @return: List<JSONObject>
-          */
-    List<JSONObject> listUserState();
          /**
               * @methodsName: countFansByUserId
               * @description: 计算用户粉丝数

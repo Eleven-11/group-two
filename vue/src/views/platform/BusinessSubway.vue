@@ -2,7 +2,7 @@
 
   <div class="app-container">
     <div>
-      <span style="font-size: 30px;">树形图</span>
+      <span style="font-size: 30px;">树形预览图</span>
       <el-tree
         ref="tree"
         :data="treeData"
@@ -40,7 +40,6 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="帖子标签" prop="businessSubwayName" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="上级的编号" prop="superiorId" style="width: 60px;">
         <template slot-scope="scope">
           <el-tag  v-if="scope.row.superiorId==0" style="margin-right: 3px;" type="danger">无上级</el-tag>
@@ -48,15 +47,20 @@
             <el-tag  v-if="scope.row.superiorId == tags.businessSubwayId" style="margin-right: 3px;" type="success" v-text="tags.businessSubwayName"></el-tag>
           </div>
         </template>
-
       </el-table-column>
+      <el-table-column align="center" label="帖子标签" prop="businessSubwayName" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" width="170" sortable></el-table-column>
       <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170" sortable></el-table-column>
+      <el-table-column align="center" label="标签的状态" prop="display" style="width: 60px;">
+        <template slot-scope="scope">
+          <el-tag  v-if="scope.row.display==1" type="success">显示</el-tag>
+          <el-tag  v-if="scope.row.display==0" type="primary">不显示</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
-          <el-button type="danger" icon="delete" v-if="scope.row.userId!=userId "
-                     @click="removeUser(scope.$index)">删除
+          <el-button type="danger" icon="delete" @click="removeUser(scope.$index)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -234,7 +238,7 @@
       createUser() {
         //添加新用户
         this.api({
-          url: "/businesssubway/import",
+          url: "/businesssubway/addBusinessSubway",
           method: "post",
           data: this.tempUser
         }).then(() => {
@@ -318,7 +322,11 @@
           type: 'warning'
         }).then(() => {
           let user = _vue.list[$index];
-          user.display = 0;
+          if(user.display == 1){
+            user.display = 0;
+          }else{
+            user.display = 1;
+          }
           _vue.api({
             url: "/businesssubway/updateBusinessSubwayDisplay",
             method: "post",

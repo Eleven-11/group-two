@@ -33,7 +33,7 @@ public class ComUserWebController {
     public JSONObject addUser(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "userUuid,userName,userPhoto,userSex");
         String userUuid = requestJson.getString("userUuid");
-        if (userUuid ==null ){
+        if (userUuid ==null){
             return wxUserService.addGuestUser(requestJson);
         }else {
             return wxUserService.addByUser(requestJson);
@@ -53,14 +53,6 @@ public class ComUserWebController {
     @GetMapping("/getUserFans")
     public JSONObject getUserFans(HttpServletRequest request){
         return wxUserService.countFansByUserId(CommonUtil.request2Json(request));
-
-    }
-    /**
-     * 用户详情页数量部分数据
-     */
-    @GetMapping("/getDetailUserById")
-    public JSONObject getDetailUserById(HttpServletRequest request){
-        return wxUserService.getDetailUserById(CommonUtil.request2Json(request));
 
     }
 

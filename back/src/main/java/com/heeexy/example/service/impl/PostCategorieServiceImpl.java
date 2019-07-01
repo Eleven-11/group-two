@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * @author: chenqiangyong
- * @description:模块/增删改查的实现
+ * @description:帖子类别/增删改查的实现
  * @date: 2019/6/18
  * @vevsion 1.0
  */
@@ -27,6 +27,8 @@ public class PostCategorieServiceImpl implements PostCategorieService {
 
     /**
      * 新增帖子类别
+     * @param jsonObject categoriesName(类别名),categoriesImg(类别图片)
+     * @return
      */
     @Override
     public JSONObject addPostCategorie(JSONObject jsonObject) {
@@ -37,8 +39,11 @@ public class PostCategorieServiceImpl implements PostCategorieService {
         postCategorieDao.addPostCategorie(jsonObject);
         return CommonUtil.successJson();
     }
+
     /**
      * 修改帖子类别状态
+     * @param jsonObject categoriesId（类别id）,display(状态值)
+     * @return
      */
     @Transactional(rollbackFor = Exception.class)
     @SuppressWarnings("unchecked")
@@ -51,6 +56,8 @@ public class PostCategorieServiceImpl implements PostCategorieService {
 
     /**
      * 修改帖子类别
+     * @param jsonObject categoriesId（类别id）,categoriesName(类别名),categoriesImg(类别图片)
+     * @return
      */
     @Override
     public JSONObject updatePostCategorie(JSONObject jsonObject) {
@@ -64,6 +71,8 @@ public class PostCategorieServiceImpl implements PostCategorieService {
 
     /**
      * 查询帖子类别列表
+     * @param jsonObject
+     * @return
      */
     @Override
     public JSONObject listPostCategorie(JSONObject jsonObject) {
@@ -72,9 +81,11 @@ public class PostCategorieServiceImpl implements PostCategorieService {
         List<JSONObject> list = postCategorieDao.listPostCategorie( jsonObject );
         return CommonUtil.successPage( jsonObject,list,count );
     }
+
     /**
      * 查询所有的帖子类别
      * 在添加/修改帖子类别的时候要使用此方法
+     * @return
      */
     @Override
     public JSONObject getAllPostCategorie() {
@@ -89,6 +100,7 @@ public class PostCategorieServiceImpl implements PostCategorieService {
 
     /**
      * 查询帖子类别列表（不包含隐藏的）
+     * @return
      */
     @Override
     public JSONObject RgetAllPostCategorie() {

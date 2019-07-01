@@ -20,14 +20,19 @@ public class apiPostCollectController {
 
     /**
      * 根据用户查询所有的帖子收藏
+     * @param jsonObject userId(用户id)
+     * @return
      */
 //    @RequiresPermissions(value = {"user:add", "user:update"}, logical = Logical.OR)
     @GetMapping("/getAllPostCollect")
     public JSONObject getAllRoles(JSONObject jsonObject) {
         return postCollectService.getAllPostCollectByUserId( jsonObject );
     }
+
     /**
      * 修改帖子收藏
+     * @param requestJson postId(帖子id),userId(用户id)
+     * @return
      */
 //    @RequiresPermissions("role:delete")
     @PostMapping("/updatePostCollectDisplay")

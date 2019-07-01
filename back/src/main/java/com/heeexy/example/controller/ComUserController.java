@@ -35,6 +35,11 @@ public class ComUserController {
     /**
      * 展示用户列表
      */
+    /**
+     * 展示用户列表
+     * @param request
+     * @return
+     */
     @RequiresPermissions("comuser:list")
     @GetMapping("/listUser")
     public JSONObject getListUser( HttpServletRequest request) {
@@ -130,13 +135,6 @@ public class ComUserController {
     public JSONObject updateUserState(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, " userId,userState");
         return wxUserService.updateStateByUserId(requestJson);
-    }
-    /**
-     * 用户状态列表
-     */
-    @GetMapping("/getAllState")
-    public JSONObject listRole() {
-        return wxUserService.listUserState();
     }
 
     /**

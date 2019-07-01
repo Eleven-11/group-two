@@ -9,23 +9,31 @@
 
     <!--网页查找单个用户点赞帖子列表-->
     <select id="getLikeByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-       select like1.like_id likeId, like1.onuser_id onUserId,u.user_name onUserName,like1.post_id postId,p.post_content postContent,uu.user_name userName,
-        like1.like_state likeState,DATE_FORMAT(like1.create_time, '%Y.%m.%d %T')  createTime,
-        DATE_FORMAT(like1.update_time, '%Y.%m.%d %T')  updateTime
-        from fly_like like1,fly_user u, fly_user uu ,tyn_post p
-        where like1.onuser_id =u.user_id and like1.user_id = uu.user_id and p.id =like1.post_id
+       select
+          like1.like_id likeId, like1.onuser_id onUserId,u.user_name onUserName,like1.post_id postId,
+          p.post_content postContent,uu.user_name userName,
+          like1.like_state likeState,DATE_FORMAT(like1.create_time, '%Y.%m.%d %T')  createTime,
+          DATE_FORMAT(like1.update_time, '%Y.%m.%d %T')  updateTime
+      from fly_like like1,fly_user u, fly_user uu ,tyn_post p
+      where like1.onuser_id =u.user_id and like1.user_id = uu.user_id and p.id =like1.post_id
         and like1.onuser_id =#{onUserId} and like1.like_state =1 ;
-       
     </select>
     <!--后台每个用户点赞帖子记录-->
     <select id="getLikeList" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
 
-       select like1.like_id likeId, like1.onuser_id onUserId,u.user_name onUserName,like1.post_id postId,p.post_content postContent,uu.user_name userName,
-        like1.like_state likeState,DATE_FORMAT(like1.create_time, '%Y.%m.%d %T')  createTime,
-        DATE_FORMAT(like1.update_time, '%Y.%m.%d %T')  updateTime
-        from fly_like like1,fly_user u, fly_user uu ,tyn_post p
-        where like1.onuser_id =u.user_id and like1.user_id = uu.user_id and p.id =like1.post_id
-
+       select
+          like1.like_id likeId, like1.onuser_id onUserId,u.user_name onUserName,like1.post_id postId,
+          p.post_content postContent,uu.user_name userName,
+          like1.like_state likeState,DATE_FORMAT(like1.create_time, '%Y.%m.%d %T')  createTime,
+          DATE_FORMAT(like1.update_time, '%Y.%m.%d %T')  updateTime
+      from fly_like like1,fly_user u, fly_user uu ,tyn_post p
+      <where>
+            like1.onuser_id =u.user_id and like1.user_id = uu.user_id and p.id =like1.post_id
+            <if test="userName != null and userName != ''">
+                and  u.user_name LIKE CONCAT(CONCAT('%',#{userName}),'%')
+            </if>
+      </where>
+        LIMIT #{offSet}, #{pageRow};
     </select>
     <!--后台每个用户点赞帖子列表计算-->
     <select id="countPostLike" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
@@ -33,7 +41,8 @@
     </select>
     <!--前台某个用户点赞帖子列表计算-->
     <select id="countPostLikeByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-        select count(0) likeNumber,onuser_id onUserId from fly_like where onuser_id = #{onUserId} and like_state = 1;
+        select count(0) likeNumber,onuser_id onUserId from fly_like
+        where onuser_id = #{onUserId} and like_state = 1
     </select>
 
     <!--查找用户是否已点赞该帖子信息-->

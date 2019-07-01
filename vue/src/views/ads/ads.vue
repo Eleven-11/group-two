@@ -15,9 +15,9 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="picture" label="图片" style="width: 60px;">
+      <el-table-column align="center" prop="picture" label="图片" style="width: 414px;">
         <template slot-scope="scope">
-          <img :src="scope.row.picture"  width="200" height="160" alt="加载中..."/>
+          <img :src="scope.row.picture"  width="207" height="41" alt="加载中..."/>
           <!--<el-image-->
             <!--style="width: 300px; height: 240px"-->
             <!--:src="scope.row.picture">-->
@@ -71,6 +71,7 @@
           >
             <el-button type="primary" size="medium">上传图片</el-button>
           </el-upload>
+          <span>支持大小：414*82</span>
         </el-form-item>
         <el-form-item label="图片" v-if="imgUrl">
             <el-upload
@@ -83,6 +84,7 @@
             >
               <el-button type="primary" size="medium">修改图片</el-button>
             </el-upload>
+            <span>支持大小：414*82</span>
 
         </el-form-item>
         <el-form-item label="标题">
