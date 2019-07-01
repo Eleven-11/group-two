@@ -66,6 +66,7 @@
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
+          <span>图标为80X80</span>
           <!--<el-upload-->
             <!--action="/api/postcategorie/upload"-->
             <!--list-type="picture-card"-->

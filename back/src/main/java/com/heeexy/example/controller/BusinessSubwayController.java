@@ -21,8 +21,11 @@ import javax.servlet.http.HttpServletRequest;
 public class BusinessSubwayController {
     @Autowired
     private BusinessSubwayService businessSubwayService;
+
     /**
-     * 查询帖子类别列表
+     * 查询帖子标签列表
+     * @param request input(输入框的内容，根据标签名模糊)
+     * @return
      */
 //   @RequiresPermissions( "businesssubway:list" )
     @GetMapping("/list")
@@ -31,6 +34,8 @@ public class BusinessSubwayController {
     }
     /**
      * 新增帖子标签
+     * @param requestJson businessSubwayName(标签名),superiorId(上级id)
+     * @return
      */
 //    @RequiresPermissions("postcategorie:add")
     @PostMapping("addBusinessSubway")
@@ -38,27 +43,33 @@ public class BusinessSubwayController {
         CommonUtil.hasAllRequired(requestJson, "businessSubwayName,superiorId");
         return businessSubwayService.addBusinessSubway(requestJson);
     }
+
     /**
-     * 修改帖子类别
+     * 修改帖子标签
+     * @param requestJson businessSubwayName(标签名),superiorId(上级id)
+     * @return
      */
-//    @RequiresPermissions("module:update")
+//  @RequiresPermissions("module:update")
     @PostMapping("/updateBusinessSubway")
     public JSONObject updateBusinessSubway(@RequestBody JSONObject requestJson){
         CommonUtil.hasAllRequired(requestJson, "businessSubwayName,superiorId");
         return businessSubwayService.updateBusinessSubway(requestJson);
     }
     /**
-     * 删除帖子类别
+     * 删除帖子标签
+     * @param requestJson businessSubwayId（标签编号）display(状态值)
+     * @return
      */
 //    @RequiresPermissions("role:delete")
     @PostMapping("/updateBusinessSubwayDisplay")
     public JSONObject updateBusinessSubwayDisplay(@RequestBody JSONObject requestJson) {
-//        CommonUtil.hasAllRequired(requestJson, "moduleID");
         return businessSubwayService.updateBusinessSubwayDisplay(requestJson);
     }
+
     /**
-     * 查询所有的帖子类别
-     * 在添加/修改帖子类别的时候要使用此方法
+     * 查询所有的帖子标签
+     * 在添加/修改帖子标签的时候要使用此方法
+     * @return
      */
 //    @RequiresPermissions(value = {"user:add", "user:update"}, logical = Logical.OR)
     @GetMapping("/getAllBusinessSubway")
@@ -69,91 +80,26 @@ public class BusinessSubwayController {
 
     /**
      * 增量导入
+     * @param file filename(表格的路径)
+     * @return
+     * @throws Exception
      */
     @RequestMapping(value = "/import")
     public JSONObject exImport(@RequestParam(value = "filename") MultipartFile file) throws Exception {
-
         String fileName = file.getOriginalFilename();
         return businessSubwayService.batchImport(fileName, file);
     }
+
     /**
      * 覆盖导入
+     * @param file filename(表格的路径)
+     * @return
+     * @throws Exception
      */
     @RequestMapping(value = "/imports")
     public JSONObject exImports(@RequestParam(value = "filename") MultipartFile file) throws Exception{
         String fileName = file.getOriginalFilename();
         return businessSubwayService.batchImports(fileName, file);
     }
-
-
-
-
-    /**
-     * 导出
-     */
-//    @RequestMapping(value = "/export")
-//    @ResponseBody
-//    public void export(HttpServletResponse response) throws IOException {
-//        List<BusinessSubway> users = businessSubwayService.selectUsers();
-//
-//        HSSFWorkbook wb = new HSSFWorkbook();
-//
-//        HSSFSheet sheet = wb.createSheet("获取excel测试表格");
-//
-//        HSSFRow row = null;
-//
-//        row = sheet.createRow(0);//创建第一个单元格
-//        row.setHeight((short) (26.25 * 20));
-//        row.createCell(0).setCellValue("列表");//为第一行单元格设值
-//
-//        /*为标题设计空间
-//         * firstRow从第1行开始
-//         * lastRow从第0行结束
-//         *
-//         *从第1个单元格开始
-//         * 从第3个单元格结束
-//         */
-//        CellRangeAddress rowRegion = new CellRangeAddress(0, 0, 0, 2);
-//        sheet.addMergedRegion(rowRegion);
-//
-//		/*CellRangeAddress columnRegion = new CellRangeAddress(1,4,0,0);
-//		sheet.addMergedRegion(columnRegion);*/
-//
-//
-//        /*
-//         * 动态获取数据库列 sql语句 select COLUMN_NAME from INFORMATION_SCHEMA.Columns where table_name='user' and table_schema='test'
-//         * 第一个table_name 表名字
-//         * 第二个table_name 数据库名称
-//         * */
-//        row = sheet.createRow(1);
-//        row.setHeight((short) (22.50 * 20));//设置行高
-//        row.createCell(0).setCellValue("编号");//为第一个单元格设值
-//        row.createCell(1).setCellValue("名");//为第二个单元格设值
-//        row.createCell(2).setCellValue("上级id");//为第三个单元格设值
-//        row.createCell(3).setCellValue("状态");//为第三个单元格设值
-//
-//        for (int i = 0; i < users.size(); i++) {
-//            row = sheet.createRow(i + 2);
-//            BusinessSubway businessSubway = users.get(i);
-//            row.createCell(0).setCellValue(businessSubway.getBusinessaubwayid());
-//            row.createCell(1).setCellValue(businessSubway.getBusinesssubwayname());
-//            row.createCell(2).setCellValue(businessSubway.getSuperiorid());
-//            row.createCell(3).setCellValue(businessSubway.getDisplay());
-//        }
-//        sheet.setDefaultRowHeight((short) (16.5 * 20));
-//        //列宽自适应
-//        for (int i = 0; i <= 13; i++) {
-//            sheet.autoSizeColumn(i);
-//        }
-//
-//        response.setContentType("application/vnd.ms-excel;charset=utf-8");
-//        OutputStream os = response.getOutputStream();
-//        response.setHeader("Content-disposition", "attachment;filename=user.xls");//默认Excel名称
-//        wb.write(os);
-//        os.flush();
-//        os.close();
-//
-//
-//    }
 
 }

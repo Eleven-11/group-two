@@ -11,36 +11,40 @@ import java.util.List;
  * @vevsion 1.0
  */
 public interface ModuleService {
-
     /**
      * 新增模块
+     * @param jsonObject moduleName(模块名字),moduleContent(模块内容)
+     * @return
      */
     JSONObject addModule(JSONObject jsonObject);
     /**
      * 新增消息
+     * @param jsonObject
+     * @return
      */
     JSONObject addMessage(JSONObject jsonObject);
-
-
     /**
-     * 删除模块
+     * 删除模块（假）
+     * @param jsonObject  moduleId(模块id)
+     * @return
      */
     JSONObject removeModuleDisplay(JSONObject jsonObject);
-
     /**
-     * 修改模块
+     * 修改模块内容
+     * @param jsonObject  moduleName(模板名字)，moduleContent(模板内容)，moduleId(模板id)
+     * @return
      */
     JSONObject updateModule(JSONObject jsonObject);
-
     /**
      * 查询模块列表
+     * @param jsonObject
+     * @return
      */
     JSONObject listModule(JSONObject jsonObject);
-
-
     /**
      * 查询所有的模块
      * 在添加/修改模块的时候要使用此方法
+     * @return
      */
     JSONObject getAllModule();
 }

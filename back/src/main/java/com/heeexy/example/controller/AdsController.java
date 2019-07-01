@@ -29,7 +29,10 @@ public class AdsController {
     private AdsService adsService;
 
     /**
-     * 展示所有广告信息
+     * 获取广告列表
+     * @param request （key: status 状态 可选；pageRow 一页条数；pageNum 页数）
+     * @return JSONObject （key：code 状态码；msg 消息；info{totalPage 总页数；list[] 数据列表；totalCount 数据总条数} 数据）
+     *         list[（id 编号；picture 图片路径；link 广告链接；title 广告标题；status 状态）]
      */
     @GetMapping("/getAds")
     public JSONObject getAllAds(HttpServletRequest request){
@@ -37,7 +40,10 @@ public class AdsController {
     }
 
     /**
-     * 展示一条广告信息
+     * 根据广告编号获取一条广告信息
+     * @param id 编号 必选
+     * @return JSONObject （key：code 状态码；msg 消息；info{} 数据）
+     *         info（id 编号；picture 图片路径；link 广告链接；title 广告标题；status 状态）
      */
     @GetMapping("/getAdsById/{id}")
     public JSONObject getAdsById(@PathVariable int id){
@@ -45,7 +51,9 @@ public class AdsController {
     }
 
     /**
-     * 修改广告信息
+     * 修改广告
+     * @param requestJson （key：id 编号 必选；picture 图片路径 必选；title 标题 必选；link 链接 必选；status 状态 必选）
+     * @return JSONObject （key：code 状态码；msg 消息；info{} 数据）
      */
     @PostMapping("/updateAds")
     public JSONObject updateAds(@RequestBody JSONObject requestJson){
@@ -54,7 +62,9 @@ public class AdsController {
     }
 
     /**
-     * 添加广告信息
+     * 添加广告
+     * @param requestJson （picture 图片路径 必选；title 标题 必选；link 链接 必选）
+     * @return JSONObject （key：code 状态码；msg 消息；info{} 数据）
      */
     @PostMapping("/addAds")
     public JSONObject addAds(@RequestBody JSONObject requestJson){
@@ -64,14 +74,22 @@ public class AdsController {
 
     /**
      * 删除广告
+     * @param id 编号
+     * @return JSONObject （key：code 状态码；msg 消息；info{} 数据）
      */
     @GetMapping("/removeAdsById/{id}")
     public JSONObject removeAdsById(@PathVariable int id){
         return adsService.removeAdsById(id);
     }
 
+    /**
+     * 上传图片，返回图片路径
+     * @param multiReq 上传的图片
+     * @return map（key：code 状态码；msg 消息；url ）图片路径
+     * @throws IOException
+     */
     @PostMapping("/upload")
-    public Map imgUpload(HttpServletRequest req, MultipartHttpServletRequest multiReq) throws IOException {
+    public Map imgUpload(MultipartHttpServletRequest multiReq) throws IOException {
         Map<String,Object> map = new HashMap<>();
         MultipartFile file = multiReq.getFile("file");
         String originalFilename = file.getOriginalFilename();
@@ -82,14 +100,12 @@ public class AdsController {
                         + File.separator+"ads"
                         + "/" + temp
                         + originalFilename;
-        System.out.println(desFilePath);
         File localFile  = new File(desFilePath);
         String srcUrl = "http://localhost:8080/OTA/img/ads/"+temp+originalFilename;
         localFile.createNewFile();
         file.transferTo(localFile);
         map.put("code", 0);
         map.put("msg", "上传成功");
-        map.put("desFilePath", desFilePath);
         map.put("url", srcUrl);
         return map;
     }

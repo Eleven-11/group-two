@@ -62,14 +62,14 @@
         where post_collect_id= #{postCollectId}
     </update>
 
-    <!--修改 Display1或0-->
+    <!--修改 Display为1-->
     <update id="updatePostCollectDisplay">
         update cqy_post_collect
         set
-        display = #{display}
+        display = 0
         where post_collect_id= #{postCollectId}
      </update>
-    <!--修改 Display为1-->
+    <!--修改 Display为0-->
     <update id="updatePostCollectDisplayTwo">
         update cqy_post_collect
         set
@@ -95,13 +95,12 @@
         from tyn_post
         where post_id= #{postId}
     </select>
-    <!--校验用户是否已存在（在用户表中）-->
+    <!--校验用户id是否已存在（在用户表中）-->
     <select id="queryExistPostCollectUserId" resultType="int">
         select count(0)
         from fly_user
         where user_id= #{userId}
     </select>
-
     <!---->
     <select id="getAllPostCollectByUserId" resultType="com.alibaba.fastjson.JSONObject">
         SELECT

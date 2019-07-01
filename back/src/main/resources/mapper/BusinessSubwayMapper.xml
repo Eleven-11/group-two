@@ -26,6 +26,7 @@
         Superior_id superiorId,
         DATE_FORMAT(create_time, '%Y.%m.%d %T') createTime,
         DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime,
+        display display,
         rank rank
         from cqy_business_subway
         <where>
@@ -33,7 +34,7 @@
                 business_subway_name LIKE CONCAT(CONCAT('%',#{input}),'%')
                 and
             </if>
-             display = 1
+            display = 1
         </where>
         LIMIT #{offSet}, #{pageRow}
     </select>
@@ -67,7 +68,7 @@
     <update id="updateBusinessSubwayDisplay">
         update cqy_business_subway
         set
-        display = 0
+        display = #{display}
         where business_subway_id= #{businessSubwayId}
      </update>
 
@@ -100,9 +101,6 @@
 
 
     <!--导入-->
-
-
-
     <select id="selectSuperior" resultType="Integer">
         select
         business_subway_id businessSubwayId

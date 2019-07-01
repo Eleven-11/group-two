@@ -34,8 +34,9 @@ public class BusinessSubwayServiceImpl implements BusinessSubwayService {
     private BusinessSubwayDao businessSubwayDao;
     /**
      * 新增帖子标签
+     * @param jsonObject  businessSubwayName(标签名),superiorId(上级id)
+     * @return
      */
-
     @Override
     public JSONObject addBusinessSubway(JSONObject jsonObject) {
         int exist = businessSubwayDao.queryExistBusinessSubwayName( jsonObject );
@@ -50,7 +51,9 @@ public class BusinessSubwayServiceImpl implements BusinessSubwayService {
     }
 
     /**
-     * 修改帖子标签状态
+     * 修改帖子标签的显示值
+     * @param jsonObject  businessSubwayId（标签编号）display(状态值)
+     * @return
      */
     @Transactional(rollbackFor = Exception.class)
     @SuppressWarnings("unchecked")
@@ -61,6 +64,8 @@ public class BusinessSubwayServiceImpl implements BusinessSubwayService {
     }
     /**
      * 修改帖子标签
+     * @param jsonObject businessSubwayName(标签名),superiorId(上级id)
+     * @return
      */
     @Override
     public JSONObject updateBusinessSubway(JSONObject jsonObject) {
@@ -69,6 +74,8 @@ public class BusinessSubwayServiceImpl implements BusinessSubwayService {
     }
     /**
      * 查询帖子标签列表
+     * @param jsonObject  input(输入框的内容，根据标签名模糊)
+     * @return
      */
     @Override
     public JSONObject listBusinessSubway(JSONObject jsonObject) {
@@ -79,8 +86,9 @@ public class BusinessSubwayServiceImpl implements BusinessSubwayService {
         return CommonUtil.successPage( jsonObject,list,count );
     }
     /**
-     * 查询所有的帖子标签
+     *查询所有的帖子标签
      * 在添加/修改帖子标签的时候要使用此方法
+     * @return
      */
     @Override
     public JSONObject getAllBusinessSubway() {
@@ -90,10 +98,12 @@ public class BusinessSubwayServiceImpl implements BusinessSubwayService {
 
 
     /**
-     * 导入导出
+     * 增量导入
+     * @param fileName 表格的文件名
+     * @param file 表格的路径
+     * @return
+     * @throws Exception
      */
-
-
     @Transactional(readOnly = false,rollbackFor = Exception.class)
     @Override
     public JSONObject  batchImport(String fileName, MultipartFile file) throws Exception {
@@ -177,6 +187,13 @@ public class BusinessSubwayServiceImpl implements BusinessSubwayService {
         return CommonUtil.successJson();
     }
 
+    /**
+     * 覆盖导入
+     * @param fileName 表格的文件名
+     * @param file 表格的路径
+     * @return
+     * @throws Exception
+     */
     @Override
     public JSONObject  batchImports(String fileName, MultipartFile file) throws Exception {
 
