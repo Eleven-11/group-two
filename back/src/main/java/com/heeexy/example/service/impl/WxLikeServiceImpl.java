@@ -56,7 +56,6 @@ public class WxLikeServiceImpl implements WxLikeService {
         CommonUtil.fillPageParam(jsonObject);
         List<JSONObject> list = wxLikeDao.getLikeList(jsonObject);
         int count = wxLikeDao.countPostLike(jsonObject);
-
         return CommonUtil.successPage(jsonObject, list, count);
     }
     /**
