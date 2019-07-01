@@ -20,14 +20,18 @@ import java.util.Map;
 public class WxUserServiceImpl implements WxUserService {
     @Autowired
     private WxUserDao wxUserDao;
+
+    /**
+     *
+     * @param jsonObject
+     * @return
+     */
     @Override
     public JSONObject getListUser(JSONObject jsonObject) {
         //查找所有用户
         CommonUtil.fillPageParam(jsonObject);
         int count = wxUserDao.countUser(jsonObject);
-        System.out.println(count);
         List<JSONObject> list = wxUserDao.getListUser(jsonObject);
-//        System.out.println(list);
         return CommonUtil.successPage(jsonObject, list, count);
     }
 

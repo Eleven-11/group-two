@@ -43,6 +43,7 @@ public class WxFansServiceImpl implements WxFansService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject updateFansByUserId(JSONObject jsonObject) {
+        CommonUtil.fillPageParam(jsonObject);
          wxFansDao.updateFansByUserId(jsonObject);
         int count = wxUserDao.getFansByUserId(jsonObject);
         String userId = jsonObject.getString("userId");

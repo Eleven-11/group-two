@@ -6,11 +6,16 @@
     <!--后台每个用户自己的帖子记录-->
     <select id="getMyPostList" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
 
-        select  post.id postId,post.post_content postContent,users.user_name onUserName,post.delete_state myPostState,
-        DATE_FORMAT(post.post_time, '%Y.%m.%d %T')  createTime
-
+        select  post.id postId,post.post_content postContent,users.user_name onUserName,post.
+        delete_state myPostState, DATE_FORMAT(post.post_time, '%Y.%m.%d %T')  createTime
         from  tyn_post post,fly_user users
-        where  post.post_owner =users.user_id
+        <where>
+            post.post_owner = users.user_id
+            <if test="userName != null and userName != ''">
+               and  users.user_name LIKE CONCAT(CONCAT('%',#{userName}),'%')
+            </if>
+        </where>
+        LIMIT #{offSet},#{pageRow};
     </select>
 <!--后台计数-->
     <select id="countMyPost" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
