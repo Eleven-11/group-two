@@ -24,6 +24,8 @@ public class ModuleController {
 
     /**
      * 查询模板列表
+     * @param request
+     * @return
      */
 //    @RequiresPermissions( "module:list" )
     @GetMapping("/list")
@@ -33,6 +35,8 @@ public class ModuleController {
 
     /**
      * 新增模块
+     * @param requestJson  moduleName(模块名字),moduleContent(模块内容)
+     * @return
      */
 //    @RequiresPermissions("module:add")
     @PostMapping("addModule")
@@ -40,8 +44,11 @@ public class ModuleController {
         CommonUtil.hasAllRequired(requestJson, "moduleName,moduleContent");
         return moduleService.addModule(requestJson);
     }
+
     /**
      * 群发消息
+     * @param requestJson moduleContent(模块内容)
+     * @return
      */
 //    @RequiresPermissions("module:add")
     @PostMapping("addMessage")
@@ -52,16 +59,20 @@ public class ModuleController {
 
     /**
      * 修改模块
+     * @param requestJson moduleName(模块名字),moduleContent(模块内容),moduleId(模板id)
+     * @return
      */
 //    @RequiresPermissions("module:update")
     @PostMapping("/updateModule")
     public JSONObject updateModule(@RequestBody JSONObject requestJson){
-        CommonUtil.hasAllRequired(requestJson, " moduleName,moduleContent");
+        CommonUtil.hasAllRequired(requestJson, " moduleName,moduleContent,moduleId");
         return moduleService.updateModule(requestJson);
     }
 
     /**
-     * 删除角色
+     * 修改模块状态值
+     * @param requestJson moduleId(模块id)
+     * @return
      */
 //    @RequiresPermissions("role:delete")
     @PostMapping("/removeModuleDisplay")
@@ -72,6 +83,7 @@ public class ModuleController {
     /**
      * 查询所有的模块
      * 在添加/修改模块的时候要使用此方法
+     * @return
      */
 //    @RequiresPermissions(value = {"user:add", "user:update"}, logical = Logical.OR)
     @GetMapping("/getAllRoles")

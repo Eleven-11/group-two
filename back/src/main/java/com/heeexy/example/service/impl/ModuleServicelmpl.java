@@ -26,6 +26,8 @@ public class ModuleServicelmpl implements ModuleService {
 
     /**
      * 添加模块
+     * @param jsonObject moduleName(模块名字),moduleContent(模块内容)
+     * @return
      */
     @Override
     public JSONObject addModule(JSONObject jsonObject) {
@@ -39,8 +41,11 @@ public class ModuleServicelmpl implements ModuleService {
         moduleDao.addModule( jsonObject );
         return CommonUtil.successJson();
     }
+
     /**
      * 新增消息
+     * @param jsonObject
+     * @return
      */
     @Override
     public JSONObject addMessage(JSONObject jsonObject) {
@@ -49,17 +54,17 @@ public class ModuleServicelmpl implements ModuleService {
             jsonObject.put("ulist",allUserId);
             moduleDao.addChat( jsonObject );
         }
-
         List<Integer> allLcChatId = moduleDao.getAllLcChatId();
         jsonObject.put("clist",allLcChatId);
         moduleDao.addMessage( jsonObject );
-
         return CommonUtil.successJson();
     }
 
 
     /**
-     * 删除模块
+     * 修改模块状态值
+     * @param jsonObject  moduleId(模块id)
+     * @return
      */
     @Transactional(rollbackFor = Exception.class)
     @SuppressWarnings("unchecked")
@@ -70,7 +75,9 @@ public class ModuleServicelmpl implements ModuleService {
     }
 
     /**
-     * 修改模块
+     * 修改模块内容
+     * @param jsonObject  moduleName(模板名字)，moduleContent(模板内容)，moduleId(模板id)
+     * @return
      */
     @Override
     public JSONObject updateModule(JSONObject jsonObject) {
@@ -80,6 +87,8 @@ public class ModuleServicelmpl implements ModuleService {
 
     /**
      * 查询模块列表
+     * @param jsonObject
+     * @return
      */
     @Override
     public JSONObject listModule(JSONObject jsonObject) {
@@ -91,6 +100,7 @@ public class ModuleServicelmpl implements ModuleService {
     /**
      * 查询所有的模块
      * 在添加/修改模块的时候要使用此方法
+     * @return
      */
     @Override
     public JSONObject getAllModule() {

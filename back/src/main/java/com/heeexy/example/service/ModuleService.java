@@ -13,7 +13,7 @@ import java.util.List;
 public interface ModuleService {
     /**
      * 新增模块
-     * @param jsonObject
+     * @param jsonObject moduleName(模块名字),moduleContent(模块内容)
      * @return
      */
     JSONObject addModule(JSONObject jsonObject);
@@ -24,14 +24,14 @@ public interface ModuleService {
      */
     JSONObject addMessage(JSONObject jsonObject);
     /**
-     * 删除模块
-     * @param jsonObject
+     * 修改模块状态值
+     * @param jsonObject  moduleId(模块id)
      * @return
      */
     JSONObject removeModuleDisplay(JSONObject jsonObject);
     /**
-     * 修改模块
-     * @param jsonObject
+     * 修改模块内容
+     * @param jsonObject  moduleName(模板名字)，moduleContent(模板内容)，moduleId(模板id)
      * @return
      */
     JSONObject updateModule(JSONObject jsonObject);

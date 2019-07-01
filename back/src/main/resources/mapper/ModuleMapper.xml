@@ -66,13 +66,11 @@
         INSERT into lc_chat(user_id,another_id)
         values
         <foreach collection="ulist" item="u" separator=",">
-
                 (1,#{u.userid})
-
         </foreach>
     </insert>
 
-    <!--查询用户id-->
+    <!--获取聊天表中不存在的用户id-->
     <select id="getAllUserId" resultType="com.alibaba.fastjson.JSONObject">
       select user_id userid
       from fly_user
@@ -105,9 +103,7 @@
         where module_ID= #{moduleId} and display = 1
     </update>
 
-
-
-    <!--删除-->
+    <!--修改模块的显示值-->
      <update id="removeModuleDisplay">
         update cqy_module
         set
