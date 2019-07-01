@@ -23,6 +23,9 @@ public class AdsServiceImpl implements AdsService {
 
     /**
      * 获取广告列表
+     * @param jsonObject （key: status 状态 可选；pageRow 一页条数；pageNum 页数）
+     * @return JSONObject （key：code 状态码；msg 消息；info{totalPage 总页数；list[] 数据列表；totalCount 数据总条数} 数据）
+     *         list[（id 编号；picture 图片路径；link 广告链接；title 广告标题；status 状态）]
      */
     @Override
     public JSONObject getAds(JSONObject jsonObject) {
@@ -33,7 +36,10 @@ public class AdsServiceImpl implements AdsService {
     }
 
     /**
-     * 根据id获取单条广告信息
+     * 根据广告编号获取一条广告信息
+     * @param id 编号 必选
+     * @return JSONObject （key：code 状态码；msg 消息；info{} 数据）
+     *         info（id 编号；picture 图片路径；link 广告链接；title 广告标题；status 状态）
      */
     @Override
     public JSONObject getAdsById(int id) {
@@ -41,9 +47,10 @@ public class AdsServiceImpl implements AdsService {
     }
 
     /**
-     * 修改广告信息
+     * 修改广告
+     * @param jsonObject （key：id 编号 必选；picture 图片路径 必选；title 标题 必选；link 链接 必选；status 状态 必选）
+     * @return JSONObject （key：code 状态码；msg 消息；info{} 数据）
      */
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject updateAds(JSONObject jsonObject) {
         adsDao.updateAds(jsonObject);
@@ -51,7 +58,9 @@ public class AdsServiceImpl implements AdsService {
     }
 
     /**
-     * 新增广告信息
+     * 添加广告
+     * @param jsonObject （picture 图片路径 必选；title 标题 必选；link 链接 必选）
+     * @return JSONObject （key：code 状态码；msg 消息；info{} 数据）
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
