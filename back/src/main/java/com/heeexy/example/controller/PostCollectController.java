@@ -22,6 +22,8 @@ public class PostCollectController {
 
     /**
      * 查询帖子收藏
+     * @param request
+     * @return
      */
     //    @RequiresPermissions( "postcollect:list" )
     @GetMapping("/list")
@@ -31,6 +33,8 @@ public class PostCollectController {
 
     /**
      * 新增帖子收藏
+     * @param requestJson postId(帖子id),userId(用户id)
+     * @return
      */
 //    @RequiresPermissions("module:add")
     @PostMapping("addPostCollect")
@@ -39,28 +43,31 @@ public class PostCollectController {
         return postCollectService.addPostCollect(requestJson);
     }
 
-    /**
-     * 修改帖子收藏
-     */
-//    @RequiresPermissions("module:update")
-    @PostMapping("/updatePostCollect")
-    public JSONObject updateModule(@RequestBody JSONObject requestJson){
-        CommonUtil.hasAllRequired(requestJson, "postId,userId");
-        return postCollectService.updatePostCollect(requestJson);
-    }
+//    /**
+//     * 修改帖子收藏
+//     */
+////    @RequiresPermissions("module:update")
+//    @PostMapping("/updatePostCollect")
+//    public JSONObject updateModule(@RequestBody JSONObject requestJson){
+//        CommonUtil.hasAllRequired(requestJson, "postId,userId");
+//        return postCollectService.updatePostCollect(requestJson);
+//    }
 
     /**
-     * 删除帖子收藏(假删除)
+     * 修改帖子收藏状态
+     * @param requestJson  postCollectId(收藏id),display(状态值)
+     * @return
      */
 //    @RequiresPermissions("role:delete")
     @PostMapping("//updatePostCollectDisplay")
     public JSONObject updatePostCollectDisplay(@RequestBody JSONObject requestJson) {
-//        CommonUtil.hasAllRequired(requestJson, "moduleID");
         return postCollectService.updatePostCollectDisplay(requestJson);
     }
+
     /**
-     * 查询所有的帖子收藏
-     * 在添加/修改帖子收藏的时候要使用此方法
+     *查询所有的帖子收藏
+     *在添加/修改帖子收藏的时候要使用此方法
+     * @return
      */
 //    @RequiresPermissions(value = {"user:add", "user:update"}, logical = Logical.OR)
     @GetMapping("/getAllPostCollect")
