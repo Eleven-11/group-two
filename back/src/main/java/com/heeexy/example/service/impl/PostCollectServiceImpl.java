@@ -21,6 +21,7 @@ import java.util.List;
 @Service
 public class PostCollectServiceImpl implements PostCollectService {
 
+//   ************************ 后台************************
 
     @Autowired
     private PostCollectDao postCollectDao;
@@ -86,4 +87,32 @@ public class PostCollectServiceImpl implements PostCollectService {
         List<JSONObject> roles = postCollectDao.getAllPostCollect();
         return CommonUtil.successJson(roles);
     }
+
+    //   ************************ 小程序前台************************
+    /**
+     * 根据用户查询的收藏帖子
+     */
+    @Override
+    public JSONObject getAllPostCollectByUserId(JSONObject jsonObject) {
+        List<JSONObject> roles = postCollectDao.getAllPostCollectByUserId( jsonObject );
+        return CommonUtil.successJson(roles);
+    }
+
+    @Override
+    public JSONObject updatePostCollectDisplays(JSONObject jsonObject) {
+        int exist = postCollectDao.queryExistPostCollectPU( jsonObject );
+        if (exist!=0){
+            int i = postCollectDao.queryExistPostCollectDisplay( jsonObject );
+            if (i==0){
+                postCollectDao.updatePostCollectDisplayTwo( jsonObject );
+            }else if(i==1){
+                postCollectDao.updatePostCollectDisplay( jsonObject );
+            }
+        }else {
+            postCollectDao.addPostCollect( jsonObject );
+        }
+        return CommonUtil.successJson();
+    }
+
+
 }

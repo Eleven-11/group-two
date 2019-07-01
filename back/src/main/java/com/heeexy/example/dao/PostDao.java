@@ -1,6 +1,7 @@
 package com.heeexy.example.dao;
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.xmlbeans.impl.jam.JSourcePosition;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -69,7 +70,7 @@ public interface PostDao {
      * @return int
      */
 
-    List<JSONObject> getSomeTag(JSONObject jsonObject)
+    List<JSONObject> getSomeTag(JSONObject jsonObject);
     /*
      * @Author lover_tyn
      * @Description //TODO 
@@ -77,16 +78,70 @@ public interface PostDao {
      * @Param [need]
      * @return java.util.List<com.alibaba.fastjson.JSONObject>
      */
-    ;
+
+    List<JSONObject> getNewTagId(JSONObject jsonObject);
+    /*
+     * @Author lover_tyn
+     * @Description //TODO 
+     * @Date  2019/6/28 14:28
+     * @Param [jsonObject]
+     * @return java.util.List<com.alibaba.fastjson.JSONObject>
+     */
     
     
     
+    int addPostTag(JSONObject jsonObject);
+    /*
+     * @Author lover_tyn
+     * @Description //TODO 
+     * @Date  2019/6/28 14:27
+     * @Param [jsonObject]
+     * @return int
+     */
+    
+    List<Integer> getDeleteTagId(JSONObject jsonObject);
+    /*
+     * @Author lover_tyn
+     * @Description //TODO 
+     * @Date  2019/6/28 15:17
+     * @Param [jsonObject]
+     * @return java.util.List<com.alibaba.fastjson.JSONObject>
+     */
 
+    int deleteTag(JSONObject jsonObject);
+    /*
+     * @Author lover_tyn
+     * @Description //TODO
+     * @Date  2019/6/28 15:24
+     * @Param [jsonObject]
+     * @return int
+     */
+    
+    List<JSONObject> getFirstTag();
+    /*
+     * @Author lover_tyn
+     * @Description //TODO 
+     * @Date  2019/6/30 17:24
+     * @Param []
+     * @return java.util.List<com.alibaba.fastjson.JSONObject>
+     */
+    
+    int deleteImg(JSONObject jsonObject);
+    /*
+     * @Author lover_tyn
+     * @Description //TODO 
+     * @Date  2019/6/30 17:24
+     * @Param [jsonObject]
+     * @return int
+     */
+    
+    
 
-
-
-
-
+    
+    
+    
+    
+    
     
 
 }
