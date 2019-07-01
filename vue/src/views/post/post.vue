@@ -142,29 +142,21 @@
            </div>
           </div>
           <div v-else>
-            <el-collapse  v-model="activeNames">
-              <el-collapse-item title="已选" name="selected" >
-                <el-checkbox-group v-model="tempPost.tags" @change="checkSelectedTag" size="mini">
+            <el-collapse  :v-model="已选">
+              <el-collapse-item  title="已选"  >
+                <el-checkbox-group v-model="tempPost.tags" size="mini">
                   <el-checkbox-button  v-for="taged in tempPost.tags" :label="taged" :key="taged" style="margin-left: 10px">
                     {{taged}}
                   </el-checkbox-button>
                 </el-checkbox-group>
               </el-collapse-item>
-              <el-collapse-item title="全部" name="all" >
+            </el-collapse>
+            <el-collapse @change="getFirstTag">
+              <el-collapse-item title="全部"  >
                 <el-collapse accordion  @change="getSecondTag">
-                  <el-collapse-item title="地铁周边" name="地铁周边" style="margin-left: 20px" ></el-collapse-item>
-                  <el-collapse  accordion  @change="getSomeTag" >
-                    <el-collapse-item v-for="sectag in secondTag"   :title="sectag.tagName"  :key="sectag.tagId"  :name="sectag.tagName" style="margin-left: 20px;">
-                      <el-checkbox-group  v-model="tempPost.tags" size="mini">
-                        <el-checkbox-button  v-for="tag in someTag" :label="tag.tagName" :key="tag.tagName" style="margin-left: 10px">
-                          {{tag.tagName}}
-                        </el-checkbox-button>
-                      </el-checkbox-group>
-                    </el-collapse-item>
-                  </el-collapse>
-                  <el-collapse-item title="热门商圈" name="热门商圈"  style="margin-left: 20px">
+                  <el-collapse-item v-for="firtag in firstTag" :title="firtag.tagName" :key="firtag.tagName" :name="firtag.tagName" style="margin-left: 20px"  >
                     <el-collapse  accordion  @change="getSomeTag" >
-                      <el-collapse-item v-for="sectag in secondTag"   :title="sectag.tagName"  :key="sectag.tagId"  :name="sectag.tagName" style="margin-left: 20px;">
+                      <el-collapse-item v-for="sectag in secondTag" :title="sectag.tagName"  :key="sectag.tagId"  :name="sectag.tagName" style="margin-left: 20px;">
                         <el-checkbox-group  v-model="tempPost.tags" size="mini">
                           <el-checkbox-button  v-for="tag in someTag" :label="tag.tagName" :key="tag.tagName" style="margin-left: 10px">
                             {{tag.tagName}}
@@ -194,14 +186,18 @@
         </el-form-item>
         <el-form-item   v-if="dialogStatus!='makeTop' " v-model="tempPost.imgs" style="overflow: hidden;">
           <div v-if="dialogStatus=='detail'" >
-            <div  v-for="oneImg in tempPost.imgs" style="float: left; margin-left: 20px;">
+            <div   v-for="oneImg in tempPost.imgs"  style="float: left; margin-left: 20px;">
               <img :src="oneImg" style="width: 120px;" >
             </div>
           </div>
           <div v-else>
-            <div v-for="oneImg in tempPost.imgs" style="float: left;margin-left: 20px">
-              <el-checkbox-button><img :src="oneImg" style="width: 120px;"></el-checkbox-button>
-            </div>
+
+            <el-checkbox-group v-model="tempImg"  >
+                <el-checkbox-button v-for="oneImg in tempPost.imgs"  :label="oneImg" :key="oneImg" style="float: left;margin-left: 20px">
+                  <img :src="oneImg" style="width: 120px;" >
+                </el-checkbox-button>
+            </el-checkbox-group>
+            <el-button  size="mini" v-if="tempPost.imgs!=null"  @click="tempDelete">删除</el-button>
           </div>
       </el-form-item>
         <el-form-item label="位置:" required v-if="dialogStatus=='detail'" v-model="tempPost.postLocation">
@@ -265,6 +261,8 @@
           theOthers: ''
         },
         sorts: [],//分类列表
+        tempImg:[],
+        firstTag:[],
         secondTag:[],
         someTag:[],
         dialogStatus: 'detail',
@@ -297,6 +295,7 @@
           selectTag:[],
           newTag:[],
           deleteTag:[],
+          deleteImg:[]
         },
       }
     },
@@ -321,16 +320,16 @@
           this.sorts = data.list;
         })
       },
-      getFirstTag() {
+      getFirstTag(){
         this.api({
-          url: "/post/getFirstTag",
-          method: "get"
-        }).then(data => {
+          url:"/post/getFirstTag",
+          method:"get"
+        }).then(data=>{
           this.firstTag = data.list;
+          console.log(this.firstTag);
         })
       },
       getSecondTag(value) {
-
         if (value != null && value != '') {
           this.api({
             url: "/post/getSomeTag",
@@ -451,6 +450,8 @@
           this.tempPost.deleteTag =[];
           this.tempPost.newTag = [];
           this.tempPost.imgs = oPost.imgList;
+          this.tempImg = [];
+          this.tempPost.deleteImg = [];
           this.tempPost.likeOff = oPost.likeOff;
           this.tempPost.collectOff = oPost.collectOff;
           this.tempPost.viewOff = oPost.viewOff;
@@ -460,7 +461,7 @@
         })
       },
       updatePost() {
-
+        console.log(this.tempPost.deleteImg);
         for(let i=0;i<this.tempPost.tags.length;i++){
           let st = 1;
           for(let j=0;j<this.tempPost.selectTag.length;j++){
@@ -592,6 +593,14 @@
             }
           }
         }
+      },
+      tempDelete(){
+      for(let i=0;i<this.tempImg.length;i++){
+        for(let j=0;j<this.tempPost.imgs.length;j++)
+          if(this.tempImg[i]==this.tempPost.imgs[j])
+            this.tempPost.imgs.splice(j,1);
+      }
+      this.tempPost.deleteImg=this.tempImg;
       },
     }
   }

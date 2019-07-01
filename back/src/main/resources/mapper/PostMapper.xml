@@ -235,4 +235,16 @@
         delete from tyn_post_tag
         where tag_id=#{tId} and post_id=#{postId}
     </delete>
+
+    <select id="getFirstTag" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        business_subway_name tagName
+        from cqy_business_subway
+        where Superior_id =0
+     </select>
+
+    <delete id="deleteImg">
+        delete from tyn_post_img
+        where img=#{img} and post_id=#{postId}
+    </delete>
 </mapper>

@@ -88,9 +88,7 @@ public interface PostDao {
      * @return java.util.List<com.alibaba.fastjson.JSONObject>
      */
     
-
     
-   
     
     int addPostTag(JSONObject jsonObject);
     /*
@@ -118,18 +116,32 @@ public interface PostDao {
      * @Param [jsonObject]
      * @return int
      */
+    
+    List<JSONObject> getFirstTag();
+    /*
+     * @Author lover_tyn
+     * @Description //TODO 
+     * @Date  2019/6/30 17:24
+     * @Param []
+     * @return java.util.List<com.alibaba.fastjson.JSONObject>
+     */
+    
+    int deleteImg(JSONObject jsonObject);
+    /*
+     * @Author lover_tyn
+     * @Description //TODO 
+     * @Date  2019/6/30 17:24
+     * @Param [jsonObject]
+     * @return int
+     */
+    
+    
 
     
     
     
     
     
-
-
-
-
-
-
     
 
 }

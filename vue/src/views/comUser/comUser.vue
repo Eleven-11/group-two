@@ -16,7 +16,7 @@
         <span v-text="getIndex(scope.$index)"> </span>
       </template>
     </el-table-column>
-    <el-table-column align="center" label="用户UUID" prop="userUuid" style="width: 60px;"></el-table-column>
+    <el-table-column align="center" v-if="false" label="用户UUID" prop="userUuid" style="width: 60px;"></el-table-column>
     <el-table-column  align="center" label="头像" width="100">
       <template slot-scope="scope">
         <img :src="scope.row.userPhoto" width="80" height="80"  style="border-radius:50%;" />
@@ -25,8 +25,8 @@
    <!-- <el-table-column align="center" label="用户头像" prop="userPhoto" style="width: 60px;"></el-table-column>-->
     <el-table-column align="center" label="用户名" prop="userName" style="width: 60px;"></el-table-column>
     <el-table-column align="center" label="性别" prop="userSex" style="width: 60px;"></el-table-column>
-    <el-table-column align="center" label="粉丝数" prop="userFans" style="width: 60px;"></el-table-column>
-    <el-table-column align="center" label="虚拟粉丝" prop="userFansf" style="width: 60px;"></el-table-column>
+    <el-table-column align="center" label="粉丝数" prop="fansToal" style="width: 60px;"></el-table-column>
+   <!-- <el-table-column align="center" label="虚拟粉丝" prop="userFansf" style="width: 60px;"></el-table-column>-->
     <el-table-column align="center" label="角色" prop="guest" style="width: 60px;">
       <template slot-scope="scope">
         <p v-if="scope.row.guest=='0'">
@@ -53,7 +53,8 @@
     <el-table-column align="center" label="管理" width="300">
       <template slot-scope="scope">
         <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
-       <el-button type="danger" icon="danger"  @click="updateState(scope.$index)">封禁？</el-button>
+       <el-button type="primary" icon="danger"  v-if="scope.row.userState=='1'" @click="updateState(scope.$index)">恢复</el-button>
+        <el-button type="danger" icon="danger" v-if="scope.row.userState=='0'" @click="updateState(scope.$index)">封禁</el-button>
         <el-button type="primary" icon="info"  @click="jump(scope.$index)">查看</el-button>
 
       </template>
@@ -70,7 +71,7 @@
   </el-pagination>
   <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
 
-    <el-form class="small-space" :model="tempUser" label-position="left" label-width="80px"
+    <el-form class="small-space" :model="tempUser" label-position="left" label-width="100px"
              style='width: 300px; margin-left:50px;'>
     <!--  <el-form-item label="用户头像"  >
         <el-input type="text" v-model="tempUser.userPhoto" >
@@ -84,8 +85,16 @@
         <el-input type="text" :disabled="true" v-model="tempUser.userSex">
         </el-input>
       </el-form-item>-->
-      <el-form-item label="粉丝数" required >
-        <el-input type="number"  oninput="javascript:this.value=this.value.replace(/[^\d]/g,'')"  v-model="tempUser.userFansf" >
+      <el-form-item label="真实粉丝数" required >
+        <el-input id="fans" type="text" :disabled="true" v-model="tempUser.userFans" >
+        </el-input>
+      </el-form-item>
+      <el-form-item label="虚拟粉丝数" required >
+        <el-input type="number"  id="fansf" oninput="javascript:this.value=this.value.replace(/[^\d]/g,'')"  v-model="tempUser.userFansf" >
+        </el-input>
+      </el-form-item>
+      <el-form-item label="总粉丝数" required >
+        <el-input type="text"  v-model="sumFans">
         </el-input>
       </el-form-item>
      <!-- <el-form-item label="封禁状态" required>
@@ -134,6 +143,7 @@
           userSex: '',
           userFans: '',
           userFansf: '',
+          fansToal:'',
           userState: '',
           userId: ''
         }
@@ -145,7 +155,10 @@
     computed: {
       ...mapGetters([
         'userId'
-      ])
+      ]),
+      sumFans:function () {
+        return Number(this.tempUser.userFans)+Number(this.tempUser.userFansf)
+      }
     },
     methods: {
         jump($index){
@@ -205,6 +218,8 @@
       },
       updateUser() {
         //修改用户信息
+        console.log(this.tempUser.userFans);
+        console.log(this.tempUser.userFansf);
         let _vue = this;
         this.api({
           url: "/comUser/updateUserFans",

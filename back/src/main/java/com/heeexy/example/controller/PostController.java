@@ -61,4 +61,11 @@ public class PostController {
         return postService.getSomeTag(requestJson);
     }
 
+    @GetMapping("/getFirstTag")
+    public JSONObject getFirstTag(){
+        System.out.println("controller");
+        return postService.getFirstTag();
+    }
+
+
 }

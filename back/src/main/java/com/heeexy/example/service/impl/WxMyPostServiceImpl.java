@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.WxMyPostDao;
 import com.heeexy.example.service.WxMyPostService;
 import com.heeexy.example.util.CommonUtil;
-import netscape.javascript.JSObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +25,7 @@ public class WxMyPostServiceImpl implements WxMyPostService {
     @Override
     public JSONObject getMyPostList(JSONObject jsonObject) {
         //后台数据显示
+        CommonUtil.fillPageParam(jsonObject);
         List<JSONObject> list = wxMyPostDao.getMyPostList(jsonObject);
         int count = wxMyPostDao.countMyPost(jsonObject);
         return CommonUtil.successPage(jsonObject, list, count);

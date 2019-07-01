@@ -71,6 +71,7 @@
           >
             <el-button type="primary" size="medium">上传图片</el-button>
           </el-upload>
+          <span>支持大小：414*82</span>
         </el-form-item>
         <el-form-item label="图片" v-if="imgUrl">
             <el-upload
@@ -83,6 +84,7 @@
             >
               <el-button type="primary" size="medium">修改图片</el-button>
             </el-upload>
+            <span>支持大小：414*82</span>
 
         </el-form-item>
         <el-form-item label="标题">

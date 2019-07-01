@@ -49,8 +49,6 @@ public class PostServiceImpl implements PostService {
     public JSONObject updatePost(JSONObject jsonObject) {
         postDao.updatePost(jsonObject);
         List<String> temp = (List<String>) jsonObject.get("newTag");
-        System.out.println(jsonObject.get("newTag"));
-        System.out.println(jsonObject.get("deleteTag"));
         if(temp!=null&&temp.size()!=0) {
             System.out.println("添加--------------------------------------------");
             List<JSONObject> newTags =  postDao.getNewTagId(jsonObject);
@@ -72,6 +70,17 @@ public class PostServiceImpl implements PostService {
                 postDao.deleteTag(tag);
             }
         }
+        List<String> temp2 = (List<String>) jsonObject.get("deleteImg");
+        if(temp2!=null&&temp2.size()!=0){
+            for (String s:temp2
+                 ) {
+                JSONObject tempImg = new JSONObject();
+                tempImg.put("postId",jsonObject.get("postId"));
+                tempImg.put("img",s);
+                postDao.deleteImg(tempImg);
+
+            }
+        }
         return CommonUtil.successJson();
     }
 
@@ -86,5 +95,12 @@ public class PostServiceImpl implements PostService {
     public JSONObject getSomeTag(JSONObject jsonObject) {
        List<JSONObject> someTag =  postDao.getSomeTag(jsonObject);
         return CommonUtil.successPage(someTag);
+    }
+
+    @Override
+    public JSONObject getFirstTag() {
+        List<JSONObject> firstTag = postDao.getFirstTag();
+
+        return CommonUtil.successPage(firstTag);
     }
 }
