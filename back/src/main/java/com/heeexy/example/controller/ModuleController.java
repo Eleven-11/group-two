@@ -70,7 +70,7 @@ public class ModuleController {
     }
 
     /**
-     * 修改模块状态值
+     * 删除模块（假）
      * @param requestJson moduleId(模块id)
      * @return
      */

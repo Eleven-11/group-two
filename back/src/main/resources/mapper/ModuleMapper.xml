@@ -103,7 +103,7 @@
         where module_ID= #{moduleId} and display = 1
     </update>
 
-    <!--修改模块的显示值-->
+    <!--删除模块的显示值（假）-->
      <update id="removeModuleDisplay">
         update cqy_module
         set

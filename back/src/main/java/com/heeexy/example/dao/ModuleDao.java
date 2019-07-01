@@ -52,7 +52,7 @@ public interface ModuleDao {
     int addChat(JSONObject jsonObject);
 
     /**
-     * 修改模块的显示值
+     * 删除模块（假）
      * @param jsonObject moduleId(模块id)
      * @return
      */

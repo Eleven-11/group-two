@@ -24,7 +24,7 @@ public interface ModuleService {
      */
     JSONObject addMessage(JSONObject jsonObject);
     /**
-     * 修改模块状态值
+     * 删除模块（假）
      * @param jsonObject  moduleId(模块id)
      * @return
      */
