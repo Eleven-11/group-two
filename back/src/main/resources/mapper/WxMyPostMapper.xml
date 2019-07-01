@@ -6,8 +6,8 @@
     <!--后台每个用户自己的帖子记录-->
     <select id="getMyPostList" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
 
-        select  post.id postId,post.post_content postContent,users.user_name onUserName,post.
-        delete_state myPostState, DATE_FORMAT(post.post_time, '%Y.%m.%d %T')  createTime
+        select  post.id postId,post.post_content postContent,users.user_name onUserName,
+                post.delete_state myPostState, DATE_FORMAT(post.post_time, '%Y.%m.%d %T')  createTime
         from  tyn_post post,fly_user users
         <where>
             post.post_owner = users.user_id
@@ -44,18 +44,16 @@
     </select>
     <!--前台本人发帖数量-->
     <select id="countMyPostByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-        select count(0) postNumber,tyn_post.post_owner userId from tyn_post where post_owner =#{onUserId} and delete_state =0
+        select count(0) postNumber,tyn_post.post_owner userId from tyn_post
+        where post_owner =#{onUserId} and delete_state =0
     </select>
     <!--批量删除帖子-->
     <update id="updateByPostIdMany" parameterType="java.util.Map">
-
-
-                <if test="myPostState ==0 ">
-                    update  tyn_post  set delete_state = 1 where id = #{postId}
-                </if>
-            <if test="myPostState ==1 ">
+        <if test="myPostState ==0 ">
+                update  tyn_post  set delete_state = 1 where id = #{postId}
+        </if>
+        <if test="myPostState ==1 ">
                 update  tyn_post  set delete_state = 0 where id = #{postId}
-            </if>
-
+        </if>
     </update>
 </mapper>

@@ -20,16 +20,6 @@ public interface WxBrowserService {
      */
     JSONObject addBrowsePost(JSONObject jsonObject);
     /**
-     * @methodsName: getBrowsePostByPostId
-     * @description: 查找该用户是否有该帖子的浏览记录
-     * @param:  JSONObject
-     * @return: JSONObject
-     */
-
-    JSONObject getBrowsePostByPostId(JSONObject jsonObject);
-    //修改该用户的浏览帖子记录的时间
-    JSONObject updateBrowse(JSONObject jsonObject);
-    /**
      * @methodsName: getBrowseList
      * @description: 后台显示浏览记录表
      * @param:  JSONObject

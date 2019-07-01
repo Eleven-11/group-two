@@ -5,11 +5,12 @@
 
     <!--查找最大id数-->
     <select id="getMaxNumber" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-       select
+      /* select
          user_id  userId,user_name userName, user_photo userPhoto,
       user_sex  userSex,user_fans userFans,user_fans_f userFansf,
-      guest guest, user_state userState,DATE_FORMAT(first_time, '%Y.%m.%d %T') firstTime,DATE_FORMAT(update_time, '%Y.%m.%d %T')  updateTime
-        from  fly_user where user_id = (select max(user_id) from fly_user)
+      guest guest, user_state userState,DATE_FORMAT(first_time, '%Y.%m.%d %T') firstTime,
+      DATE_FORMAT(update_time, '%Y.%m.%d %T')  updateTime
+        from  fly_user where user_id = (select max(user_id) from fly_user)*/
     </select>
     <!--增加普通用户-->
     <insert id="addByUser" parameterType="com.alibaba.fastjson.JSONObject">
@@ -40,8 +41,9 @@
     </update>
     <!--前台查找总粉丝数-->
     <select id="countFansByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-        select fly_user.user_fans+fly_user.user_fans_f fansToal,fly_user.user_name username from fly_user where user_id =#{onUserId};
-        select fly_user.user_fans+fly_user.user_fans_f fansToal,fly_user.user_name username from fly_user where user_id =#{onUserId};
+        select fly_user.user_fans+fly_user.user_fans_f fansToal,fly_user.user_name username from fly_user
+         where user_id =#{onUserId};
+
     </select>
     <!--查找真实粉丝数-->
     <select id="getFansByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
@@ -51,20 +53,19 @@
     <!--查找所有用户-->
     <select id="getListUser" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
       select
-      t1.user_id  userId,t1.user_uuid userUuid,t1.user_name userName,t1.user_photo userPhoto,
-      t1.user_sex  userSex,t1.user_fans userFans,t1.user_fans_f userFansf,t1.user_fans+t1.user_fans_f  fansToal,
-      t1.guest guest, t1.user_state userState,DATE_FORMAT(first_time, '%Y.%m.%d %T') firstTime,DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
+          t1.user_id  userId,t1.user_uuid userUuid,t1.user_name userName,t1.user_photo userPhoto,
+          t1.user_sex  userSex,t1.user_fans userFans,t1.user_fans_f userFansf,t1.user_fans+t1.user_fans_f  fansToal,
+          t1.guest guest, t1.user_state userState,DATE_FORMAT(first_time, '%Y.%m.%d %T') firstTime,
+          DATE_FORMAT(update_time, '%Y.%m.%d %T') updateTime
       from  fly_user t1
-
         <where>
-
             <if test="userName != null and userName != ''">
               user_name LIKE CONCAT(CONCAT('%',#{userName}),'%')
                 and
             </if>
              t1.user_id > 1
         </where>
-       LIMIT #{offSet},#{pageRow};
+        LIMIT #{offSet},#{pageRow};
     </select>
     <!--计算用户数-->
     <select id="countUser" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
@@ -77,17 +78,13 @@
             user_id !=1
         </where>
     </select>
-    <!--查找封禁状态集合-->
-    <select id="listUserState" resultType="com.alibaba.fastjson.JSONObject">
-      select  id Id,close_id closeId, close_name closeName from fly_userstate;
-    </select>
     <!--查找某个用户-->
     <select id="getUserByUsername" resultType="com.alibaba.fastjson.JSONObject" parameterType="com.alibaba.fastjson.JSONObject">
         select
-      t1.user_id  userId,t1.user_uuid userUuid,t1.user_name userName,t1.user_photo userPhoto,
-      t1.user_sex  userSex,t1.user_fans userFans,t1.user_fans_f userFansf,
-      t1.guest guest,t1.user_state userState,DATE_FORMAT(t1.first_time, '%Y.%m.%d %T') firstTime,DATE_FORMAT(t1.update_time, '%Y.%m.%d %T') updateTime
-      from  fly_user t1 where t1.user_id =#{onUserId};
+            t1.user_id  userId,t1.user_uuid userUuid,t1.user_name userName,t1.user_photo userPhoto,
+            t1.user_sex  userSex,t1.user_fans userFans,t1.user_fans_f userFansf,
+             t1.guest guest,t1.user_state userState,DATE_FORMAT(t1.first_time, '%Y.%m.%d %T') firstTime,DATE_FORMAT(t1.update_time, '%Y.%m.%d %T') updateTime
+          from  fly_user t1 where t1.user_id =#{onUserId};
     </select>
     <!--查看该用户的封禁状态-->
     <select id="getStateByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
@@ -95,14 +92,14 @@
     </select>
     <!--用户详情页-->
 <select id="getDetailUserById" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-        select t1.postNumber1 postNumber, u.user_fans_f+u.user_fans fansNumber,t2.fNumber1 fNumber
+  /*  select t1.postNumber1 postNumber, u.user_fans_f+u.user_fans fansNumber,t2.fNumber1 fNumber
         from
         (select count(tyn_post.post_owner) postNumber1,tyn_post.post_owner from tyn_post
         where tyn_post.delete_state = 0 and tyn_post.post_owner =#{onUserId})  t1
         ,fly_user u,(select  count(fly_fans.onuser_id) fNumber1,fly_fans.onuser_id from fly_fans
         where  fly_fans.onuser_id =#{onUserId} and fly_fans.state =1) t2
         where u.user_id =t1.post_owner  and t2.onuser_id =u.user_id and t1.post_owner =t2.onuser_id
-        and u.user_id =#{onUserId}
+        and u.user_id =#{onUserId}*/
 </select>
 
 </mapper>
