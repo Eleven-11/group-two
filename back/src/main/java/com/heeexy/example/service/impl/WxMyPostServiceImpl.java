@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.WxMyPostDao;
 import com.heeexy.example.service.WxMyPostService;
 import com.heeexy.example.util.CommonUtil;
-import netscape.javascript.JSObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
