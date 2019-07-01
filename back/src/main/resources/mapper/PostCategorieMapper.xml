@@ -32,14 +32,16 @@
     <!--增/改后查询全部-->
     <select id="getAllPostCategorie" resultType="com.alibaba.fastjson.JSONObject">
         select
-        module_ID moduleId,
-        module_name moduleName,
-        module_content moduleContent,
+        categories_id categoriesId,
+        categories_name categoriesName,
+        categories_img categoriesImg,
         display display,
         create_time createTime,
         update_time updateTime
-        from cqy_module
+        from cqy_post_categories
     </select>
+
+
     <!--新增-->
     <insert id="addPostCategorie" useGeneratedKeys="true" keyProperty="categoriesId">
         INSERT into cqy_post_categories(categories_name,categories_img,display)
@@ -78,4 +80,20 @@
         from cqy_post_categories
         where categories_name= #{categoriesName} and categories_id != #{categoriesId}
     </select>
+
+
+
+
+
+    <!--前台-->
+    <!--查看所有模块，不包含隐藏的-->
+    <select id="RgetAllPostCategorie" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        categories_id categoriesId,
+        categories_name categoriesName,
+        categories_img categoriesImg
+        from cqy_post_categories
+        where display=1
+    </select>
+
 </mapper>
