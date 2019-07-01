@@ -23,7 +23,7 @@ public class BusinessSubwayController {
     private BusinessSubwayService businessSubwayService;
 
     /**
-     * 查询帖子类别列表
+     * 查询帖子标签列表
      * @param request input(输入框的内容，根据标签名模糊)
      * @return
      */
@@ -45,7 +45,7 @@ public class BusinessSubwayController {
     }
 
     /**
-     * 修改帖子类别
+     * 修改帖子标签
      * @param requestJson businessSubwayName(标签名),superiorId(上级id)
      * @return
      */
@@ -56,7 +56,7 @@ public class BusinessSubwayController {
         return businessSubwayService.updateBusinessSubway(requestJson);
     }
     /**
-     * 删除帖子类别
+     * 删除帖子标签
      * @param requestJson businessSubwayId（标签编号）display(状态值)
      * @return
      */
@@ -67,8 +67,8 @@ public class BusinessSubwayController {
     }
 
     /**
-     * 查询所有的帖子类别
-     * 在添加/修改帖子类别的时候要使用此方法
+     * 查询所有的帖子标签
+     * 在添加/修改帖子标签的时候要使用此方法
      * @return
      */
 //    @RequiresPermissions(value = {"user:add", "user:update"}, logical = Logical.OR)

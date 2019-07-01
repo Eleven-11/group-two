@@ -30,6 +30,13 @@ public class PostCategorieController {
     String string=new String();
 
 
+    /**
+     * 获取上传图片
+     * @param req 图片地址
+     * @param multiReq 图片名字
+     * @return
+     * @throws IOException
+     */
     @RequestMapping(value = "/upload")
     public Map imgUpload(HttpServletRequest req, MultipartHttpServletRequest multiReq) throws IOException {
         Map<String,Object> map = new HashMap<>();
@@ -70,25 +77,31 @@ public class PostCategorieController {
         map.put("url", desFilePath);
         return map;
     }
-
-    @PostMapping("/delete")
-    public void delete (@RequestBody JSONObject jsonObject) {
-       string="";
-        File file = new File(jsonObject.getString("desFilePath"));
-        file.delete();
-    }
-
-
+//    /**
+//     * 删除图片
+//     * @param jsonObject
+//     */
+//    @PostMapping("/delete")
+//    public void delete (@RequestBody JSONObject jsonObject) {
+//       string="";
+//        File file = new File(jsonObject.getString("desFilePath"));
+//        file.delete();
+//    }
     /**
      * 查询帖子类别列表
+     * @param request
+     * @return
      */
 //   @RequiresPermissions( "postcategorie:list" )
     @GetMapping("/list")
     public JSONObject listPostCategorie(HttpServletRequest request){
         return postCategorieService.listPostCategorie( CommonUtil.request2Json(request));
     }
+
     /**
      * 新增帖子类别
+     * @param requestJson categoriesName(类别名)
+     * @return
      */
 //    @RequiresPermissions("postcategorie:add")
     @PostMapping("addPostCategorie")
@@ -101,6 +114,8 @@ public class PostCategorieController {
 
     /**
      * 修改帖子类别
+     * @param requestJson  categoriesId（类别id）,categoriesName(类别名),categoriesImg(类别图片)
+     * @return
      */
 //    @RequiresPermissions("module:update")
     @PostMapping("/updatePostCategorie")
@@ -110,8 +125,11 @@ public class PostCategorieController {
         System.out.println(requestJson.get( "categoriesImg" ));
         return postCategorieService.updatePostCategorie(requestJson);
     }
+
     /**
      * 删除帖子类别
+     * @param requestJson categoriesId（类别id）,display(状态值)
+     * @return
      */
 //    @RequiresPermissions("role:delete")
     @PostMapping("/updatePostCategorieDisplay")
@@ -119,9 +137,11 @@ public class PostCategorieController {
 //        CommonUtil.hasAllRequired(requestJson, "moduleID");
         return postCategorieService.updatePostCategorieDisplay(requestJson);
     }
+
     /**
      * 查询所有的帖子类别
      * 在添加/修改帖子类别的时候要使用此方法
+     * @return
      */
 //    @RequiresPermissions(value = {"user:add", "user:update"}, logical = Logical.OR)
     @GetMapping("/getAllPostCategorie")

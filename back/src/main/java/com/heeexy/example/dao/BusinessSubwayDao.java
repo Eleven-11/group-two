@@ -13,19 +13,19 @@ import java.util.List;
  */
 public interface BusinessSubwayDao {
     /**
-     * 新增帖子类别
+     * 新增帖子标签
      * @param jsonObject  businessSubwayName(标签名),superiorId(上级id)
      * @return
      */
     int addBusinessSubway(JSONObject jsonObject);
     /**
-     * 修改帖子类别
+     * 修改帖子标签
      * @param jsonObject businessSubwayName(标签名),superiorId(上级id)
      * @return
      */
     int updateBusinessSubway(JSONObject jsonObject);
     /**
-     * 修改帖子类别的显示值
+     * 修改帖子标签的显示值
      * @param jsonObject  businessSubwayId（标签编号）display(状态值)
      * @return
      */
@@ -37,7 +37,7 @@ public interface BusinessSubwayDao {
      */
     int countBusinessSubway(JSONObject jsonObject);
     /**
-     * 查询帖子类别列表
+     * 查询帖子标签列表
      * @param jsonObject  input(输入框的内容，根据标签名模糊)
      * @return
      */
@@ -56,8 +56,8 @@ public interface BusinessSubwayDao {
      */
     int queryExistBusinessSubwayDisplay(JSONObject jsonObject);
     /**
-     *查询所有的帖子类别
-     * 在添加/修改帖子类别的时候要使用此方法
+     *查询所有的帖子标签
+     * 在添加/修改帖子标签的时候要使用此方法
      * @return
      */
     List<JSONObject> getAllBusinessSubway();
