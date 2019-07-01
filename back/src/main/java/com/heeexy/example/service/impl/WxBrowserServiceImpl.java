@@ -44,7 +44,6 @@ public class WxBrowserServiceImpl implements WxBrowserService {
         CommonUtil.fillPageParam(jsonObject);
         List<JSONObject> list = wxBrowserDao.getBrowseList(jsonObject);
         int count = wxBrowserDao.countBrowse(jsonObject);
-
         return CommonUtil.successPage(jsonObject, list, count);
     }
 
