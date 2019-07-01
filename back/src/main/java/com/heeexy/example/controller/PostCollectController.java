@@ -14,8 +14,6 @@ import javax.servlet.http.HttpServletRequest;
  * @date: 2019/6/20 14:06
  * @vevsion 1.0
  */
-
-
 @RestController
 @RequestMapping("/postcollect")
 public class PostCollectController {

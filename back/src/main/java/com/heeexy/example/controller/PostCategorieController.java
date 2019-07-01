@@ -58,8 +58,8 @@ public class PostCategorieController {
         }
         BufferedInputStream in = new BufferedInputStream( new FileInputStream( desFilePath ) );
         Image bi = ImageIO.read(in);
-        BufferedImage tag = new BufferedImage( 50,50, BufferedImage.TYPE_INT_RGB);
-        tag.getGraphics().drawImage( bi,0,0,50,50,null );
+        BufferedImage tag = new BufferedImage( 80,80, BufferedImage.TYPE_INT_RGB);
+        tag.getGraphics().drawImage( bi,0,0,80,80,null );
         localFile.delete();
         BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream(desFilePath) );
         ImageIO.write( tag,"JPG",out);
