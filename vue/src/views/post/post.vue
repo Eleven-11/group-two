@@ -41,7 +41,7 @@
       <el-table-column align="center" label="发帖时间" prop="postTime" width="100" sortable></el-table-column>
       <el-table-column align="center" label="所属分类"  width="110" sortable>
         <template slot-scope="scope">
-            <el-tag v-text="scope.row.sortName" style="float: left;margin-left: 5px"></el-tag>
+            <el-tag type="success" v-text="scope.row.sortName" style="float: left;margin-left: 5px"></el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="标签" width="270">
@@ -58,7 +58,16 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="显示状态" prop="deleteState" width="120" sortable></el-table-column>
+      <el-table-column align="center" label="显示状态" width="120" sortable>
+      <template slot-scope="scope">
+        <div v-if="scope.row.deleteState==1" >
+          <el-tag type="success">正常</el-tag>
+        </div>
+        <div v-else>
+          <el-tag type="warning">隐藏</el-tag>
+        </div>
+      </template>
+      </el-table-column>
       <el-table-column align="center" label="点赞数/偏移量" prop="alike" width="150" sortable></el-table-column>
       <el-table-column align="center" label="收藏数/偏移量" prop="acollect" width="150" sortable></el-table-column>
       <el-table-column align="center" label="浏览数/偏移量" prop="aview" width="150" sortable></el-table-column>
@@ -71,10 +80,10 @@
           <el-button type="primary"
                      @click="showTop(scope.$index)"><i class="el-icon-caret-top"></i>
           </el-button>
-          <el-button type="danger"  v-if="scope.row.deleteState=='隐藏'"
+          <el-button type="danger"  v-if="scope.row.deleteState==2"
                      @click="recoverPost(scope.$index)"><i class="el-icon-circle-plus"></i>
           </el-button>
-          <el-button type="danger"  v-if="scope.row.deleteState=='正常'"
+          <el-button type="danger"  v-if="scope.row.deleteState==1"
                      @click="deletePost(scope.$index)"><i class="el-icon-remove"></i>
           </el-button>
         </template>
@@ -97,8 +106,8 @@
         </el-form-item>
         <el-form-item label="请选择置顶模块" v-if="dialogStatus=='makeTop' " v-model="tempPost.tops" required>
           <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll"
-                       @change="handleCheckAllChange">全选</el-checkbox>
-          <el-checkbox-group v-model="tempPost.tops" @change="handleCheckedCitiesChange" style="display: inline-block;margin-left: 10px" >
+                       @change="checkAllTop">全选</el-checkbox>
+          <el-checkbox-group v-model="tempPost.tops" @change="checkTop" style="display: inline-block;margin-left: 10px" >
             <el-checkbox v-for="top in allTops" :label="top" :key="top">
               {{top}}
             </el-checkbox>
@@ -113,7 +122,7 @@
         </el-form-item>
         <el-form-item label="所属分类:"  v-if="dialogStatus!='makeTop' " v-model="tempPost.sortName" required>
           <div v-if="dialogStatus=='detail'" >
-            {{tempPost.sortName}}
+            <el-tag v-text="tempPost.sortName" effect="dark" style="float: left;margin-left: 5px"></el-tag>
           </div>
           <div v-else >
               <el-select v-model="tempPost.sortId" placeholder="请选择">
@@ -132,6 +141,34 @@
               <el-tag v-text="tag" style="float: left;margin-left: 5px"></el-tag>
            </div>
           </div>
+          <div v-else>
+            <el-collapse  :v-model="已选">
+              <el-collapse-item  title="已选"  >
+                <el-checkbox-group v-model="tempPost.tags" size="mini">
+                  <el-checkbox-button  v-for="taged in tempPost.tags" :label="taged" :key="taged" style="margin-left: 10px">
+                    {{taged}}
+                  </el-checkbox-button>
+                </el-checkbox-group>
+              </el-collapse-item>
+            </el-collapse>
+            <el-collapse @change="getFirstTag">
+              <el-collapse-item title="全部"  >
+                <el-collapse accordion  @change="getSecondTag">
+                  <el-collapse-item v-for="firtag in firstTag" :title="firtag.tagName" :key="firtag.tagName" :name="firtag.tagName" style="margin-left: 20px"  >
+                    <el-collapse  accordion  @change="getSomeTag" >
+                      <el-collapse-item v-for="sectag in secondTag" :title="sectag.tagName"  :key="sectag.tagId"  :name="sectag.tagName" style="margin-left: 20px;">
+                        <el-checkbox-group  v-model="tempPost.tags" size="mini">
+                          <el-checkbox-button  v-for="tag in someTag" :label="tag.tagName" :key="tag.tagName" style="margin-left: 10px">
+                            {{tag.tagName}}
+                          </el-checkbox-button>
+                        </el-checkbox-group>
+                      </el-collapse-item>
+                    </el-collapse>
+                  </el-collapse-item>
+                </el-collapse>
+              </el-collapse-item>
+            </el-collapse>
+          </div>
         </el-form-item>
         <el-form-item label="帖子内容:"  v-if="dialogStatus!='makeTop' " required>
           <div v-if="dialogStatus=='detail'" v-model="tempPost.postContent">
@@ -149,14 +186,18 @@
         </el-form-item>
         <el-form-item   v-if="dialogStatus!='makeTop' " v-model="tempPost.imgs" style="overflow: hidden;">
           <div v-if="dialogStatus=='detail'" >
-            <div  v-for="oneImg in tempPost.imgs" style="float: left; margin-left: 20px;">
+            <div   v-for="oneImg in tempPost.imgs"  style="float: left; margin-left: 20px;">
               <img :src="oneImg" style="width: 120px;" >
             </div>
           </div>
           <div v-else>
-            <div v-for="oneImg in tempPost.imgs" style="float: left;margin-left: 20px">
-              <el-checkbox-button><img :src="oneImg" style="width: 120px;"></el-checkbox-button>
-            </div>
+
+            <el-checkbox-group v-model="tempImg"  >
+                <el-checkbox-button v-for="oneImg in tempPost.imgs"  :label="oneImg" :key="oneImg" style="float: left;margin-left: 20px">
+                  <img :src="oneImg" style="width: 120px;" >
+                </el-checkbox-button>
+            </el-checkbox-group>
+            <el-button  size="mini" v-if="tempPost.imgs!=null"  @click="tempDelete">删除</el-button>
           </div>
       </el-form-item>
         <el-form-item label="位置:" required v-if="dialogStatus=='detail'" v-model="tempPost.postLocation">
@@ -220,6 +261,10 @@
           theOthers: ''
         },
         sorts: [],//分类列表
+        tempImg:[],
+        firstTag:[],
+        secondTag:[],
+        someTag:[],
         dialogStatus: 'detail',
         dialogFormVisible: false,
         textMap: {
@@ -246,7 +291,11 @@
           viewOff: '',
           tags: [],
           imgs: [],
-          tops: []
+          tops: [],
+          selectTag:[],
+          newTag:[],
+          deleteTag:[],
+          deleteImg:[]
         },
       }
     },
@@ -271,6 +320,38 @@
           this.sorts = data.list;
         })
       },
+      getFirstTag(){
+        this.api({
+          url:"/post/getFirstTag",
+          method:"get"
+        }).then(data=>{
+          this.firstTag = data.list;
+          console.log(this.firstTag);
+        })
+      },
+      getSecondTag(value) {
+        if (value != null && value != '') {
+          this.api({
+            url: "/post/getSomeTag",
+            method: "post",
+            data: {need: value}
+          }).then(data => {
+            this.secondTag = data.list;
+          })
+        }
+      },
+      getSomeTag(value) {
+
+        if (value != null && value != '') {
+          this.api({
+            url: "/post/getSomeTag",
+            method: "post",
+            data: {need: value}
+          }).then(data => {
+            this.someTag = data.list;
+          })
+        }
+      },
       getList() {
         //查询列表
         this.listLoading = true;
@@ -287,19 +368,15 @@
           this.list = data.list;
           for (let i = 0; i < data.list.length; i++) {
             let listTop = new Array();
-            let j=3;
+            let j = 3;
             let temp = parseInt(data.list[i].isTop);
             while (temp > 0) {
-              if(temp % 10 == 1)
+              if (temp % 10 == 1)
                 listTop.unshift(this.allTops[j]);
               j--;
-              temp = parseInt(temp/10);
+              temp = parseInt(temp / 10);
             }
             this.list[i].tops = listTop;
-            if (this.list[i].deleteState == 1)
-              this.list[i].deleteState = '正常';
-             else
-              this.list[i].deleteState = "隐藏";
             this.list[i].alike += '/' + this.list[i].likeOff;
             this.list[i].acollect += '/' + this.list[i].collectOff;
             this.list[i].aview += '/' + this.list[i].viewOff;
@@ -369,7 +446,12 @@
           this.tempPost.postLocation = oPost.postLocation;
           this.tempPost.postPhone = oPost.postPhone;
           this.tempPost.tags = oPost.tagList;
+          this.tempPost.selectTag = oPost.tagList;
+          this.tempPost.deleteTag =[];
+          this.tempPost.newTag = [];
           this.tempPost.imgs = oPost.imgList;
+          this.tempImg = [];
+          this.tempPost.deleteImg = [];
           this.tempPost.likeOff = oPost.likeOff;
           this.tempPost.collectOff = oPost.collectOff;
           this.tempPost.viewOff = oPost.viewOff;
@@ -379,7 +461,26 @@
         })
       },
       updatePost() {
-        //修改用户信息
+        console.log(this.tempPost.deleteImg);
+        for(let i=0;i<this.tempPost.tags.length;i++){
+          let st = 1;
+          for(let j=0;j<this.tempPost.selectTag.length;j++){
+            if(this.tempPost.tags[i]==this.tempPost.selectTag[j]) {
+               st=0;   break;
+            }
+          }
+          if(st==1) {this.tempPost.newTag.push(this.tempPost.tags[i]);}
+        }
+        for(let i=0;i<this.tempPost.selectTag.length;i++){
+          let sb = 1;
+          for(let j=0;j<this.tempPost.tags.length;j++){
+            if(this.tempPost.selectTag[i]==this.tempPost.tags[j]) {
+              sb=0;   break;
+            }
+          }
+          if(sb==1) this.tempPost.deleteTag.push(this.tempPost.selectTag[i])
+        }
+
         let _vue = this;
         this.api({
           url: "/post/updatePost",
@@ -405,7 +506,7 @@
         let post = this.list[$index];
         this.tempPost.postId = post.postId;
         this.tempPost.tops = post.tops;
-        this.tempPost.isTop= post.isTop;
+        this.tempPost.isTop = post.isTop;
         this.dialogStatus = "makeTop"
         this.dialogFormVisible = true
       },
@@ -472,28 +573,35 @@
           })
         })
       },
-      handleCheckAllChange(val) {
+      checkAllTop(val) {
         this.tempPost.tops = val ? this.allTops : [];
         this.isIndeterminate = false;
-        if(val==true)
-          this.tempPost.isTop=1111;
-        else this.tempPost.isTop=0;
+        if (val == true)
+          this.tempPost.isTop = 1111;
+        else this.tempPost.isTop = 0;
       },
-      handleCheckedCitiesChange(value) {
-
+      checkTop(value) {
         let checkedCount = value.length;
         this.checkAll = checkedCount === this.allTops.length;
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.allTops.length;
-        this.tempPost.isTop=0;
-        for(let i=0;i<value.length;i++) {
-          for(let j=0;j<4;j++){
-            if(value[i]==this.allTops[j])
-            {this.tempPost.isTop+=Math.pow(10,(3-j)); break;}
-
+        this.tempPost.isTop = 0;
+        for (let i = 0; i < value.length; i++) {
+          for (let j = 0; j < 4; j++) {
+            if (value[i] == this.allTops[j]) {
+              this.tempPost.isTop += Math.pow(10, (3 - j));
+              break;
+            }
           }
         }
+      },
+      tempDelete(){
+      for(let i=0;i<this.tempImg.length;i++){
+        for(let j=0;j<this.tempPost.imgs.length;j++)
+          if(this.tempImg[i]==this.tempPost.imgs[j])
+            this.tempPost.imgs.splice(j,1);
       }
-
+      this.tempPost.deleteImg=this.tempImg;
+      },
     }
   }
 </script>

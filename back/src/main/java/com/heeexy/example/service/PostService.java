@@ -67,6 +67,26 @@ public interface PostService {
      * @return com.alibaba.fastjson.JSONObject
      */
 
+    JSONObject getSomeTag(JSONObject jsonObject);
+    /*
+     * @Author lover_tyn
+     * @Description //TODO
+     * @Date  2019/6/27 10:57
+     * @Param [jsonObject]
+     * @return com.alibaba.fastjson.JSONObject
+     */
+
+    JSONObject getFirstTag();
+    /*
+     * @Author lover_tyn
+     * @Description //TODO
+     * @Date  2019/6/30 17:34
+     * @Param [jsonObject]
+     * @return com.alibaba.fastjson.JSONObject
+     */
+
+
+
 
 
 

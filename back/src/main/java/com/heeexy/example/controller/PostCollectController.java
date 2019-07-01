@@ -52,11 +52,11 @@ public class PostCollectController {
     }
 
     /**
-     * 删除帖子收藏
+     * 删除帖子收藏(假删除)
      */
 //    @RequiresPermissions("role:delete")
     @PostMapping("//updatePostCollectDisplay")
-    public JSONObject removeModuleDisplay(@RequestBody JSONObject requestJson) {
+    public JSONObject updatePostCollectDisplay(@RequestBody JSONObject requestJson) {
 //        CommonUtil.hasAllRequired(requestJson, "moduleID");
         return postCollectService.updatePostCollectDisplay(requestJson);
     }

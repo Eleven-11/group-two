@@ -7,10 +7,9 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="用户ID" prop="onUserName" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="帖子ID" prop="postContent" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="用户名" prop="onUserName" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="帖子内容" prop="postContent" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="更新时间" prop="updateTime" style="width: 60px;"></el-table-column>
 
      <!-- <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
@@ -55,7 +54,6 @@
           onUserName: '',
           postContent:'',
           createTime:'',
-          updateTime: '',
           browseId: ''
         }
       }

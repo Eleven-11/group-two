@@ -1,6 +1,10 @@
 package com.heeexy.example.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.heeexy.example.bean.BusinessSubway;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * @author: chengqiangyong
@@ -34,4 +38,12 @@ public interface BusinessSubwayService {
      * 在添加/修改帖子类别的时候要使用此方法
      */
     JSONObject getAllBusinessSubway();
+
+    /**
+     * 导入导出
+     */
+
+    JSONObject  batchImport(String fileName, MultipartFile file) throws Exception;
+
+    JSONObject  batchImports(String fileName, MultipartFile file) throws Exception;
 }

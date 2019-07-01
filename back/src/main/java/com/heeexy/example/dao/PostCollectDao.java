@@ -11,20 +11,14 @@ import java.util.List;
  * @vevsion 1.0
  */
 public interface PostCollectDao {
+
+    //   ************************ 后台************************
     /**
      * 新增收藏
      */
     int addPostCollect(JSONObject jsonObject);
 
-    /**
-     * 修改收藏的显示值(1改0)
-     */
-    int updatePostCollectDisplay(JSONObject jsonObject);
 
-    /**
-     * 修改收藏的显示值(0改1)
-     */
-    JSONObject updatePostCollectDisplayTwo(JSONObject jsonObject);
     /**
      * 修改收藏
      */
@@ -40,10 +34,34 @@ public interface PostCollectDao {
      */
     List<JSONObject> listPostCollect(JSONObject jsonObject);
 
+
+    /**
+     * 查询所有的模块
+     * 在添加/修改模块的时候要使用此方法
+     */
+    List<JSONObject> getAllPostCollect();
+
+    //   ************************ 共用************************
+
     /**
      * 校验帖子id和用户id是否已存在
      */
     int queryExistPostCollectPU(JSONObject jsonObject);
+    /**
+     * 查询收藏的的隐藏值
+     */
+    int queryExistPostCollectDisplay(JSONObject jsonObject);
+    /**
+     * 修改收藏的显示值(1改0)
+     */
+    int updatePostCollectDisplay(JSONObject jsonObject);
+    /**
+     * 修改收藏的显示值(0改1)
+     */
+    int updatePostCollectDisplayTwo(JSONObject jsonObject);
+
+    //   ************************ 小程序前台************************
+
     /**
      * 校验帖子id是否存在（在帖子表中）
      */
@@ -54,20 +72,12 @@ public interface PostCollectDao {
      */
     int queryExistPostCollectUserId(JSONObject jsonObject);
 
+    /**
+     * 返回用户收藏的所有帖子
+     */
+     List<JSONObject> getAllPostCollectByUserId(JSONObject jsonObject);
 
-    /**
-     * 校验收藏的的隐藏值
-     */
-    int queryExistPostCollectDisplay(JSONObject jsonObject);
-    /**
-     * 查询所有的模块
-     * 在添加/修改模块的时候要使用此方法
-     */
-    List<JSONObject> getAllPostCollect();
 
-    /**
-     * 查询所有的模块
-     * 在添加/修改模块的时候要使用此方法
-     */
-     List<JSONObject> listPostCollectId();
+
+
 }

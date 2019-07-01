@@ -1,6 +1,7 @@
 package com.heeexy.example.dao;
 
 import com.alibaba.fastjson.JSONObject;
+import com.heeexy.example.bean.BusinessSubway;
 
 import java.util.List;
 
@@ -52,6 +53,23 @@ public interface BusinessSubwayDao {
      * 查询帖子标签的名,根据id
      */
     int queryExistBusinessSubwayById(JSONObject jsonObject);
+
+    /**
+     * 上传导入
+     */
+    Integer selectSuperior(String businesssubwayname);
+
+    void updateUserByName(BusinessSubway businessSubway);
+
+    void addUser(BusinessSubway businessSubway);
+
+    int addbusinessSubwayName(String businessaubwayname);
+
+    int selectByName(Integer businessaubwayid);
+
+    int removeBusinessSubway();
+
+    int countbusinessSubwayName(String businessaubwayname);
 
 
 }

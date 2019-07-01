@@ -28,7 +28,7 @@
         </where>
         ) p
         LEFT JOIN tyn_post_tag pt ON p.postId=pt.post_id
-        left join cqy_business_subway bs on pt.id=bs.business_subway_id
+        left join cqy_business_subway bs on pt.tag_id=bs.business_subway_id
         ) op,tyn_post
         <where>
             op.postId=tyn_post.id
@@ -91,7 +91,7 @@
                  LIMIT #{offSet}, #{pageRow}
              ) p
             LEFT JOIN tyn_post_tag pt ON p.postId=pt.post_id
-            left join cqy_business_subway bs on pt.id=bs.business_subway_id
+            left join cqy_business_subway bs on pt.tag_id=bs.business_subway_id
             ) op,tyn_post
             <where>
             op.postId=tyn_post.id
@@ -160,7 +160,7 @@
                  WHERE id=#{postId} and user_id=post_owner and categories_id=post_sort
              ) p
             LEFT JOIN tyn_post_tag pt ON p.postId=pt.post_id
-            left join cqy_business_subway bs on pt.id=bs.business_subway_id
+            left join cqy_business_subway bs on pt.tag_id=bs.business_subway_id
             left join tyn_post_img pi on pi.post_id=p.postId
 
     </select>
@@ -189,5 +189,62 @@
         is_top = #{isTop}
         WHERE id = #{postId}
     </update>
+    
+    <select id="getSomeTag"   resultType="com.alibaba.fastjson.JSONObject">
+        select
+        business_subway_id    tagId,
+        business_subway_name  tagName
+        from cqy_business_subway c
+        where  c.Superior_id = (
+        select business_subway_id
+        from cqy_business_subway c
+        where c.business_subway_name = #{need}
+        )
+    </select>
 
+    <select id="getNewTagId"   resultType="com.alibaba.fastjson.JSONObject">
+        select business_subway_id tId,
+        Superior_id fId
+        from cqy_business_subway
+        <where>
+            <foreach collection="newTag" item="name" open="business_subway_name in(" close=")" separator=",">
+                #{name}
+            </foreach>
+        </where>
+    </select>
+
+    <insert id="addPostTag">
+        insert into tyn_post_tag
+        (post_id,tag_id,tag_type)
+        values
+        (#{postId},#{tId},#{fId})
+    </insert>
+
+    <select id="getDeleteTagId"   resultType="java.lang.Integer">
+        select
+        business_subway_id tId
+        from cqy_business_subway
+        <where>
+            <foreach collection="deleteTag" item="name" open="business_subway_name in(" close=")" separator=",">
+                #{name}
+            </foreach>
+        </where>
+    </select>
+
+    <delete id="deleteTag">
+        delete from tyn_post_tag
+        where tag_id=#{tId} and post_id=#{postId}
+    </delete>
+
+    <select id="getFirstTag" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        business_subway_name tagName
+        from cqy_business_subway
+        where Superior_id =0
+     </select>
+
+    <delete id="deleteImg">
+        delete from tyn_post_img
+        where img=#{img} and post_id=#{postId}
+    </delete>
 </mapper>

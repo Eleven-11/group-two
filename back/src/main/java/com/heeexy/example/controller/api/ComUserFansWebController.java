@@ -1,4 +1,4 @@
-package com.heeexy.example.controller;
+package com.heeexy.example.controller.api;
 
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.service.WxFansService;
@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.UUID;
 
 /**
  * @ Author     ：良优
@@ -17,60 +16,49 @@ import java.util.UUID;
  * @Version: 1.0
  */
 @RestController
-@RequestMapping("/comUserFans")
-public class comUserFansController {
+@RequestMapping("/comUserFansWeb")
+public class ComUserFansWebController {
     @Autowired
     private WxFansService wxFansService;
     /**
     *前台展示用户关注列表
     */
-  /*  @GetMapping("/listUserFans")
+    @GetMapping("/listUserFans")
     public JSONObject listUserFans(HttpServletRequest request) {
 
         return wxFansService.getListByUserId(CommonUtil.request2Json(request));
-    }*/
-    /**
-     * 后台添加用户关注
-     */
-    @RequiresPermissions("comuserfans:add")
-    @PostMapping("/addFans")
-    public JSONObject addFans(@RequestBody JSONObject requestJson) {
-
-        CommonUtil.hasAllRequired(requestJson, "onUserId,userId");
-        return wxFansService.addByFans(requestJson);
     }
     /**
-     * 后台修改用户关注状态
+     *前台展示用户关注计算数量
      */
-    @RequiresPermissions("comuserfans:delete")
-    @PostMapping("/updateUserFans")
-    public JSONObject updateFans(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "state,fansId");
-        return wxFansService.updateFansByUserId(requestJson);
+    @GetMapping("/userFansNumber")
+    public JSONObject UserFansNumber(HttpServletRequest request) {
+
+        return wxFansService.countByUserId(CommonUtil.request2Json(request));
     }
     /**
      * 前台添加用户关注
      */
- /*   @PostMapping("/addFansByUser")
+    @PostMapping("/addFansByUser")
     public JSONObject addFans1(@RequestBody JSONObject requestJson) {
 
         CommonUtil.hasAllRequired(requestJson, "onUserId,userId");
         return wxFansService.addByFans(requestJson);
-    }*/
+    }
     /**
-     * 前台修改用户关注状态
+     * 前台修改用户关注状态(取消)
      */
-   /* @PostMapping("/updateFansByUser")
+    @PostMapping("/updateFansByUser")
     public JSONObject updateFans1(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "state,fansId");
         return wxFansService.updateFansByUserId(requestJson);
-    }*/
+    }
     /**
      * 查找是否关注该用户信息
      */
-  /*  @PostMapping("/selectFans")
+    @PostMapping("/selectFans")
     public JSONObject selectFans(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "onUserId,userId");
         return wxFansService.getUserFans(requestJson);
-    }*/
+    }
 }

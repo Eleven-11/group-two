@@ -16,7 +16,6 @@
     </div>
 
 
-
     <div class="filter-container">
       <el-form>
         <el-form-item>
@@ -24,8 +23,15 @@
           <el-button type="primary" icon="el-icon-search" @click="getList" >搜索</el-button>
           <el-button type="primary" icon="plus" v-if="hasPerm('user:add')" @click="showCreate">添加</el-button>
         </el-form-item>
+        <label>选excel表</label>
+        <input class="form-input" type="file" name="filename" @change="getFile($event)" width="100px"></input>
+        <el-button type="primary" id="my_file"  @click="uploadFileMethod($event)">增量添加</el-button>
+        <el-button type="primary" icon="plus" @click="uploadFileCoverMethod($event)" >覆盖添加</el-button>
+        <el-button type="danger" icon="delete" @click="removeUser()" v-if="hasPerm('post:delete')">删除
+        </el-button>
       </el-form>
     </div>
+
 
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
@@ -34,15 +40,15 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="帖子主键" prop="businessSubwayId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="帖子标签" prop="businessSubwayName" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="上级的编号" prop="superiorId" style="width: 60px;">
         <template slot-scope="scope">
-          <el-tag type="primary"  v-if="scope.row.superiorId===0">无上级</el-tag>
-          <el-tag type="success" v-else-if="scope.row.superiorId===1">热门商圈</el-tag>
-          <el-tag type="success"  v-else-if="scope.row.superiorId===2">地铁周边</el-tag>
-          <el-tag type="info" v-text="scope.row.superiorId" v-else></el-tag>
+          <el-tag  v-if="scope.row.superiorId==0" style="margin-right: 3px;" type="danger">无上级</el-tag>
+          <div v-if="scope.row.superiorId!=1" v-for="tags in list" style="text-align: center">
+            <el-tag  v-if="scope.row.superiorId == tags.businessSubwayId" style="margin-right: 3px;" type="success" v-text="tags.businessSubwayName"></el-tag>
+          </div>
         </template>
+
       </el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" width="170" sortable></el-table-column>
       <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170" sortable></el-table-column>
@@ -210,6 +216,7 @@
         this.tempUser.superiorId= "";
         this.dialogStatus = "create"
         this.dialogFormVisible = true
+
       },
 
       showUpdate($index) {
@@ -227,7 +234,7 @@
       createUser() {
         //添加新用户
         this.api({
-          url: "/businesssubway/addBusinessSubway",
+          url: "/businesssubway/import",
           method: "post",
           data: this.tempUser
         }).then(() => {
@@ -258,6 +265,51 @@
           })
         })
       },
+
+      getFile(event) {
+        this.file = event.target.files[0];
+        console.log(this.file);
+      },
+      uploadFileMethod(event){
+        if(this.file == undefined){
+          this.$message.error("文件为空");
+
+        }else {
+          event.preventDefault();
+          let _vue = this;
+          let formdata = new FormData();
+          formdata.append('filename', this.file);
+          let headers = {headers: {"Content-Type": "multipart/form-data"}}
+          this.api.post("/businesssubway/import",formdata,headers).then(function(data){
+            _vue.getList();
+          },function(err){
+            console.log("err------: ");
+            console.log(err);
+          })
+        }
+      },
+      uploadFileCoverMethod(event){
+        if(this.file == undefined){
+          this.$message.error("文件为空");
+        }else {
+          event.preventDefault();
+          let _vue = this;
+          let formdata = new FormData();
+          formdata.append('filename', this.file);
+          let headers = {headers: {"Content-Type": "multipart/form-data"}}
+          this.api.post("/businesssubway/imports",formdata,headers).then(function(data){
+
+            _vue.getList();
+          },function(err){
+            console.log("err------: ");
+            console.log(err);
+          })
+        }
+
+
+      },
+
+
       removeUser($index) {
         let _vue = this;
         this.$confirm('确定删除此模块?', '提示', {

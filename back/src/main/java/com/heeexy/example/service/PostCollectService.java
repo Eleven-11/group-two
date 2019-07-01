@@ -9,6 +9,8 @@ import com.alibaba.fastjson.JSONObject;
  * @vevsion 1.0
  */
 public interface PostCollectService {
+
+    //   ************************ 后台************************
     /**
      * 新增收藏
      */
@@ -34,4 +36,17 @@ public interface PostCollectService {
      * 在添加/修改收藏的时候要使用此方法
      */
     JSONObject getAllPostCollect();
+
+    //   ************************ 小程序前台************************
+    /**
+     * 根据用户查询的收藏帖子
+     */
+    JSONObject getAllPostCollectByUserId(JSONObject jsonObject);
+
+    /**
+     * 修改帖子收藏状态值
+     */
+    JSONObject updatePostCollectDisplays(JSONObject jsonObject);
+
+
 }

@@ -21,7 +21,7 @@ public class PostController {
     private PostService postService;
 
     @GetMapping("/list")
-    public JSONObject listUser(HttpServletRequest request) {
+    public JSONObject list(HttpServletRequest request) {
         return postService.getAllPost(CommonUtil.request2Json(request));
     }
 
@@ -44,8 +44,8 @@ public class PostController {
 
     @PostMapping("/updatePost")
     public JSONObject updatePost(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "sortId,postContent, likeOff,collectOff,viewOff, postId");
-        System.out.println(requestJson);
+        CommonUtil.hasAllRequired(requestJson, "sortId,postContent, likeOff,collectOff,viewOff, postId,deleteTag,newTag");
+
         return postService.updatePost(requestJson);
     }
 
@@ -54,5 +54,18 @@ public class PostController {
         CommonUtil.hasAllRequired(requestJson, "isTop,postId");
         return postService.updatePostTop(requestJson);
     }
+
+    @PostMapping("/getSomeTag")
+    public JSONObject getSomeTag(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "need");
+        return postService.getSomeTag(requestJson);
+    }
+
+    @GetMapping("/getFirstTag")
+    public JSONObject getFirstTag(){
+        System.out.println("controller");
+        return postService.getFirstTag();
+    }
+
 
 }

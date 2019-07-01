@@ -17,7 +17,7 @@
       </el-table-column>
 
       <el-table-column align="center" label="用户名" prop="onUserName" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="帖子ID" prop="postId" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" v-if="false" label="帖子ID" prop="postId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="帖子内容" prop="postContent" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="帖子状态" prop="myPostState" style="width: 60px;">
         <template slot-scope="scope">

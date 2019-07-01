@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -54,6 +56,15 @@ public class PostCategorieController {
             localFile.createNewFile();
             file.transferTo(localFile);
         }
+        BufferedInputStream in = new BufferedInputStream( new FileInputStream( desFilePath ) );
+        Image bi = ImageIO.read(in);
+        BufferedImage tag = new BufferedImage( 50,50, BufferedImage.TYPE_INT_RGB);
+        tag.getGraphics().drawImage( bi,0,0,50,50,null );
+        localFile.delete();
+        BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream(desFilePath) );
+        ImageIO.write( tag,"JPG",out);
+        in.close();
+        out.close();
         map.put("code", 0);
         map.put("msg", "上传成功");
         map.put("url", desFilePath);

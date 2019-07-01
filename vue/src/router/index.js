@@ -156,6 +156,13 @@ export const asyncRouterMap = [
         meta: {title: '普通用户列表', icon: 'user'},
         menu: 'comuser'
       },
+    /*  {
+        path: 'comuserrole',
+        name: '权限管理',
+        component: _import('comUser/comuserrole'),
+        meta: {title: '权限管理', icon: 'password'},
+        menu: 'comrole'
+      },*/
       {
         path: 'fans',
         name: '用户关注列表',
