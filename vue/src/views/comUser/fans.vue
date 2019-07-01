@@ -25,7 +25,7 @@
       <el-table-column align="center" label="更新时间" prop="updateTime" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
-          <el-button type="danger" icon="delete" v-if="scope.row.state=='0'" @click="addfans(scope.$index)">关注</el-button>
+          <el-button type="primary" icon="delete" v-if="scope.row.state=='0'" @click="addfans(scope.$index)">关注</el-button>
           <el-button type="danger" icon="delete" v-if="scope.row.state=='1'" @click="removeUser(scope.$index)">取消</el-button>
         </template>
       </el-table-column>
