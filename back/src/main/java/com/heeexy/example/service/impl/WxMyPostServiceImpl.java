@@ -25,6 +25,7 @@ public class WxMyPostServiceImpl implements WxMyPostService {
     @Override
     public JSONObject getMyPostList(JSONObject jsonObject) {
         //后台数据显示
+        CommonUtil.fillPageParam(jsonObject);
         List<JSONObject> list = wxMyPostDao.getMyPostList(jsonObject);
         int count = wxMyPostDao.countMyPost(jsonObject);
         return CommonUtil.successPage(jsonObject, list, count);

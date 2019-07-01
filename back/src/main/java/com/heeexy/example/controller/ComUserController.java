@@ -35,6 +35,11 @@ public class ComUserController {
     /**
      * 展示用户列表
      */
+    /**
+     * 展示用户列表
+     * @param request
+     * @return
+     */
     @RequiresPermissions("comuser:list")
     @GetMapping("/listUser")
     public JSONObject getListUser( HttpServletRequest request) {

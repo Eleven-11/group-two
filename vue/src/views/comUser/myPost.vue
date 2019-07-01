@@ -1,9 +1,18 @@
 <template>
   <div class="app-container">
+    <div class="filter-container">
+      <el-form >
+        <el-form-item label="用户名"  >
+          <el-input type="text" v-model="userName"  onkeyup="value=value.replace(/[^\w\u4E00-\u9FA5]/g, '')" style="width: 200px;margin-right: 30px;">
+          </el-input>
+          <el-button type="primary"  icon="el-icon-search"  @click="selectUser">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
 <el-row>
   <el-col>
     <el-button type="primary" icon="delete" :disabled="this.checkBoxData.length===0"
-               @click="deletePost(checkBoxData)">选择删除
+               @click="deletePost(checkBoxData)">选择修改
     </el-button>
   </el-col>
 </el-row>
@@ -32,7 +41,7 @@
       <el-table-column align="center" label="创建时间" prop="createTime" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
-          <el-button type="danger" icon="delete"@click="removeUser(scope.$index)">删除</el-button>
+          <el-button type="danger" icon="delete"@click="removeUser(scope.$index)">修改</el-button>
         </template>
       </el-table-column>
 
@@ -57,6 +66,7 @@
   export default {
     data() {
       return {
+        userName:"",//搜索框中信息
         tableData:[],
         checkBoxData:[],//被选中的记录数据
         ids:[],
@@ -64,6 +74,7 @@
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
         listQuery: {
+          userName:this.userName,//获取输入框的值
           pageNum: 1,//页码
           pageRow: 50,//每页条数
         },
@@ -91,43 +102,9 @@
       ])
     },
     methods: {
-      deletePost(rows){
-        //批量删除
-          let _vue = this;
-        _vue.$confirm('是否确认此操作?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            rows.forEach(element =>{
-              _vue.ids.push(element);
-              let param = {
-                "posts":_vue.ids,
-              }
-              _vue.api({
-                url: "/comUserPost/updateUserPostMany",
-                method: "post",
-                data: param
-              }).then(() => {
-                _vue.getList()
-              }).catch(() => {
-                _vue.$message.error("删除失败")
-              })
-            })
-          console.log(this.postId);
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消'
-            });
-          });
-      },
-      changeFun(val) {
-        console.log("changeFun",val)
-        this.checkBoxData = val;
-      },
       getList() {
         //查询列表
+        this.listQuery.userName = this.userName;
         this.listLoading = true;
         this.api({
           url: "/comUser/listUserPost",
@@ -159,37 +136,42 @@
         return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
       },
       selectUser(){
-
         this.getList();
       },
-      showUpdate($index) {
-        let user = this.list[$index];
-
-        this.dialogStatus = "update"
-        this.dialogFormVisible = true
-      },
-      updateUser() {
-        //修改用户信息
+      deletePost(rows){
+        //批量删除
         let _vue = this;
-        this.api({
-          url: "/comUser/updateUserPost",
-          method: "post",
-          data: this.tempMyPost
+        _vue.$confirm('是否确认此操作?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
         }).then(() => {
-          let msg = "修改成功";
-          this.dialogFormVisible = false
-          if (this.fansId === this.tempFans.fansId) {
-            msg = '修改成功,部分信息重新登录后生效'
-          }
-          this.$message({
-            message: msg,
-            type: 'success',
-            duration: 1 * 1000,
-            onClose: () => {
-              _vue.getList();
+          rows.forEach(element =>{
+            _vue.ids.push(element);
+            let param = {
+              "posts":_vue.ids,
             }
+            _vue.api({
+              url: "/comUserPost/updateUserPostMany",
+              method: "post",
+              data: param
+            }).then(() => {
+              _vue.getList()
+            }).catch(() => {
+              _vue.$message.error("删除失败")
+            })
           })
-        })
+          console.log(this.postId);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
+      },
+      changeFun(val) {
+        console.log("changeFun",val)
+        this.checkBoxData = val;
       },
       removeUser($index) {
         let _vue = this;

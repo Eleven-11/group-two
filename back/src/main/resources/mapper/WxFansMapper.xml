@@ -19,7 +19,7 @@
           DATE_FORMAT(fans.update_time, '%Y.%m.%d %T') updateTime
           from  fly_fans fans,fly_user users,fly_user u
             where users.user_id =fans.onuser_id and  u.user_id =fans.user_id and
-            fans.onuser_id =#{onUserId} and fans.state = 1;
+            fans.onuser_id =#{onUserId} and fans.state = 1
     </select>
 
     <!--查找用户是否有关注信息-->
@@ -42,7 +42,13 @@
     DATE_FORMAT(fans.create_time, '%Y.%m.%d %T') createTime,
     DATE_FORMAT(fans.update_time, '%Y.%m.%d %T') updateTime
       from  fly_fans fans,fly_user users,fly_user u
-        where users.user_id =fans.onuser_id and  u.user_id =fans.user_id
+        <where>
+           users.user_id =fans.onuser_id and  u.user_id =fans.user_id
+            <if test="userName != null and userName != ''">
+                and  users.user_name LIKE CONCAT(CONCAT('%',#{userName}),'%')
+            </if>
+        </where>
+
         LIMIT #{offSet}, #{pageRow};
     </select>
     <!--计算用户数(后台)-->

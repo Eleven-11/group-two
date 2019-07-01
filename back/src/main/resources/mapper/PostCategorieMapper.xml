@@ -81,10 +81,6 @@
         where categories_name= #{categoriesName} and categories_id != #{categoriesId}
     </select>
 
-
-
-
-
     <!--前台-->
     <!--查看所有模块，不包含隐藏的-->
     <select id="RgetAllPostCategorie" resultType="com.alibaba.fastjson.JSONObject">
