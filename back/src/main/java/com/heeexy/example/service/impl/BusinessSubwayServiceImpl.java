@@ -30,8 +30,11 @@ import java.util.List;
  */
 @Service
 public class BusinessSubwayServiceImpl implements BusinessSubwayService {
+
     @Autowired
     private BusinessSubwayDao businessSubwayDao;
+
+//************************ 小程序前台************************
     /**
      * 新增帖子标签
      * @param jsonObject  businessSubwayName(标签名),superiorId(上级id)
@@ -274,6 +277,12 @@ public class BusinessSubwayServiceImpl implements BusinessSubwayService {
         }
             return  CommonUtil.successJson();
         }
+//************************ 小程序前台************************
+    @Override
+    public JSONObject FgetAllBusinessSubway() {
+        List<JSONObject> roles = businessSubwayDao.FgetAllBusinessSubway();
+        return CommonUtil.successJson(roles);
+    }
 
 
 }

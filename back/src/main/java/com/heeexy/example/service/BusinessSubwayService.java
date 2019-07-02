@@ -14,6 +14,7 @@ import java.util.List;
  */
 public interface BusinessSubwayService {
 
+//************************ 后台************************
     /**
      * 新增帖子标签
      * @param jsonObject  businessSubwayName(标签名),superiorId(上级id)
@@ -61,4 +62,11 @@ public interface BusinessSubwayService {
      * @throws Exception
      */
     JSONObject  batchImports(String fileName, MultipartFile file) throws Exception;
+
+//************************ 小程序前台************************
+    /**
+     *查询所有的帖子标签
+     * @return
+     */
+    JSONObject FgetAllBusinessSubway();
 }
