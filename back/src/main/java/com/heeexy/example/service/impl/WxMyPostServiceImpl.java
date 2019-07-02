@@ -59,5 +59,27 @@ public class WxMyPostServiceImpl implements WxMyPostService {
         return CommonUtil.successJson();
     }
 
+    /**
+     * 某用户收藏帖子列表
+     * @param jsonObject (onUserId)
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject getPostCollectListByUserId(JSONObject jsonObject) {
+        List<JSONObject> postCollectListByUserId = wxMyPostDao.getPostCollectListByUserId(jsonObject);
+        return CommonUtil.successPage(postCollectListByUserId);
+    }
+
+    /**
+     * 某用户收藏帖子数
+     * @param jsonObject (onUserId)
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject countPostCollectByUserId(JSONObject jsonObject) {
+        List<JSONObject> jsonObjects = wxMyPostDao.countPostCollectByUserId(jsonObject);
+        return CommonUtil.successPage(jsonObjects);
+    }
+
 
 }

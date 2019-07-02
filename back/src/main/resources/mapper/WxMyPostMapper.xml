@@ -53,4 +53,14 @@
             </if>
 
     </update>
+    <!--前台收藏帖子列表-->
+    <select id="getPostCollectListByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select c.post_id postId, post.post_content postContent,post.post_owner userId,DATE_FORMAT(c.create_time, '%Y.%m.%d %T')  createTime
+        from cqy_post_collect c,tyn_post post
+        where post.id=c.post_id and c.user_id =#{onUserId} and c.display = 0
+    </select>
+    <!--某用户收藏帖子计数-->
+    <select id="countPostCollectByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select count(0) collectNumber from cqy_post_collect c  where c.user_id =#{onUserId} and c.display =0
+    </select>
 </mapper>
