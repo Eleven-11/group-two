@@ -70,7 +70,16 @@ public class PostCollectServiceImpl implements PostCollectService {
 //        postCollectDao.updatePostCollect( jsonObject );
 //        return CommonUtil.successJson();
 //    }
-
+    /**
+     * 查询所有的帖子收藏
+     * 在添加/修改帖子收藏的时候要使用此方法
+     * @return
+     */
+    @Override
+    public JSONObject getAllPostCollect() {
+        List<JSONObject> roles = postCollectDao.getAllPostCollect();
+        return CommonUtil.successJson(roles);
+    }
     /**
      * 查询帖子收藏列表
      * @param jsonObject
@@ -84,16 +93,6 @@ public class PostCollectServiceImpl implements PostCollectService {
         return CommonUtil.successPage( jsonObject,list,count );
     }
 
-    /**
-     * 查询所有的帖子收藏
-     * 在添加/修改帖子收藏的时候要使用此方法
-     * @return
-     */
-    @Override
-    public JSONObject getAllPostCollect() {
-        List<JSONObject> roles = postCollectDao.getAllPostCollect();
-        return CommonUtil.successJson(roles);
-    }
 
     //   ************************ 小程序前台************************
 
@@ -104,10 +103,21 @@ public class PostCollectServiceImpl implements PostCollectService {
      */
     @Override
     public JSONObject getAllPostCollectByUserId(JSONObject jsonObject) {
-        List<JSONObject> roles = postCollectDao.getAllPostCollectByUserId( jsonObject );
+        List<JSONObject> roles = postCollectDao.getAllPostCollectByUserId(jsonObject);
+        for (JSONObject role : roles) {
+            Object postId = role.get("postId");
+            List<JSONObject> allCommentByPostId = postCollectDao.getAllCommentByPostId(postId);
+            List<JSONObject> allPostImgByPostId = postCollectDao.getAllPostImgByPostId(postId);
+            for (JSONObject object : allCommentByPostId) {
+                Object commentId = object.get( "commentId" );
+                List<JSONObject> allCommentByToCommentId = postCollectDao.getAllCommentByToCommentId( commentId );
+                object.put( "Comments",allCommentByToCommentId);
+            }
+            role.put( "Comment",allCommentByPostId);
+            role.put( "img",allPostImgByPostId);
+        }
         return CommonUtil.successJson(roles);
     }
-
     /**
      * 修改帖子收藏状态值
      * @param jsonObject  postId(帖子id),userId(用户id)

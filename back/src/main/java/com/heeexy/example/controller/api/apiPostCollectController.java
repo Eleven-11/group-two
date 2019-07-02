@@ -6,6 +6,8 @@ import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author: chenqiangyong
  * @description:
@@ -20,15 +22,15 @@ public class apiPostCollectController {
 
     /**
      * 根据用户查询所有的帖子收藏
-     * @param jsonObject userId(用户id)
+     * @param requestJson userId(用户id)
      * @return
      */
 //    @RequiresPermissions(value = {"user:add", "user:update"}, logical = Logical.OR)
-    @GetMapping("/getAllPostCollect")
-    public JSONObject getAllRoles(JSONObject jsonObject) {
-        return postCollectService.getAllPostCollectByUserId( jsonObject );
+    @PostMapping("/getAllPostCollect")
+    public JSONObject getAllRoles(@RequestBody  JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "userId");
+        return postCollectService.getAllPostCollectByUserId(requestJson);
     }
-
     /**
      * 修改帖子收藏
      * @param requestJson postId(帖子id),userId(用户id)

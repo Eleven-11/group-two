@@ -42,7 +42,6 @@ public class PostCollectController {
         CommonUtil.hasAllRequired(requestJson, "postId,userId");
         return postCollectService.addPostCollect(requestJson);
     }
-
 //    /**
 //     * 修改帖子收藏
 //     */
@@ -52,7 +51,6 @@ public class PostCollectController {
 //        CommonUtil.hasAllRequired(requestJson, "postId,userId");
 //        return postCollectService.updatePostCollect(requestJson);
 //    }
-
     /**
      * 修改帖子收藏状态
      * @param requestJson  postCollectId(收藏id),display(状态值)
