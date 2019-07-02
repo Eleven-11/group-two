@@ -108,6 +108,7 @@ public class PostCollectServiceImpl implements PostCollectService {
             Object postId = role.get("postId");
             List<JSONObject> allCommentByPostId = postCollectDao.getAllCommentByPostId(postId);
             List<JSONObject> allPostImgByPostId = postCollectDao.getAllPostImgByPostId(postId);
+            List<JSONObject> allLikeByPostId = postCollectDao.getAllLikeByPostId( postId );
             for (JSONObject object : allCommentByPostId) {
                 Object commentId = object.get( "commentId" );
                 List<JSONObject> allCommentByToCommentId = postCollectDao.getAllCommentByToCommentId( commentId );
@@ -115,6 +116,7 @@ public class PostCollectServiceImpl implements PostCollectService {
             }
             role.put( "Comment",allCommentByPostId);
             role.put( "img",allPostImgByPostId);
+            role.put( "like",allLikeByPostId);
         }
         return CommonUtil.successJson(roles);
     }

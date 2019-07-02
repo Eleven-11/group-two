@@ -108,6 +108,13 @@ public interface PostCollectDao {
     List<JSONObject> getAllPostImgByPostId(Object postId);
 
     /**
+     * 帖子的点赞
+     * @param postId
+     * @return
+     */
+    List<JSONObject> getAllLikeByPostId(Object postId);
+
+    /**
      * 返回用户收藏的所有帖子的回复消息
      * @param  postId
      * @return
@@ -120,5 +127,8 @@ public interface PostCollectDao {
      * @return
      */
     List<JSONObject> getAllCommentByToCommentId(Object commentId);
+
+
+
 
 }
