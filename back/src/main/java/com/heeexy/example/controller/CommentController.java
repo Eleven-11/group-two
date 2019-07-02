@@ -39,6 +39,8 @@ public class CommentController {
 
     /**
      * 获取某个帖子的评论
+     * @param request
+     * @return
      */
     @GetMapping("getCommentByPostId")
     public JSONObject getCommentByPostId(HttpServletRequest request){

@@ -15,7 +15,7 @@
         categories_name                         sortName
         FROM tyn_post,fly_user,cqy_post_categories
         <where>
-            delete_state in (1,2)  and user_id=post_owner and categories_id=post_sort
+            delete_state in (1,0)  and user_id=post_owner and categories_id=post_sort
             <if test="theStart!= null and theStart != ''">
                 and post_time&gt;=#{theStart}
             </if>
@@ -77,7 +77,7 @@
                      view_offset			                 viewOff
                  FROM tyn_post,fly_user,cqy_post_categories
         <where>
-            delete_state in (1,2)  and user_id=post_owner and categories_id=post_sort
+            delete_state in (1,0)  and user_id=post_owner and categories_id=post_sort
             <if test="theStart!= null and theStart != ''">
                 and post_time&gt;=#{theStart}
             </if>
@@ -195,7 +195,7 @@
         business_subway_id    tagId,
         business_subway_name  tagName
         from cqy_business_subway c
-        where  c.Superior_id = (
+        where  c.superior_id = (
         select business_subway_id
         from cqy_business_subway c
         where c.business_subway_name = #{need}
@@ -204,7 +204,7 @@
 
     <select id="getNewTagId"   resultType="com.alibaba.fastjson.JSONObject">
         select business_subway_id tId,
-        Superior_id fId
+        superior_id fId
         from cqy_business_subway
         <where>
             <foreach collection="newTag" item="name" open="business_subway_name in(" close=")" separator=",">
@@ -217,7 +217,7 @@
         insert into tyn_post_tag
         (post_id,tag_id,tag_type)
         values
-        (#{postId},#{tId},#{fId})
+        (#{postId},#{tId},(SELECT superior_id FROM cqy_business_subway WHERE business_subway_id = #{fId}))
     </insert>
 
     <select id="getDeleteTagId"   resultType="java.lang.Integer">
@@ -240,7 +240,7 @@
         select
         business_subway_name tagName
         from cqy_business_subway
-        where Superior_id =0
+        where superior_id =0
      </select>
 
     <delete id="deleteImg">

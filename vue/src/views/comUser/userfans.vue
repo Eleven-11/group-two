@@ -51,11 +51,14 @@
     <div v-for="item1 in userpostNumber">
       <p>帖子数：{{ item1.postNumber}}</p>
     </div>
-    <!--<div v-for="item1 in userFansNumber">
-      <p>粉丝数：{{ item1.fansNumber}}</p>
-      <p>发帖数量：{{ item1.postNumber}}</p>
-      <p>关注数量：{{item1.fNumber}}</p>
-    </div>-->
+    <div v-for="item1 in MyCollectPostNumber">
+      <p>收藏数：{{ item1.collectNumber}}</p>
+    </div>
+    <p>============收藏帖子=============</p>
+    <div v-for="item1 in UserCollectPost">
+      <p>收藏帖子内容：{{ item1.postContent}}</p>
+      <p>收藏帖子时间：{{ item1.createTime}}</p>
+    </div>
   <p>==============点赞数============</p>
     <!--<div v-for="item2 in userLikeNumber">
       <p>点赞数量：{{ item2.likeNumber}}</p>
@@ -76,6 +79,8 @@
           userFansNumber:[],
           userLikeNumber:[],
           userpostNumber:[],
+          UserCollectPost:[],
+          MyCollectPostNumber:[],
         }
       },
       created() {
@@ -88,7 +93,8 @@
         this.getMyLikeNumber();
         this.getFansNumber();
         this.getpostNumber();
-      /*  this.getCellection();*/
+      this.UserCollectPostNumber();
+      this. getUserCollectPost();
       },
       methods: {
         /*粉丝列表*/
@@ -98,7 +104,7 @@
             }
             console.log(param1);
             this.api({
-              url: "/comUserFansWeb/listUserFans",
+              url: "/api/comUserFansWeb/listUserFans",
               method: "get",
               params: param1
             }).then(data => {
@@ -112,7 +118,7 @@
           }
           console.log(param2);
           this.api({
-            url: "/comUserLikeWeb/listUserLike",
+            url: "/api/comUserLikeWeb/listUserLike",
             method: "get",
             params: param2
           }).then(data => {
@@ -126,11 +132,39 @@
           }
           console.log(param3);
           this.api({
-            url: "/comUserPostWeb/listUserPostById",
+            url: "/api/comUserPostWeb/listUserPostById",
             method: "get",
             params: param3
           }).then(data => {
             this.onUserPost = data.list;
+          })
+        },
+        /*收藏帖子记录*/
+        getUserCollectPost() {
+          let param = {
+            "onUserId":this.$route.query.onUserId,
+          }
+          console.log(param);
+          this.api({
+            url: "/api/comUserPostWeb/ListUserCollectPost",
+            method: "get",
+            params: param
+          }).then(data => {
+            this.UserCollectPost = data.list;
+          })
+        },
+        /*收藏帖子记录计数*/
+        UserCollectPostNumber() {
+          let param = {
+            "onUserId":this.$route.query.onUserId,
+          }
+          console.log(param);
+          this.api({
+            url: "/api/comUserPostWeb/countMyCollectPostByUserId",
+            method: "get",
+            params: param
+          }).then(data => {
+            this.MyCollectPostNumber = data.list;
           })
         },
         /*浏览记录*/
@@ -140,7 +174,7 @@
           }
           console.log(param4);
           this.api({
-            url: "/comUserBrowseWeb/listBrowseByUser",
+            url: "/api/comUserBrowseWeb/listBrowseByUser",
             method: "get",
             params: param4
           }).then(data => {
@@ -154,7 +188,7 @@
           }
           console.log(param5);
           this.api({
-            url: "/comUserCommentWeb/listUserCommentByUserId",
+            url: "/api/comUserCommentWeb/listUserCommentByUserId",
             method: "get",
             params: param5
           }).then(data => {
@@ -168,7 +202,7 @@
           }
           console.log(param6);
           this.api({
-            url: "/comUserLikeWeb/userLikeNumber",
+            url: "/api/comUserLikeWeb/userLikeNumber",
             method: "get",
             params: param6
           }).then(data => {
@@ -184,7 +218,7 @@
           }
           console.log(param9);
           this.api({
-            url: "/comUserPostWeb/countMyPostNumber",
+            url: "/api/comUserPostWeb/countMyPostNumber",
             method: "get",
             params: param9
           }).then(data => {
@@ -198,7 +232,7 @@
           }
           console.log(param7);
           this.api({
-            url: "/comUserFansWeb/userFansNumber",
+            url: "/api/comUserFansWeb/userFansNumber",
             method: "get",
             params: param7
           }).then(data => {
@@ -212,7 +246,7 @@
           }
           console.log(param8);
           this.api({
-            url: "/comUserWeb/getUserFans",
+            url: "/api/comUserWeb/getUserFans",
             method: "get",
             params: param8
           }).then(data => {

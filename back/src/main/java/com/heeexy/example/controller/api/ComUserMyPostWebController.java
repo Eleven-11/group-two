@@ -18,7 +18,7 @@ import java.util.Map;
  * @Version: 1.0
  */
 @RestController
-@RequestMapping("/comUserPostWeb")
+@RequestMapping("/api/comUserPostWeb")
 public class ComUserMyPostWebController {
     @Autowired
     private WxMyPostService wxMyPostService;
@@ -58,5 +58,22 @@ public class ComUserMyPostWebController {
     public JSONObject countMyPostByUserId(HttpServletRequest request){
 
         return wxMyPostService.countMyPostByUserId(CommonUtil.request2Json(request));
+    }
+    /**
+     * 网页展示用户收藏帖子列表
+     */
+    @GetMapping("/ListUserCollectPost")
+    public JSONObject getListUserCollectPost(HttpServletRequest request) {
+
+        return wxMyPostService.getPostCollectListByUserId(CommonUtil.request2Json(request));
+
+    }
+    /**
+     * 网页就算某用户发帖数量
+     */
+    @GetMapping("/countMyCollectPostByUserId")
+    public JSONObject countMyCollectPostByUserId(HttpServletRequest request){
+
+        return wxMyPostService.countPostCollectByUserId(CommonUtil.request2Json(request));
     }
 }

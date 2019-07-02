@@ -19,14 +19,25 @@ import java.util.List;
 public class WxMyCommentServiceImpl implements WxMyCommentService {
     @Autowired
     private WxMyCommentDao wxMyCommentDao;
+
+    /**
+     * 后台表格显示评论列表
+     * @param jsonObject (offSet,pageRow)
+     * @return JSONObject
+     */
     @Override
     public JSONObject getMyCommentList(JSONObject jsonObject) {
         //后台网页显示
+        CommonUtil.fillPageParam(jsonObject);
         List<JSONObject> list = wxMyCommentDao.getMyCommentList(jsonObject);
         int count = wxMyCommentDao.countMyComment(jsonObject);
         return CommonUtil.successPage(jsonObject, list, count);
     }
-
+    /**
+     * 前台某用户评论列表
+     * @param jsonObject (onUserId)
+     * @return JSONObject
+     */
     @Override
     public JSONObject getMyCommentListById(JSONObject jsonObject) {
         //前台网页显示
