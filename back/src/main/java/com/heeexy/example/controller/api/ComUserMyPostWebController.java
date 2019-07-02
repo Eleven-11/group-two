@@ -18,7 +18,7 @@ import java.util.Map;
  * @Version: 1.0
  */
 @RestController
-@RequestMapping("/comUserPostWeb")
+@RequestMapping("/api/comUserPostWeb")
 public class ComUserMyPostWebController {
     @Autowired
     private WxMyPostService wxMyPostService;

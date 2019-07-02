@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
  * @ Version: 1.0
  */
 @RestController
-@RequestMapping("/comUserCommentWeb")
+@RequestMapping("/api/comUserCommentWeb")
 public class ComUserCommentWebController {
     @Autowired
     private WxMyCommentService wxMyCommentService;

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Version: 1.0
  */
 @RestController
-@RequestMapping("/comUserFansWeb")
+@RequestMapping("/api/comUserFansWeb")
 public class ComUserFansWebController {
     @Autowired
     private WxFansService wxFansService;

@@ -98,7 +98,7 @@
             }
             console.log(param1);
             this.api({
-              url: "/comUserFansWeb/listUserFans",
+              url: "/api/comUserFansWeb/listUserFans",
               method: "get",
               params: param1
             }).then(data => {
@@ -112,7 +112,7 @@
           }
           console.log(param2);
           this.api({
-            url: "/comUserLikeWeb/listUserLike",
+            url: "/api/comUserLikeWeb/listUserLike",
             method: "get",
             params: param2
           }).then(data => {
@@ -126,7 +126,7 @@
           }
           console.log(param3);
           this.api({
-            url: "/comUserPostWeb/listUserPostById",
+            url: "/api/comUserPostWeb/listUserPostById",
             method: "get",
             params: param3
           }).then(data => {
@@ -140,7 +140,7 @@
           }
           console.log(param4);
           this.api({
-            url: "/comUserBrowseWeb/listBrowseByUser",
+            url: "/api/comUserBrowseWeb/listBrowseByUser",
             method: "get",
             params: param4
           }).then(data => {
@@ -154,7 +154,7 @@
           }
           console.log(param5);
           this.api({
-            url: "/comUserCommentWeb/listUserCommentByUserId",
+            url: "/api/comUserCommentWeb/listUserCommentByUserId",
             method: "get",
             params: param5
           }).then(data => {
@@ -168,7 +168,7 @@
           }
           console.log(param6);
           this.api({
-            url: "/comUserLikeWeb/userLikeNumber",
+            url: "/api/comUserLikeWeb/userLikeNumber",
             method: "get",
             params: param6
           }).then(data => {
@@ -184,7 +184,7 @@
           }
           console.log(param9);
           this.api({
-            url: "/comUserPostWeb/countMyPostNumber",
+            url: "/api/comUserPostWeb/countMyPostNumber",
             method: "get",
             params: param9
           }).then(data => {
@@ -198,7 +198,7 @@
           }
           console.log(param7);
           this.api({
-            url: "/comUserFansWeb/userFansNumber",
+            url: "/api/comUserFansWeb/userFansNumber",
             method: "get",
             params: param7
           }).then(data => {
@@ -212,7 +212,7 @@
           }
           console.log(param8);
           this.api({
-            url: "/comUserWeb/getUserFans",
+            url: "/api/comUserWeb/getUserFans",
             method: "get",
             params: param8
           }).then(data => {

@@ -131,13 +131,7 @@ public class ComUserController {
         CommonUtil.hasAllRequired(requestJson, " userId,userState");
         return wxUserService.updateStateByUserId(requestJson);
     }
-    /**
-     * 用户状态列表
-     */
-    @GetMapping("/getAllState")
-    public JSONObject listRole() {
-        return wxUserService.listUserState();
-    }
+
 
     /**
      * 计算用户粉丝数
