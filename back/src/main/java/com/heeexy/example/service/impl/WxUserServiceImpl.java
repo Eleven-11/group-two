@@ -28,9 +28,11 @@ public class WxUserServiceImpl implements WxUserService {
      */
     @Override
     public JSONObject getListUser(JSONObject jsonObject) {
-        //查找所有用户
+
         CommonUtil.fillPageParam(jsonObject);
+        //统计用户数量
         int count = wxUserDao.countUser(jsonObject);
+        //查找所有用户
         List<JSONObject> list = wxUserDao.getListUser(jsonObject);
         return CommonUtil.successPage(jsonObject, list, count);
     }
@@ -78,7 +80,6 @@ public class WxUserServiceImpl implements WxUserService {
         wxUserDao.updateStateByUserId(jsonObject);
         return CommonUtil.successJson();
     }
-
     /**
      * 查找某个用户
      * @param jsonObject (onUserId)

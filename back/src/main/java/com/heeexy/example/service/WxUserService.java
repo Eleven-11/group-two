@@ -77,6 +77,13 @@ public interface WxUserService {
      */
     JSONObject countFansByUserId(JSONObject jsonObject);
     /**
+     * @methodsName: getDetailUserById
+     * @description: 用户详情发帖计数和粉丝计数
+     * @param:  JSONObject
+     * @return: JSONObject
+     */
+   /* JSONObject getDetailUserById(JSONObject jsonObject);*/
+    /**
      * @methodsName: updateFansById
      * @description: 修改真实粉丝数
      * @param:  Map

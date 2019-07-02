@@ -137,6 +137,7 @@ public class ComUserController {
         return wxUserService.updateStateByUserId(requestJson);
     }
 
+
     /**
      * 计算用户粉丝数
       */

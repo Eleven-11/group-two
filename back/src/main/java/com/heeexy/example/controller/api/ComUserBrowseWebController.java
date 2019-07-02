@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Version: 1.0
  */
 @RestController
-@RequestMapping("/comUserBrowseWeb")
+@RequestMapping("/api/comUserBrowseWeb")
 public class ComUserBrowseWebController {
 
     @Autowired
