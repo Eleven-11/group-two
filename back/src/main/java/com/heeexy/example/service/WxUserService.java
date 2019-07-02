@@ -29,7 +29,7 @@ public interface WxUserService {
      * @param:  JSONObject
      * @return: JSONObject
      */
-    JSONObject getMaxNumber(JSONObject jsonObject);
+  /*  JSONObject getMaxNumber(JSONObject jsonObject);*/
 
     /**
      * @methodsName: addByUser
@@ -75,7 +75,7 @@ public interface WxUserService {
      * @param:
      * @return: JSONObject
      */
-    JSONObject listUserState();
+   /* JSONObject listUserState();*/
     /**
      * @methodsName: countFansByUserId
      * @description: 计算用户粉丝数
@@ -89,7 +89,7 @@ public interface WxUserService {
      * @param:  JSONObject
      * @return: JSONObject
      */
-    JSONObject getDetailUserById(JSONObject jsonObject);
+   /* JSONObject getDetailUserById(JSONObject jsonObject);*/
     /**
      * @methodsName: updateFansById
      * @description: 修改真实粉丝数
