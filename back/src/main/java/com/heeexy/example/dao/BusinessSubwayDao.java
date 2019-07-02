@@ -12,6 +12,9 @@ import java.util.List;
  * @vevsion 1.0
  */
 public interface BusinessSubwayDao {
+
+
+//************************ 后台************************
     /**
      * 新增帖子标签
      * @param jsonObject  businessSubwayName(标签名),superiorId(上级id)
@@ -43,6 +46,12 @@ public interface BusinessSubwayDao {
      */
     List<JSONObject> listBusinessSubway(JSONObject jsonObject);
     /**
+     *查询所有的帖子标签
+     * 在添加/修改帖子标签的时候要使用此方法
+     * @return
+     */
+    List<JSONObject> getAllBusinessSubway();
+    /**
      * 校验帖子类标签是否已存在
      * @param jsonObject businessSubwayName(标签名)
      * @return
@@ -55,12 +64,7 @@ public interface BusinessSubwayDao {
      * @return
      */
     int queryExistBusinessSubwayDisplay(JSONObject jsonObject);
-    /**
-     *查询所有的帖子标签
-     * 在添加/修改帖子标签的时候要使用此方法
-     * @return
-     */
-    List<JSONObject> getAllBusinessSubway();
+
     /**
      * 查询帖子标签的上级id,根据名
      * @param jsonObject businessSubwayName(标签名)
@@ -97,5 +101,9 @@ public interface BusinessSubwayDao {
      */
     int countbusinessSubwayName(String businessaubwayname);
 
+
+
+//   ************************ 小程序前台************************
+    List<JSONObject> FgetAllBusinessSubway();
 
 }
