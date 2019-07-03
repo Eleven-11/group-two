@@ -70,7 +70,9 @@ public class AdsServiceImpl implements AdsService {
     }
 
     /**
-     * 删除广告信息
+     * 删除广告
+     * @param id 编号
+     * @return JSONObject （key：code 状态码；msg 消息；info{} 数据）
      */
     @Override
     public JSONObject removeAdsById(int id) {
