@@ -95,11 +95,10 @@ public class ModuleServicelmpl implements ModuleService {
         Object commentContent = jsonObject.get("commentContent");
         String messageContent=moduleByJ+commentContent;
         jsonObject.put("messageContent",messageContent);
-        jsonObject.put("messageContent",moduleByJ);
         String chatidByU = moduleDao.getChatidByU(jsonObject);
         if( chatidByU ==null ){
-            moduleDao.addChatByUA( jsonObject );
-            String chatidByUs = moduleDao.getChatidByU( jsonObject );
+            moduleDao.addChatByUA(jsonObject);
+            String chatidByUs = moduleDao.getChatidByU(jsonObject);
             chatidByU=chatidByUs;
             Integer chatidByUa = Integer.valueOf(chatidByU);
             jsonObject.put("chatId",chatidByUa);
