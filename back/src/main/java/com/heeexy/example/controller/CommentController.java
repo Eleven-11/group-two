@@ -69,6 +69,7 @@ public class CommentController {
     @PostMapping("updateComment")
     public JSONObject updateComment(@RequestBody JSONObject requestJson){
         CommonUtil.hasAllRequired(requestJson, "id,status");
+
         return commentService.updateComment(requestJson);
     }
 }
