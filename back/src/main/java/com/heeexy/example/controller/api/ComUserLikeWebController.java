@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  * @ Version: 1.0
  */
 @RestController
-@RequestMapping("/comUserLikeWeb")
+@RequestMapping("/api/comUserLikeWeb")
 public class ComUserLikeWebController {
     @Autowired
     private WxLikeService wxLikeService;

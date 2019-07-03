@@ -8,132 +8,140 @@ import java.util.List;
 
 /**
  * @author: PostDao
- * @description: todo
+ * @description: 后台管理帖子
  * @date: 2019/6/18 9:06
  * @version: 1.0
  */
 @Repository
 public interface PostDao {
-    int queryCountPost(JSONObject jsonObject);
-    /*
+    /**
      * @Author lover_tyn
      * @Description //TODO
-     * @Date  2019/6/18 9:07
+     * @Date  2019/7/1 15:25
      * @Param [jsonObject]
      * @return int
      */
+    int queryCountPost(JSONObject jsonObject);
 
-    List<JSONObject> getAllPost(JSONObject jsonObject);
-    /*
+    /**
      * @Author lover_tyn
      * @Description //TODO
-     * @Date  2019/6/18 10:55
+     * @Date  2019/7/1 15:25
      * @Param [jsonObject]
      * @return java.util.List<com.alibaba.fastjson.JSONObject>
      */
+    List<JSONObject> getAllPost(JSONObject jsonObject);
 
-    int updatePostState(JSONObject jsonObject);
-    /*
+    /**
      * @Author lover_tyn
      * @Description //TODO
-     * @Date  2019/6/23 10:41
+     * @Date  2019/7/1 15:26
      * @Param [jsonObject]
      * @return int
      */
+    int updatePostState(JSONObject jsonObject);
 
-    JSONObject queryOnePost(JSONObject jsonObject);
-    /*
+    /**
      * @Author lover_tyn
      * @Description //TODO
-     * @Date  2019/6/23 19:45
+     * @Date  2019/7/1 15:26
      * @Param [jsonObject]
      * @return com.alibaba.fastjson.JSONObject
      */
+    JSONObject queryOnePost(JSONObject jsonObject);
 
-    List<JSONObject> getAllSorts();
-
-    int updatePost(JSONObject jsonObject);
-    /*
+    /**
      * @Author lover_tyn
      * @Description //TODO
-     * @Date  2019/6/25 20:13
-     * @Param [jsonObject]
-     * @return int
-     */
-
-    int updatePostTop(JSONObject jsonObject);
-    /*
-     * @Author lover_tyn
-     * @Description //TODO 
-     * @Date  2019/6/27 11:00
-     * @Param [jsonObject]
-     * @return int
-     */
-
-    List<JSONObject> getSomeTag(JSONObject jsonObject);
-    /*
-     * @Author lover_tyn
-     * @Description //TODO 
-     * @Date  2019/6/27 11:01
-     * @Param [need]
-     * @return java.util.List<com.alibaba.fastjson.JSONObject>
-     */
-
-    List<JSONObject> getNewTagId(JSONObject jsonObject);
-    /*
-     * @Author lover_tyn
-     * @Description //TODO 
-     * @Date  2019/6/28 14:28
-     * @Param [jsonObject]
-     * @return java.util.List<com.alibaba.fastjson.JSONObject>
-     */
-    
-    
-    
-    int addPostTag(JSONObject jsonObject);
-    /*
-     * @Author lover_tyn
-     * @Description //TODO 
-     * @Date  2019/6/28 14:27
-     * @Param [jsonObject]
-     * @return int
-     */
-    
-    List<Integer> getDeleteTagId(JSONObject jsonObject);
-    /*
-     * @Author lover_tyn
-     * @Description //TODO 
-     * @Date  2019/6/28 15:17
-     * @Param [jsonObject]
-     * @return java.util.List<com.alibaba.fastjson.JSONObject>
-     */
-
-    int deleteTag(JSONObject jsonObject);
-    /*
-     * @Author lover_tyn
-     * @Description //TODO
-     * @Date  2019/6/28 15:24
-     * @Param [jsonObject]
-     * @return int
-     */
-    
-    List<JSONObject> getFirstTag();
-    /*
-     * @Author lover_tyn
-     * @Description //TODO 
-     * @Date  2019/6/30 17:24
+     * @Date  2019/7/1 15:26
      * @Param []
      * @return java.util.List<com.alibaba.fastjson.JSONObject>
      */
-    
-    int deleteImg(JSONObject jsonObject);
-    /*
+    List<JSONObject> getAllSorts();
+
+    /**
      * @Author lover_tyn
-     * @Description //TODO 
-     * @Date  2019/6/30 17:24
+     * @Description //TODO
+     * @Date  2019/7/1 15:26
      * @Param [jsonObject]
      * @return int
      */
+    int updatePost(JSONObject jsonObject);
+
+    /**
+     * @Author lover_tyn
+     * @Description //TODO
+     * @Date  2019/7/1 15:27
+     * @Param [jsonObject]
+     * @return int
+     */
+    int updatePostTop(JSONObject jsonObject);
+
+    /**
+     * @Author lover_tyn
+     * @Description //TODO
+     * @Date  2019/7/1 15:27
+     * @Param [jsonObject]
+     * @return java.util.List<com.alibaba.fastjson.JSONObject>
+     */
+    List<JSONObject> getSomeTag(JSONObject jsonObject);
+
+    /**
+     * @Author lover_tyn
+     * @Description //TODO
+     * @Date  2019/7/1 15:27
+     * @Param [jsonObject]
+     * @return java.util.List<com.alibaba.fastjson.JSONObject>
+     */
+    List<JSONObject> getNewTagId(JSONObject jsonObject);
+
+    /**
+     * @Author lover_tyn
+     * @Description //TODO
+     * @Date  2019/7/1 15:28
+     * @Param [jsonObject]
+     * @return int
+     */
+    int addPostTag(JSONObject jsonObject);
+
+    /**
+     * @Author lover_tyn
+     * @Description //TODO
+     * @Date  2019/7/1 15:28
+     * @Param [jsonObject]
+     * @return java.util.List<java.lang.Integer>
+     */
+    List<Integer> getDeleteTagId(JSONObject jsonObject);
+
+    /**
+     * @Author lover_tyn
+     * @Description //TODO
+     * @Date  2019/7/1 15:28
+     * @Param [jsonObject]
+     * @return int
+     */
+    int deleteTag(JSONObject jsonObject);
+
+    /**
+     * @Author lover_tyn
+     * @Description //TODO
+     * @Date  2019/7/1 15:28
+     * @Param []
+     * @return java.util.List<com.alibaba.fastjson.JSONObject>
+     */
+    List<JSONObject> getFirstTag();
+
+    /**
+     * @Author lover_tyn
+     * @Description //TODO
+     * @Date  2019/7/1 15:28
+     * @Param [jsonObject]
+     * @return int
+     */
+    int deleteImg(JSONObject jsonObject);
+
+
+
     
     
 

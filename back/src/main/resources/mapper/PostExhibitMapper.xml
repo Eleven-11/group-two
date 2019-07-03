@@ -2,105 +2,95 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.heeexy.example.dao.PostDao">
-    <select id="queryCountPost" resultType="java.lang.Integer">
-        SELECT
-            count(distinct postId)
-        from(
-        SELECT
-        p.*,
-        bs.business_subway_name                            tagName
-        FROM (
-        SELECT
-        id                                      postId,
-        categories_name                         sortName
-        FROM tyn_post,fly_user,cqy_post_categories
-        <where>
-            delete_state in (1,0)  and user_id=post_owner and categories_id=post_sort
-            <if test="theStart!= null and theStart != ''">
-                and post_time&gt;=#{theStart}
-            </if>
-            <if test="theEnd!= null and theEnd != ''">
-                and post_time&lt;=#{theEnd}
-            </if>
-            <if test="theOwnerName!=null and theOwnerName!='' ">
-                and user_name like '%${theOwnerName}%'
-            </if>
-        </where>
-        ) p
-        LEFT JOIN tyn_post_tag pt ON p.postId=pt.post_id
-        left join cqy_business_subway bs on pt.tag_id=bs.business_subway_id
-        ) op,tyn_post
-        <where>
-            op.postId=tyn_post.id
-            <if test="theOthers!=null and theOthers!='' ">
-               and (op.sortName like '%${theOthers}%' or tyn_post.post_content like '%${theOthers}%' or  op.tagName like '%${theOthers}%')
-            </if>
-        </where>
-    </select>
+
     <resultMap id="postMap" type="com.heeexy.example.util.model.One2Many">
         <id column="postId" property="postId"/>
+        <result column="ownerId" property="ownerId"/>
         <result column="ownerName" property="ownerName"/>
         <result column="postTime" property="postTime"/>
+        <result column="postLocation" property="postLocation"/>
+        <result column="postContent" property="postContent"/>
         <result column="sortName" property="sortName"/>
-        <result column="isTop" property="isTop"/>
-        <result column="deleteState" property="deleteState"/>
-        <result column="likeOff" property="likeOff"/>
-        <result column="collectOff" property="collectOff"/>
-        <result column="viewOff" property="viewOff"/>
-        <result column="alike" property="alike"/>
-        <result column="acollect" property="acollect"/>
-        <result column="aview" property="aview"/>
-        <collection property="tagList" ofType="String">
-            <id column="tagName" property="tagName"/>
+        <result column="priceLow" property="priceLow"/>
+        <result column="priceHigh" property="priceHigh"/>
+        <result column="alike" property="amountLike"/>
+        <result column="acollect" property="amountCollect"/>
+        <result column="aview" property="amountView"/>
+        <collection property="imgList" ofType="String">
+            <id column="imgAddress" property="imgAddress"/>
         </collection>
     </resultMap>
-    <select id="getAllPost" resultMap="postMap">
+    <select id="getTopPost" resultMap="postMap">
         SELECT
         op.*,
-        (SELECT COUNT(0) FROM fly_like l WHERE l.post_id=op.postId and l.like_state=1) alike,
-        (SELECT COUNT(0) FROM cqy_post_collect pc WHERE pc.post_id=op.postId and pc.display=1) acollect,
-        (SELECT COUNT(0) FROM fly_browse b WHERE b.post_id=op.postId) aview
+        img                                      imgAddress,
+        (SELECT COUNT(0) FROM fly_like l WHERE l.post_id=op.postId and l.like_state=1)+likeOff alike,
+        (SELECT COUNT(0) FROM cqy_post_collect pc WHERE pc.post_id=op.postId and pc.display=1)+collectOff acollect,
+        (SELECT COUNT(0) FROM fly_browse b WHERE b.post_id=op.postId)+viewOff aview
          from(
-           SELECT
-            p.*,
-            bs.business_subway_name                            tagName
-        FROM (
                  SELECT
                      id                                      postId,
+                     post_owner                              ownerId,
                      user_name                               ownerName,
                      DATE_FORMAT(post_time, '%Y.%m.%d %T')   postTime,
+                     post_location                           postLocation,
+                     post_content                            postContent,
                      categories_name                         sortName,
-                     is_top                                  isTop,
-                     delete_state                            deleteState,
+                     price_low                               priceLow,
+                     price_high                              priceHigh,
 					 like_offset  							 likeOff,
 					 collect_offset					         collectOff,
                      view_offset			                 viewOff
-                 FROM tyn_post,fly_user,cqy_post_categories
+                 FROM tyn_post,fly_user,cqy_post_categories,tyn_post_tag
+                 <where>
+                     delete_state =1  and user_id=post_owner and categories_id=post_sort
+                     <if test="isTop!= null and isTop != ''">
+                         and is_top like #{isTop}
+                     </if>
+                     <if test="tagType!=null and tagType!='' ">
+                         and id=post_id and tag_type=#{tagTtpe}
+                     </if>
+                 </where>
+                 LIMIT #{offSet}, #{pageRow}
+             ) op
+             left join tyn_post_img tpi on postId=tpi.post_id
+             ORDER BY postTime Desc
+    </select>
+    <select id="getNormalPost" resultMap="postMap">
+        SELECT
+        op.*,
+        img                                      imgAddress,
+        (SELECT COUNT(0) FROM fly_like l WHERE l.post_id=op.postId and l.like_state=1)+likeOff alike,
+        (SELECT COUNT(0) FROM cqy_post_collect pc WHERE pc.post_id=op.postId and pc.display=1)+collectOff acollect,
+        (SELECT COUNT(0) FROM fly_browse b WHERE b.post_id=op.postId)+viewOff aview
+        from(
+        SELECT
+        id                                      postId,
+        post_owner                              ownerId,
+        user_name                               ownerName,
+        DATE_FORMAT(post_time, '%Y.%m.%d %T')   postTime,
+        post_location                           postLocation,
+        post_content                            postContent,
+        categories_name                         sortName,
+        like_offset  							likeOff,
+        collect_offset					        collectOff,
+        view_offset			                    viewOff
+        FROM tyn_post,fly_user,cqy_post_categories,tyn_post_tag
         <where>
-            delete_state in (1,0)  and user_id=post_owner and categories_id=post_sort
-            <if test="theStart!= null and theStart != ''">
-                and post_time&gt;=#{theStart}
+            delete_state =1  and user_id=post_owner and categories_id=post_sort
+            <if test="isTop!= null and isTop != ''">
+                and is_top not like #{isTop}
             </if>
-            <if test="theEnd!= null and theEnd != ''">
-                and post_time&lt;=#{theEnd}
-            </if>
-            <if test="theOwnerName!=null and theOwnerName!='' ">
-                and user_name like '%${theOwnerName}%'
+            <if test="tagType!=null and tagType!='' ">
+                and id=post_id and tag_type=#{tagTtpe}
             </if>
         </where>
-                 LIMIT #{offSet}, #{pageRow}
-             ) p
-            LEFT JOIN tyn_post_tag pt ON p.postId=pt.post_id
-            left join cqy_business_subway bs on pt.tag_id=bs.business_subway_id
-            ) op,tyn_post
-            <where>
-            op.postId=tyn_post.id
-                <if test="theOthers!=null and theOthers!='' ">
-                    and (op.sortName like '%${theOthers}%' or tyn_post.post_content like '%${theOthers}%' or op.tagName like '%${theOthers}%')
-                </if>
-            </where>
+        LIMIT #{offSet}, #{pageRow}
+        ) op
+        left join tyn_post_img tpi on postId=tpi.post_id
         ORDER BY postTime Desc
     </select>
+
     <update id="updatePostState">
         UPDATE tyn_post
         SET

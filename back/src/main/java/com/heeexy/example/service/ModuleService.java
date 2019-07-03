@@ -18,11 +18,32 @@ public interface ModuleService {
      */
     JSONObject addModule(JSONObject jsonObject);
     /**
-     * 新增消息
+     * 新增消息（群）
      * @param jsonObject
      * @return
      */
     JSONObject addMessage(JSONObject jsonObject);
+
+    /**
+     * 新增封禁消息（单独）
+     * @param jsonObject
+     * @return
+     */
+    JSONObject addMessageF(JSONObject jsonObject);
+    /**
+     * 新增警告消息（单独）
+     * @param jsonObject
+     * @return
+     */
+    JSONObject addMessageJ(JSONObject jsonObject);
+
+    /**
+     * 新增欢迎消息（单独）
+     * @param jsonObject
+     * @return
+     */
+    JSONObject addMessageH(JSONObject jsonObject);
+
     /**
      * 删除模块（假）
      * @param jsonObject  moduleId(模块id)
@@ -47,4 +68,7 @@ public interface ModuleService {
      * @return
      */
     JSONObject getAllModule();
+
+
+
 }

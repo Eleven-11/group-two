@@ -41,7 +41,8 @@
       <el-table-column align="center" label="创建时间" prop="createTime" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
-          <el-button type="danger" icon="delete"@click="removeUser(scope.$index)">修改</el-button>
+          <el-button type="danger"  v-if="scope.row.myPostState=='0'" icon="delete"@click="removeUser(scope.$index)">删除</el-button>
+          <el-button type="primary"  v-if="scope.row.myPostState=='1'" icon="delete"@click="removeUser(scope.$index)">取消</el-button>
         </template>
       </el-table-column>
 

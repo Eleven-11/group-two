@@ -29,7 +29,7 @@ public interface WxUserService {
      * @param:  JSONObject
      * @return: JSONObject
      */
-    JSONObject getMaxNumber(JSONObject jsonObject);
+   /* JSONObject getMaxNumber(JSONObject jsonObject);*/
 
     /**
      * @methodsName: addByUser
@@ -70,13 +70,6 @@ public interface WxUserService {
      */
     JSONObject getUserByUsername(JSONObject jsonObject);
     /**
-     * @methodsName: listUserState
-     * @description: 查找封禁状态集合
-     * @param:
-     * @return: JSONObject
-     */
-    JSONObject listUserState();
-    /**
      * @methodsName: countFansByUserId
      * @description: 计算用户粉丝数
      * @param:  JSONObject
@@ -89,7 +82,7 @@ public interface WxUserService {
      * @param:  JSONObject
      * @return: JSONObject
      */
-    JSONObject getDetailUserById(JSONObject jsonObject);
+   /* JSONObject getDetailUserById(JSONObject jsonObject);*/
     /**
      * @methodsName: updateFansById
      * @description: 修改真实粉丝数

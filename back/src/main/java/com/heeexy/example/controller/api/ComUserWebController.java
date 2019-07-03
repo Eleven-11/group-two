@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
  * @ Version: 1.0
  */
 @RestController
-@RequestMapping("/comUserWeb")
+@RequestMapping("/api/comUserWeb")
 public class ComUserWebController {
     @Autowired
     private WxUserService wxUserService;
@@ -33,7 +33,7 @@ public class ComUserWebController {
     public JSONObject addUser(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "userUuid,userName,userPhoto,userSex");
         String userUuid = requestJson.getString("userUuid");
-        if (userUuid ==null ){
+        if (userUuid ==null){
             return wxUserService.addGuestUser(requestJson);
         }else {
             return wxUserService.addByUser(requestJson);
@@ -55,13 +55,6 @@ public class ComUserWebController {
         return wxUserService.countFansByUserId(CommonUtil.request2Json(request));
 
     }
-    /**
-     * 用户详情页数量部分数据
-     */
-    @GetMapping("/getDetailUserById")
-    public JSONObject getDetailUserById(HttpServletRequest request){
-        return wxUserService.getDetailUserById(CommonUtil.request2Json(request));
 
-    }
 
 }

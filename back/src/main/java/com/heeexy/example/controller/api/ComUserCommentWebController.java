@@ -5,6 +5,7 @@ import com.heeexy.example.service.WxMyCommentService;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  * @ Version: 1.0
  */
 @RestController
-@RequestMapping("/comUserCommentWeb")
+@RequestMapping("/api/comUserCommentWeb")
 public class ComUserCommentWebController {
     @Autowired
     private WxMyCommentService wxMyCommentService;

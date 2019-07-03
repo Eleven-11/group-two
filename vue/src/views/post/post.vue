@@ -80,7 +80,7 @@
           <el-button type="primary"
                      @click="showTop(scope.$index)"><i class="el-icon-caret-top"></i>
           </el-button>
-          <el-button type="danger"  v-if="scope.row.deleteState==2"
+          <el-button type="danger"  v-if="scope.row.deleteState==0"
                      @click="recoverPost(scope.$index)"><i class="el-icon-circle-plus"></i>
           </el-button>
           <el-button type="danger"  v-if="scope.row.deleteState==1"
@@ -142,8 +142,8 @@
            </div>
           </div>
           <div v-else>
-            <el-collapse  :v-model="已选">
-              <el-collapse-item  title="已选"  >
+            <el-collapse  v-model="activeNames">
+              <el-collapse-item  title="已选" name="1" >
                 <el-checkbox-group v-model="tempPost.tags" size="mini">
                   <el-checkbox-button  v-for="taged in tempPost.tags" :label="taged" :key="taged" style="margin-left: 10px">
                     {{taged}}
@@ -153,9 +153,9 @@
             </el-collapse>
             <el-collapse @change="getFirstTag">
               <el-collapse-item title="全部"  >
-                <el-collapse accordion  @change="getSecondTag">
+                <el-collapse v-model="activeNames" accordion  @change="getSecondTag">
                   <el-collapse-item v-for="firtag in firstTag" :title="firtag.tagName" :key="firtag.tagName" :name="firtag.tagName" style="margin-left: 20px"  >
-                    <el-collapse  accordion  @change="getSomeTag" >
+                    <el-collapse   accordion  @change="getSomeTag" >
                       <el-collapse-item v-for="sectag in secondTag" :title="sectag.tagName"  :key="sectag.tagId"  :name="sectag.tagName" style="margin-left: 20px;">
                         <el-checkbox-group  v-model="tempPost.tags" size="mini">
                           <el-checkbox-button  v-for="tag in someTag" :label="tag.tagName" :key="tag.tagName" style="margin-left: 10px">
@@ -197,7 +197,7 @@
                   <img :src="oneImg" style="width: 120px;" >
                 </el-checkbox-button>
             </el-checkbox-group>
-            <el-button  size="mini" v-if="tempPost.imgs!=null"  @click="tempDelete">删除</el-button>
+            <el-button  size="mini" v-if="tempPost.imgs!=null&&tempPost.imgs.length!=0"  @click="tempDelete">删除</el-button>
           </div>
       </el-form-item>
         <el-form-item label="位置:" required v-if="dialogStatus=='detail'" v-model="tempPost.postLocation">
@@ -261,6 +261,7 @@
           theOthers: ''
         },
         sorts: [],//分类列表
+        activeNames:[],
         tempImg:[],
         firstTag:[],
         secondTag:[],
@@ -341,7 +342,6 @@
         }
       },
       getSomeTag(value) {
-
         if (value != null && value != '') {
           this.api({
             url: "/post/getSomeTag",
@@ -366,6 +366,7 @@
         }).then(data => {
           this.listLoading = false;
           this.list = data.list;
+          this.totalCount = data.totalCount;
           for (let i = 0; i < data.list.length; i++) {
             let listTop = new Array();
             let j = 3;
@@ -439,6 +440,7 @@
         }).then(data => {
           this.listLoading = false;
           let oPost = data.thePost;
+          this.activeNames=['1'];
           this.tempPost.postId = oPost.postId;
           this.tempPost.sortId = oPost.sortId;
           this.tempPost.sortName = oPost.sortName;
@@ -561,7 +563,7 @@
           type: 'warning'
         }).then(() => {
           let onePost = _vue.list[$index];
-          onePost.deleteState = 2;
+          onePost.deleteState = 0;
           _vue.api({
             url: "/post/updatePostState",
             method: "post",
@@ -602,6 +604,12 @@
       }
       this.tempPost.deleteImg=this.tempImg;
       },
+      checkNumber(value){
+        if(value<0)
+          alert("浮动值不能为负数！");
+        if(value>parseInt(value))
+          alert("浮动值不能为小数！");
+      }
     }
   }
 </script>

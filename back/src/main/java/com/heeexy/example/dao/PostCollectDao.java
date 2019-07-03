@@ -100,6 +100,34 @@ public interface PostCollectDao {
      */
      List<JSONObject> getAllPostCollectByUserId(JSONObject jsonObject);
 
+    /**
+     * 帖子的图片
+     * @param postId
+     * @return
+     */
+    List<JSONObject> getAllPostImgByPostId(Object postId);
+
+    /**
+     * 帖子的点赞
+     * @param postId
+     * @return
+     */
+    List<JSONObject> getAllLikeByPostId(Object postId);
+
+    /**
+     * 返回用户收藏的所有帖子的回复消息
+     * @param  postId
+     * @return
+     */
+    List<JSONObject> getAllCommentByPostId(Object postId);
+
+    /**
+     * 回复消息的回复消息
+     * @param  commentId
+     * @return
+     */
+    List<JSONObject> getAllCommentByToCommentId(Object commentId);
+
 
 
 
