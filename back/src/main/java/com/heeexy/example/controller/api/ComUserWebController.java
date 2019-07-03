@@ -19,6 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 public class ComUserWebController {
     @Autowired
     private WxUserService wxUserService;
+    //cqy
+    @Autowired
+    private ModuleService moduleService;
     /**
      * 查找用户
      */
@@ -40,7 +43,10 @@ public class ComUserWebController {
             //先查看是否之前已授权过该小程序，空为首次登入
             JSONObject jsonObject = wxUserService.queryUserByUuId(requestJson);
             if (jsonObject.isEmpty()){
-                return wxUserService.addByUser(requestJson);
+             //cqy改(未测试)
+                JSONObject jsonObject1 = wxUserService.addByUser(requestJson);
+                moduleService.addMessageH(jsonObject);
+                return jsonObject1 ;
             }else {
                 return CommonUtil.successJson();
             }
