@@ -139,4 +139,16 @@
     <delete id="removeBusinessSubway">
         delete from cqy_business_subway
     </delete>
+
+
+
+    <!--返回帖子标签给前台-->
+    <select id="FgetAllBusinessSubway" resultType="com.alibaba.fastjson.JSONObject">
+         select
+         business_subway_id businessSubwayId,
+         business_subway_name businessSubwayName,
+         Superior_id superiorId
+        from cqy_business_subway
+        where display = 1
+    </select>
 </mapper>

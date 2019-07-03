@@ -43,7 +43,7 @@ public class ModuleServicelmpl implements ModuleService {
     }
 
     /**
-     * 新增消息
+     * 新增消息（群）
      * @param jsonObject
      * @return
      */
@@ -57,6 +57,81 @@ public class ModuleServicelmpl implements ModuleService {
         List<Integer> allLcChatId = moduleDao.getAllLcChatId();
         jsonObject.put("clist",allLcChatId);
         moduleDao.addMessage( jsonObject );
+        return CommonUtil.successJson();
+    }
+
+    /**
+     * 新增封禁用户消息（单独）
+     * @param jsonObject userId
+     * @return
+     */
+    @Override
+    public JSONObject addMessageF(JSONObject jsonObject) {//moduleContent
+        Object userId = jsonObject.get("userId");
+        String moduleByF = moduleDao.getModuleByF();
+        jsonObject.put("messageContent",moduleByF);
+        String chatidByU = moduleDao.getChatidByU(jsonObject);
+        if( chatidByU ==null ){
+            moduleDao.addChatByUA( jsonObject );
+            String chatidByUs = moduleDao.getChatidByU( jsonObject );
+            chatidByU=chatidByUs;
+            Integer chatidByUa = Integer.valueOf(chatidByU);
+            jsonObject.put("chatId",chatidByUa);
+        }else {
+            Integer chatidByUa = Integer.valueOf(chatidByU);
+            jsonObject.put("chatId",chatidByUa);
+        }
+        moduleDao.addMessageAlone(jsonObject);
+        return CommonUtil.successJson();
+    }
+    /**
+     * 新增警告用户消息（单独）
+     * @param jsonObject userid ,commentContent
+     * @return
+     */
+    @Override
+    public JSONObject addMessageJ(JSONObject jsonObject) {
+        String moduleByJ = moduleDao.getModuleByJ();
+        Object commentContent = jsonObject.get("commentContent");
+        String messageContent=moduleByJ+commentContent;
+        jsonObject.put("messageContent",messageContent);
+        jsonObject.put("messageContent",moduleByJ);
+        String chatidByU = moduleDao.getChatidByU(jsonObject);
+        if( chatidByU ==null ){
+            moduleDao.addChatByUA( jsonObject );
+            String chatidByUs = moduleDao.getChatidByU( jsonObject );
+            chatidByU=chatidByUs;
+            Integer chatidByUa = Integer.valueOf(chatidByU);
+            jsonObject.put("chatId",chatidByUa);
+        }else {
+            Integer chatidByUa = Integer.valueOf(chatidByU);
+            jsonObject.put("chatId",chatidByUa);
+        }
+        moduleDao.addMessageAlone(jsonObject);
+        return CommonUtil.successJson();
+    }
+    /**
+     * 新增欢迎用户消息（单独）
+     * @param jsonObject userId
+     * @return
+     */
+    @Override
+    public JSONObject addMessageH(JSONObject jsonObject) {
+        String moduleByH = moduleDao.getModuleByH();
+        jsonObject.put("messageContent",moduleByH);
+        String chatidByU = moduleDao.getChatidByU(jsonObject);
+        if( chatidByU ==null ){
+            moduleDao.addChatByUA( jsonObject );
+            String chatidByUs = moduleDao.getChatidByU( jsonObject );
+            chatidByU=chatidByUs;
+            Integer chatidByUa = Integer.valueOf(chatidByU);
+            jsonObject.put("chatId",chatidByUa);
+        }else {
+            Integer chatidByUa = Integer.valueOf(chatidByU);
+            jsonObject.put("chatId",chatidByUa);
+        }
+        jsonObject.put("chatid",chatidByU);
+        moduleDao.addMessageAlone(jsonObject);
         return CommonUtil.successJson();
     }
 

@@ -96,18 +96,18 @@ export const asyncRouterMap = [
     meta: {title: '系统信息管理', icon: 'table'},
     children: [
       {
-        path: '',
+        path: 'module',
         name: '模块管理',
         component: _import('module/module'),
         meta: {title: '模块管理', icon: 'user'},
-        menu: 'user'
+        menu: 'module'
       },
       {
-        path: 'ModuleInformation',
+        path: 'PostCollect',
         name: '帖子收藏管理',
         component: _import('module/PostCollect'),
         meta: {title: '帖子收藏管理', icon: 'user'},
-        menu: 'ModuleInformation'
+        menu: 'PostCollect'
       },
     ]
   },
@@ -120,14 +120,14 @@ export const asyncRouterMap = [
     meta: {title: '平台管理', icon: 'table'},
     children: [
       {
-        path: '',
+        path: 'PostCategories',
         name: '帖子类别管理',
         component: _import('platform/PostCategories'),
         meta: {title: '帖子类别管理', icon: 'user'},
         menu: 'PostCategories'
       },
       {
-        path: 'ModuleInformation',
+        path: 'BusinessSubway',
         name: '帖子标签管理',
         component: _import('platform/BusinessSubway'),
         meta: {title: '帖子标签管理', icon: 'user'},
