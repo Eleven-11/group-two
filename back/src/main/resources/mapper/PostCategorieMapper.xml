@@ -90,6 +90,7 @@
         categories_img categoriesImg
         from cqy_post_categories
         where display=1
+        order by  update_time
     </select>
 
 </mapper>

@@ -18,14 +18,6 @@ public interface ModuleDao {
      * @return
      */
     int addModule(JSONObject jsonObject);
-
-    /**
-     * 发送给所有人消息
-     * @param jsonObject  chatid(聊天id),moduleContent(模块内容)
-     * @return
-     */
-    int addMessage(JSONObject jsonObject);
-
     /**
      * 获取聊天表中不存在的用户id
      * @return
@@ -45,11 +37,45 @@ public interface ModuleDao {
     List<Integer> getAllLcChatId();
 
     /**
-     * 插入chat表中信息
+     * 插入chat表中信息（遍历）
      * @param jsonObject  userid(遍历而来)
      * @return
      */
     int addChat(JSONObject jsonObject);
+    /**
+     * 发送给所有人消息（遍历）
+     * @param jsonObject  chatid(聊天id),moduleContent(模块内容)
+     * @return
+     */
+    int addMessage(JSONObject jsonObject);
+
+    /**
+     * 验证chat中userid=1,anotherid=传进来的数据的chatid
+     * @param
+     * @return
+     */
+     int getChatidByU(JSONObject jsonObject);
+    /**
+     * 插入chat表中信息
+     * @param
+     * @return
+     */
+    int addChatByUA(JSONObject jsonObject);
+    /**
+     * 发送给人警告,封禁消息(单独)
+     * @param
+     * @return
+     */
+    int addMessageAlone(JSONObject jsonObject);
+
+    /**
+     * 查询警告,封禁,欢迎 模块消息
+     * @param
+     * @return
+     */
+     String getModuleByJ();
+     String getModuleByF();
+     String getModuleByH();
 
     /**
      * 删除模块（假）
@@ -99,6 +125,9 @@ public interface ModuleDao {
      * @return
      */
     List<JSONObject> getAllModule();
+
+
+
 
 
 
