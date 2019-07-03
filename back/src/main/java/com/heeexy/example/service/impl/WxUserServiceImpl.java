@@ -114,4 +114,37 @@ public class WxUserServiceImpl implements WxUserService {
          wxUserDao.updateFansById(map);
         return CommonUtil.successJson();
     }
+
+    /**
+     * 我的界面信息
+     * @param jsonObject （uid）
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject mySelf(JSONObject jsonObject) {
+        List<JSONObject> mySelf = wxUserDao.mySelf(jsonObject);
+        return CommonUtil.successPage(mySelf);
+    }
+    /**
+     * 我的粉丝
+     * @param jsonObject （keyword）
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject mySelfFans(JSONObject jsonObject) {
+        List<JSONObject> list = wxUserDao.mySelfFans(jsonObject);
+        return CommonUtil.successPage(list);
+    }
+
+    /**
+     * 根据用户uuid查找信息
+     * @param jsonObject (uuid)
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject queryUserByUuId(JSONObject jsonObject) {
+        JSONObject jsonObject1 = wxUserDao.queryUserByUuId(jsonObject);
+        return jsonObject1;
+    }
+
 }

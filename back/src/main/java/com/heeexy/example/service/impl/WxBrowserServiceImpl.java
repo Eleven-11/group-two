@@ -55,4 +55,15 @@ public class WxBrowserServiceImpl implements WxBrowserService {
 
        return CommonUtil.successPage(browseByUser);
     }
+
+    /**
+     * 我的足迹
+     * @param jsonObject (keyword)
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject myBrowse(JSONObject jsonObject) {
+        List<JSONObject> list = wxBrowserDao.myBrowse(jsonObject);
+        return CommonUtil.successPage(list);
+    }
 }

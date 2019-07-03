@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ Author     ：良优
@@ -100,5 +101,39 @@ public class WxLikeServiceImpl implements WxLikeService {
     public JSONObject addLikeByUserId(JSONObject jsonObject) {
         wxLikeDao.addLikeByUserId(jsonObject);
         return CommonUtil.successJson();
+    }
+
+    /**
+     * 用户未点赞列表集合
+     * @param jsonObject (onUserId)
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject getListMoreLikesById(JSONObject jsonObject) {
+        List<JSONObject> listMoreLikesById = wxLikeDao.getListMoreLikesById(jsonObject);
+        int size = listMoreLikesById.size();
+        return CommonUtil.successPage(jsonObject, listMoreLikesById, size);
+    }
+
+    /**
+     * 添加用户点赞帖子
+     * @param map (likeId)
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject addMoreLikes(Map map) {
+        wxLikeDao.addMoreLikes(map);
+        return CommonUtil.successJson();
+    }
+
+    /**
+     *  我的点赞
+     * @param jsonObject （keyword）
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject myLike(JSONObject jsonObject) {
+        List<JSONObject> list = wxLikeDao.myLike(jsonObject);
+        return CommonUtil.successPage(list);
     }
 }

@@ -3,6 +3,7 @@ package com.heeexy.example.service;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ Author     ：良优
@@ -64,4 +65,24 @@ public interface WxLikeService {
      * @return: JSONObject
      */
     JSONObject addLikeByUserId(JSONObject jsonObject);
+    /**
+     * @methodsName: getListMoreFansById
+     * @description: 查找用户未关注的用户集合
+     * @param:  JSONObject
+     * @return:  List<JSONObject>
+     */
+    JSONObject getListMoreLikesById(JSONObject jsonObject);
+    /**
+     * @methodsName: addMoreFans
+     * @description: 批量添加关注
+     * @param:  Map
+     * @return: int
+     */
+    JSONObject addMoreLikes(Map map);
+    /**
+     * 我的点赞
+     * @param jsonObject （keyword）
+     * @return JSONObject
+     */
+    JSONObject myLike(JSONObject jsonObject);
 }

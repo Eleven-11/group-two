@@ -44,4 +44,15 @@ public class WxMyCommentServiceImpl implements WxMyCommentService {
         List<JSONObject> myCommentListById = wxMyCommentDao.getMyCommentListById(jsonObject);
         return CommonUtil.successPage(myCommentListById);
     }
+
+    /**
+     * 我的评论
+     * @param jsonObject (keyword)
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject myselfComment(JSONObject jsonObject) {
+        List<JSONObject> list = wxMyCommentDao.myselfComment(jsonObject);
+        return  CommonUtil.successPage(list);
+    }
 }

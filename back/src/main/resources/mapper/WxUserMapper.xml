@@ -90,16 +90,30 @@
     <select id="getStateByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
 
     </select>
-    <!--用户详情页-->
-<select id="getDetailUserById" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-  /*  select t1.postNumber1 postNumber, u.user_fans_f+u.user_fans fansNumber,t2.fNumber1 fNumber
-        from
-        (select count(tyn_post.post_owner) postNumber1,tyn_post.post_owner from tyn_post
-        where tyn_post.delete_state = 0 and tyn_post.post_owner =#{onUserId})  t1
-        ,fly_user u,(select  count(fly_fans.onuser_id) fNumber1,fly_fans.onuser_id from fly_fans
-        where  fly_fans.onuser_id =#{onUserId} and fly_fans.state =1) t2
-        where u.user_id =t1.post_owner  and t2.onuser_id =u.user_id and t1.post_owner =t2.onuser_id
-        and u.user_id =#{onUserId}*/
-</select>
-
+    <!--我的界面-->
+    <select id="mySelf" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select u.user_id onUserId,u.user_name myname,u.user_photo myavatar,p.postNumber myrelease,
+        f.fansNumber myattention,u.user_fans_f+u.user_fans myfans,l.likeNumber mygood,pc.collectNumber mycollention
+        from fly_user u ,
+        (select count(0) postNumber,tyn_post.post_owner userId from tyn_post
+        where post_owner =#{uid} and delete_state =0) p,
+        (select  count(onuser_id) fansNumber
+        from fly_fans where state =1 and onuser_id =#{uid}) f,
+        (select count(0) likeNumber,onuser_id onUserId from fly_like
+        where onuser_id = #{uid} and like_state = 1) l,
+        (select count(0) collectNumber from cqy_post_collect c
+         where c.user_id =#{uid} and c.display =0) pc
+        where u.user_id =#{uid}
+    </select>
+    <!--我的粉丝-->
+    <select id="mySelfFans" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select u.user_name mySelfFansName ,u.user_photo mySelfFansImg,u.user_id mySelfFansId
+        from fly_user u,fly_fans f
+        where   u.user_id =f.onuser_id  and f.state =1 and f.user_id = #{keyword}
+    </select>
+    <!--根据uuid查找用户-->
+    <select id="queryUserByUuId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select u.user_id userId,u.user_photo userImg,u.user_name userName
+        from fly_user u where u.user_uuid =#{uuId}
+    </select>
 </mapper>

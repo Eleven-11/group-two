@@ -33,4 +33,11 @@ public interface WxBrowserService {
      * @return:  JSONObject
      */
     JSONObject getBrowseByUser(JSONObject jsonObject);
+    /**
+     * @methodsName: myBrowse
+     * @description: 我的足迹
+     * @param:  JSONObject
+     * @return:  JSONObject
+     */
+    JSONObject myBrowse(JSONObject jsonObject);
 }

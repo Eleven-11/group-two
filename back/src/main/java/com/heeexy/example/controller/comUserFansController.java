@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -73,4 +75,18 @@ public class comUserFansController {
         CommonUtil.hasAllRequired(requestJson, "onUserId,userId");
         return wxFansService.getUserFans(requestJson);
     }*/
+  @GetMapping("/getMoreFansList")
+  public JSONObject getMoreFansList(HttpServletRequest request ) {
+
+      return wxFansService.getListMoreFansById(CommonUtil.request2Json(request));
+  }
+  @PostMapping("/addMoreFans")
+  public JSONObject addMoreFans(@RequestBody JSONObject requestJson) {
+      ArrayList<Map<String,String>> fans = (ArrayList<Map<String,String>>)requestJson.get("fansId");
+      for (Map<String, String> fansId : fans) {
+
+          wxFansService.addMoreFans(fansId);
+      }
+      return CommonUtil.successJson();
+  }
 }

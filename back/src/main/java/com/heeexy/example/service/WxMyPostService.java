@@ -65,4 +65,11 @@ public interface WxMyPostService {
      * @return:  JSONObject
      */
     JSONObject countPostCollectByUserId(JSONObject jsonObject);
+    /**
+     * @methodsName: myPost
+     * @description: 我的帖子发布
+     * @param:  JSONObject
+     * @return:  JSONObject
+     */
+    JSONObject myPost(JSONObject jsonObject);
 }

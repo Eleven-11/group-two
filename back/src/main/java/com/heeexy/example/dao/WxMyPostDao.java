@@ -70,4 +70,11 @@ public interface WxMyPostDao {
           * @return:  List<JSONObject>
           */
     List<JSONObject> countPostCollectByUserId(JSONObject jsonObject);
+     /**
+          * @methodsName: myPost
+          * @description: 我的帖子发布
+          * @param:  JSONObject
+          * @return:  List<JSONObject>
+          */
+    List<JSONObject> myPost(JSONObject jsonObject);
 }

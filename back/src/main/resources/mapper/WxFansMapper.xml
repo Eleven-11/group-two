@@ -44,15 +44,32 @@
             DATE_FORMAT(fans.update_time, '%Y.%m.%d %T') updateTime
        from  fly_fans fans,fly_user users,fly_user u
         <where>
-            users.user_id =fans.onuser_id and  u.user_id =fans.user_id
+            users.user_id =fans.onuser_id and  u.user_id =fans.user_id and fans.state =1
               <if test="userName != null and userName != ''">
                 and  users.user_name LIKE CONCAT(CONCAT('%',#{userName}),'%')
               </if>
         </where>
+
           LIMIT #{offSet}, #{pageRow};
     </select>
     <!--计算用户数(后台)-->
     <select id="countUserFans" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
         select count(0) from fly_fans
+    </select>
+    <!--查找用户未关注的-->
+    <select id="getListMoreFansById" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select  fans.fans_id fansId,fans.user_id userId,u.user_name userName
+        from  fly_fans fans,fly_user u
+        where u.user_id=fans.user_id and fans.onuser_id =#{onUserId} and fans.state =0
+    </select>
+    <!--批量关注-->
+    <update id="addMoreFans" parameterType="java.util.Map">
+        update fly_fans set fly_fans.state =1 where fans_id =#{fansId}
+     </update>
+    <!--我的关注-->
+    <select id="myFans" resultType="com.alibaba.fastjson.JSONObject" parameterType="com.alibaba.fastjson.JSONObject">
+        select f.fans_id fansId,u.user_id fansUserId,u.user_name,u.user_photo fansImg fansName
+        from fly_fans f,fly_user u
+        where u.user_id= f.onuser_id and f.onuser_id =#{keyword} and f.state =1
     </select>
 </mapper>
