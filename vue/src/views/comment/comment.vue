@@ -280,18 +280,12 @@
           method: "post",
           data: this.tempComment
         }).then(() => {
-            this.api({
-              url: "/comment/updateComment",
-              method: "post",
-              data: this.tempComment
-            }).then(() => {
-              this.$message.success("操作成功");
-              this.getList();
-              this.dialogFormVisible = false;
-              this.userDialogVisible = false;
-              this.postDialogVisible = false;
-              this.commentDialogVisible = false;
-            })
+          this.$message.success("操作成功");
+          this.getList();
+          this.dialogFormVisible = false;
+          this.userDialogVisible = false;
+          this.postDialogVisible = false;
+          this.commentDialogVisible = false;
         })
       },
       changeUserState(id, val) {
