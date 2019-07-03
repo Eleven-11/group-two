@@ -35,4 +35,11 @@ public interface WxMyCommentDao {
           * @return: List<JSONObject>
           */
     List<JSONObject> getMyCommentListById(JSONObject jsonObject);
+    /**
+     * @methodsName: myselfComment
+     * @description: 我的评论
+     * @param:  JSONObject
+     * @return:  List<JSONObject>
+     */
+    List<JSONObject> myselfComment(JSONObject jsonObject);
 }

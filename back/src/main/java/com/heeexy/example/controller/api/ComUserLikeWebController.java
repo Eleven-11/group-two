@@ -70,4 +70,12 @@ public class ComUserLikeWebController {
         CommonUtil.hasAllRequired(requestJson, "onUserId,userId,postId");
         return wxLikeService.getLikeUserPost(requestJson);
     }
+    /**
+     * 我的点赞列表
+     */
+    @GetMapping("/searchlike")
+    public JSONObject searchlike(HttpServletRequest request) {
+
+        return wxLikeService.myLike(CommonUtil.request2Json(request));
+    }
 }

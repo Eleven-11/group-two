@@ -38,5 +38,14 @@ public class ComUserBrowseWebController {
         return wxBrowserService.getBrowseByUser(CommonUtil.request2Json(request));
 
     }
+    /**
+     * 前台展示用户浏览记录列表
+     */
+    @GetMapping("/searchbrowse")
+    public JSONObject searchbrowse(HttpServletRequest request) {
+
+        return wxBrowserService.myBrowse(CommonUtil.request2Json(request));
+
+    }
 
 }

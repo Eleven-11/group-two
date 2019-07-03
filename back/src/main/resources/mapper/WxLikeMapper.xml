@@ -28,7 +28,7 @@
           DATE_FORMAT(like1.update_time, '%Y.%m.%d %T')  updateTime
       from fly_like like1,fly_user u, fly_user uu ,tyn_post p
       <where>
-            like1.onuser_id =u.user_id and like1.user_id = uu.user_id and p.id =like1.post_id
+            like1.onuser_id =u.user_id and like1.user_id = uu.user_id and p.id =like1.post_id and like1.like_state =1
             <if test="userName != null and userName != ''">
                 and  u.user_name LIKE CONCAT(CONCAT('%',#{userName}),'%')
             </if>
@@ -58,4 +58,18 @@
     <update id="addLikeByUserId" parameterType="com.alibaba.fastjson.JSONObject">
             update fly_like set like_state = 1 where like_id = #{likeId} and onuser_id =#{onUserId};
     </update>
+    <!--查找用户未关注的-->
+    <select id="getListMoreLikesById" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select  likes.like_id likeId,likes.user_id userId,u.user_name userName,users.user_name onUserName
+        from  fly_like likes,fly_user u,fly_user users
+        where u.user_id=likes.user_id and users.user_id=likes.onuser_id and  likes.like_state =0
+    </select>
+    <!--批量关注-->
+    <update id="addMoreLikes" parameterType="java.util.Map">
+        update fly_like set like_state =1 where like_id =#{likeId}
+     </update>
+    <!--我的点赞-->
+    <select id="myLike" resultType="com.alibaba.fastjson.JSONObject" parameterType="com.alibaba.fastjson.JSONObject">
+
+    </select>
 </mapper>

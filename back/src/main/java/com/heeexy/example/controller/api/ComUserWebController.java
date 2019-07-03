@@ -31,12 +31,20 @@ public class ComUserWebController {
      */
     @PostMapping("/addUser")
     public JSONObject addUser(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "userUuid,userName,userPhoto,userSex");
-        String userUuid = requestJson.getString("userUuid");
+        CommonUtil.hasAllRequired(requestJson, "uuid,userName,userPhoto,userSex");
+        String userUuid = requestJson.getString("uuid");
+        //判断uuid，是否为空，空为游客，未授权，有值为授权
         if (userUuid ==null){
             return wxUserService.addGuestUser(requestJson);
         }else {
-            return wxUserService.addByUser(requestJson);
+            //先查看是否之前已授权过该小程序，空为首次登入
+            JSONObject jsonObject = wxUserService.queryUserByUuId(requestJson);
+            if (jsonObject.isEmpty()){
+                return wxUserService.addByUser(requestJson);
+            }else {
+                return CommonUtil.successJson();
+            }
+
         }
     }
     /**
@@ -55,6 +63,18 @@ public class ComUserWebController {
         return wxUserService.countFansByUserId(CommonUtil.request2Json(request));
 
     }
-
-
+    /**
+     * 我的界面信息
+     */
+    @GetMapping("/myself")
+    public JSONObject myself(HttpServletRequest request){
+        return wxUserService.mySelf(CommonUtil.request2Json(request));
+    }
+    /**
+     * 我的粉丝信息
+     */
+    @GetMapping("/searchmySelfFans")
+    public JSONObject mySelfFans(HttpServletRequest request){
+        return wxUserService.mySelfFans(CommonUtil.request2Json(request));
+    }
 }

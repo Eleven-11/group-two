@@ -16,4 +16,12 @@ public interface PostExhibitDao {
     List<JSONObject> getTopPost(JSONObject jsonObject);
 
     List<JSONObject> getNormalPost(JSONObject jsonObject);
+
+    Integer queryTagType(String tagName);
+
+    Integer isLike(JSONObject jsonObject);
+
+    Integer isCollect(JSONObject jsonObject);
+
+    JSONObject queryThePost(JSONObject jsonObject);
 }

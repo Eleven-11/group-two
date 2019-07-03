@@ -76,4 +76,13 @@ public class ComUserMyPostWebController {
 
         return wxMyPostService.countPostCollectByUserId(CommonUtil.request2Json(request));
     }
+    /**
+     * 我已发布的帖子列表
+     */
+    @GetMapping("/searchpost")
+    public JSONObject mypost(HttpServletRequest request) {
+
+        return wxMyPostService.myPost(CommonUtil.request2Json(request));
+
+    }
 }
