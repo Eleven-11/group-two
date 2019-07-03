@@ -3,6 +3,7 @@ package com.heeexy.example.util.model;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -26,5 +27,7 @@ public class One2Many extends JSONObject {
 	private List<JSONObject> users;
 	private List<JSONObject> permissions;
 	private Set<String> tagList;
-	private Set<String> imgList;
-}
+	private Set<String> imgUrls;
+	private Set<String> goods;
+	private List<Map> comments;
+  }
