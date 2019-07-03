@@ -103,4 +103,11 @@ public interface WxUserService {
      * @return:  JSONObject
      */
     JSONObject mySelfFans(JSONObject jsonObject);
+    /**
+     * @methodsName: queryUserByUuId
+     * @description: 根据uuid查找用户
+     * @param:  JSONObject
+     * @return: JSONObject
+     */
+    JSONObject queryUserByUuId(JSONObject jsonObject);
 }

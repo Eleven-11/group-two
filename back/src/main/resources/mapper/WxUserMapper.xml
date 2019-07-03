@@ -111,4 +111,9 @@
         from fly_user u,fly_fans f
         where   u.user_id =f.onuser_id  and f.state =1 and f.user_id = #{keyword}
     </select>
+    <!--根据uuid查找用户-->
+    <select id="queryUserByUuId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select u.user_id userId,u.user_photo userImg,u.user_name userName
+        from fly_user u where u.user_uuid =#{uuId}
+    </select>
 </mapper>

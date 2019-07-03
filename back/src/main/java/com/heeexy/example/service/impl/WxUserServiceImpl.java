@@ -136,4 +136,15 @@ public class WxUserServiceImpl implements WxUserService {
         return CommonUtil.successPage(list);
     }
 
+    /**
+     * 根据用户uuid查找信息
+     * @param jsonObject (uuid)
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject queryUserByUuId(JSONObject jsonObject) {
+        JSONObject jsonObject1 = wxUserDao.queryUserByUuId(jsonObject);
+        return jsonObject1;
+    }
+
 }
