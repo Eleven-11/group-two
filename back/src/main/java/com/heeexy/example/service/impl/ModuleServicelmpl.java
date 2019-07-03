@@ -67,15 +67,20 @@ public class ModuleServicelmpl implements ModuleService {
      */
     @Override
     public JSONObject addMessageF(JSONObject jsonObject) {//moduleContent
+        Object userId = jsonObject.get("userId");
         String moduleByF = moduleDao.getModuleByF();
         jsonObject.put("messageContent",moduleByF);
-        int chatidByU = moduleDao.getChatidByU(jsonObject);
-        if( chatidByU == 0 ){
+        String chatidByU = moduleDao.getChatidByU(jsonObject);
+        if( chatidByU ==null ){
             moduleDao.addChatByUA( jsonObject );
-            int chatidByUs = moduleDao.getChatidByU( jsonObject );
+            String chatidByUs = moduleDao.getChatidByU( jsonObject );
             chatidByU=chatidByUs;
+            Integer chatidByUa = Integer.valueOf(chatidByU);
+            jsonObject.put("chatId",chatidByUa);
+        }else {
+            Integer chatidByUa = Integer.valueOf(chatidByU);
+            jsonObject.put("chatId",chatidByUa);
         }
-        jsonObject.put("chatid",chatidByU );
         moduleDao.addMessageAlone(jsonObject);
         return CommonUtil.successJson();
     }
@@ -91,13 +96,17 @@ public class ModuleServicelmpl implements ModuleService {
         String messageContent=moduleByJ+commentContent;
         jsonObject.put("messageContent",messageContent);
         jsonObject.put("messageContent",moduleByJ);
-        int chatidByU = moduleDao.getChatidByU(jsonObject);
-        if(chatidByU==0){
-            moduleDao.addChatByUA(jsonObject);
-            int chatidByUs = moduleDao.getChatidByU(jsonObject);
+        String chatidByU = moduleDao.getChatidByU(jsonObject);
+        if( chatidByU ==null ){
+            moduleDao.addChatByUA( jsonObject );
+            String chatidByUs = moduleDao.getChatidByU( jsonObject );
             chatidByU=chatidByUs;
+            Integer chatidByUa = Integer.valueOf(chatidByU);
+            jsonObject.put("chatId",chatidByUa);
+        }else {
+            Integer chatidByUa = Integer.valueOf(chatidByU);
+            jsonObject.put("chatId",chatidByUa);
         }
-        jsonObject.put("chatid",chatidByU);
         moduleDao.addMessageAlone(jsonObject);
         return CommonUtil.successJson();
     }
@@ -110,11 +119,16 @@ public class ModuleServicelmpl implements ModuleService {
     public JSONObject addMessageH(JSONObject jsonObject) {
         String moduleByH = moduleDao.getModuleByH();
         jsonObject.put("messageContent",moduleByH);
-        int chatidByU = moduleDao.getChatidByU(jsonObject);
-        if(chatidByU==0){
-            moduleDao.addChatByUA(jsonObject);
-            int chatidByUs = moduleDao.getChatidByU(jsonObject);
+        String chatidByU = moduleDao.getChatidByU(jsonObject);
+        if( chatidByU ==null ){
+            moduleDao.addChatByUA( jsonObject );
+            String chatidByUs = moduleDao.getChatidByU( jsonObject );
             chatidByU=chatidByUs;
+            Integer chatidByUa = Integer.valueOf(chatidByU);
+            jsonObject.put("chatId",chatidByUa);
+        }else {
+            Integer chatidByUa = Integer.valueOf(chatidByU);
+            jsonObject.put("chatId",chatidByUa);
         }
         jsonObject.put("chatid",chatidByU);
         moduleDao.addMessageAlone(jsonObject);

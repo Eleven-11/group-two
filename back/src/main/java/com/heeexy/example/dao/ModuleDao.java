@@ -54,7 +54,7 @@ public interface ModuleDao {
      * @param
      * @return
      */
-     int getChatidByU(JSONObject jsonObject);
+     String getChatidByU(JSONObject jsonObject);
     /**
      * 插入chat表中信息
      * @param

@@ -71,23 +71,23 @@
     </insert>
 
       <!--验证chat中userid=1,anotherid=传进来的数据的chatid-->
-    <select id="getChatidByU" resultType="int">
+    <select id="getChatidByU" resultType="java.lang.String">
         select chat_id chatId
         from lc_chat
-        where user_id= 1 and another_id=#{userId}
+        where user_id= 1 and another_id = #{userId}
     </select>
     <!--插入chat表中信息(单条)-->
     <insert id="addChatByUA" useGeneratedKeys="true" keyProperty="chat_id">
         INSERT into lc_chat(user_id,another_id)
         values
-            (1,#{userid})
+            (1,#{userId})
     </insert>
 
     <!--发送给人封禁,警告消息-->
     <insert id="addMessageAlone" useGeneratedKeys="true" keyProperty="messageid">
         INSERT into lc_message(chat_id,user_id,message_content,status)
         values
-            (#{chatid},1,#{messageContent},0)
+            (#{chatId},1,#{messageContent},0)
     </insert>
 
     <!--查询警告,封禁,欢迎 模块消息-->
