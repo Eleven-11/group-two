@@ -41,6 +41,12 @@ public interface WxBrowserDao {
      * @return:  List<JSONObject>
      */
     List<JSONObject> getBrowseByUser(JSONObject jsonObject);
-
+    /**
+     * @methodsName: myBrowse
+     * @description: 我的足迹
+     * @param:  JSONObject
+     * @return:  List<JSONObject>
+     */
+    List<JSONObject> myBrowse(JSONObject jsonObject);
 
 }

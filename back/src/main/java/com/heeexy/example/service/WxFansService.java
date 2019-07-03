@@ -4,6 +4,7 @@ package com.heeexy.example.service;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ Author     ：良优
@@ -66,5 +67,24 @@ public interface WxFansService{
      * @return:  JSONObject
      */
     JSONObject getListFans(JSONObject jsonObject);
-
+    /**
+     * @methodsName: getListMoreFansById
+     * @description: 查找用户未关注的用户集合
+     * @param:  JSONObject
+     * @return:  JSONObject
+     */
+    JSONObject getListMoreFansById(JSONObject jsonObject);
+    /**
+     * @methodsName: addMoreFans
+     * @description: 批量添加关注
+     * @param:  Map
+     * @return: JSONObject
+     */
+    JSONObject addMoreFans(Map map);
+    /**
+     * 我的关注集合
+     * @param jsonObject （keyword）
+     * @return JSONObject
+     */
+    JSONObject myFans(JSONObject jsonObject);
 }

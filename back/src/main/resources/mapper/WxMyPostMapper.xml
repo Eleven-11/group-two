@@ -66,4 +66,16 @@
     <select id="countPostCollectByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
         select count(0) collectNumber from cqy_post_collect c  where c.user_id =#{onUserId} and c.display =0
     </select>
+    <!--uid:  //帖子对应用户的id
+tId:’’,//帖子id,avatarUrl：”” //用户的头像（以下用户都为帖子对应用户）,username:”” //用户昵称，types:”” //帖子类型
+desc:””//帖子描述，imgUrl:[ ] //帖子所对应的图片，good:[] //点赞这条信息的用户的头像, likestate:””//点赞状态
+address:’’ //用户所在的地，collectionstate:boolen //收藏状态，time:’’ //用户发表的时间，seepeople:””//帖子浏览数
+
+    commentsid：””//评论人id，commentsimg:””//评论人头像，commentsname:’’//评论昵称，commentstext:””//评论内容
+
+-->
+    <!--我已发布的帖子-->
+    <select id="myPost" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+
+    </select>
 </mapper>

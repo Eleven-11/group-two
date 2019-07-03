@@ -35,4 +35,11 @@
         where  users.user_id =browse.onuser_id and p.id =browse.post_id
           and browse.onuser_id =#{onUserId} group by post_id
     </select>
+    <!--我的足迹-->
+    <select id="myBrowse" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select b.browse_id browseId,u.user_name userName,u.user_photo userImg,b.post_id postId,p.post_content postContent
+        from fly_browse b,tyn_post p,fly_user u
+       where  u.user_id =p.post_owner and p.id =b.post_id
+          and b.onuser_id =#{keyword} group by b.post_id
+    </select>
 </mapper>

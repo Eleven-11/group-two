@@ -104,5 +104,16 @@ public class WxMyPostServiceImpl implements WxMyPostService {
         return CommonUtil.successPage(jsonObjects);
     }
 
+    /**
+     *  我的帖子发布
+     * @param jsonObject （keyword）
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject myPost(JSONObject jsonObject) {
+        List<JSONObject> list = wxMyPostDao.myPost(jsonObject);
+        return CommonUtil.successPage(list);
+    }
+
 
 }

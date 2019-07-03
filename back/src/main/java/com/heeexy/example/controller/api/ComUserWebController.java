@@ -55,6 +55,18 @@ public class ComUserWebController {
         return wxUserService.countFansByUserId(CommonUtil.request2Json(request));
 
     }
-
-
+    /**
+     * 我的界面信息
+     */
+    @GetMapping("/myself")
+    public JSONObject myself(HttpServletRequest request){
+        return wxUserService.mySelf(CommonUtil.request2Json(request));
+    }
+    /**
+     * 我的粉丝信息
+     */
+    @GetMapping("/searchmySelfFans")
+    public JSONObject mySelfFans(HttpServletRequest request){
+        return wxUserService.mySelfFans(CommonUtil.request2Json(request));
+    }
 }

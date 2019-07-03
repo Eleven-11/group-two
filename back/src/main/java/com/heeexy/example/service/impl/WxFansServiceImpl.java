@@ -134,4 +134,38 @@ public class WxFansServiceImpl implements WxFansService {
         return CommonUtil.successPage(jsonObject, list, count);
 
     }
+
+    /**
+     * 查找用户未关注的用户集合
+     * @param jsonObject (onUserId)
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject getListMoreFansById(JSONObject jsonObject) {
+        List<JSONObject> listMoreFansById = wxFansDao.getListMoreFansById(jsonObject);
+        int size = listMoreFansById.size();
+        return CommonUtil.successPage( jsonObject, listMoreFansById, size);
+    }
+
+    /**
+     * 后台批量添加关注
+     * @param map (fansId)
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject addMoreFans(Map map) {
+        wxFansDao.addMoreFans(map);
+        return CommonUtil.successJson();
+    }
+
+    /**
+     *
+     * @param jsonObject （keyword）
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject myFans(JSONObject jsonObject) {
+        List<JSONObject> list = wxFansDao.myFans(jsonObject);
+        return CommonUtil.successPage(list );
+    }
 }

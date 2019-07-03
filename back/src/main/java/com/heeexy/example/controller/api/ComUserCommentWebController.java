@@ -31,4 +31,13 @@ public class ComUserCommentWebController {
         return wxMyCommentService.getMyCommentListById(CommonUtil.request2Json(request));
 
     }
+    /**
+     *我的评论
+     */
+    @GetMapping("/searchMyselfComment")
+    public JSONObject myselfComment(HttpServletRequest request) {
+
+        return wxMyCommentService.myselfComment(CommonUtil.request2Json(request));
+
+    }
 }

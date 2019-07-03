@@ -100,4 +100,19 @@ public interface WxUserDao {
                * @return: int
                */
          int getFansByUserId(JSONObject jsonObject);
+
+    /**
+     * @methodsName: mySelf
+     * @description: 我的界面
+     * @param:  JSONObject
+     * @return:  List<JSONObject>
+     */
+    List<JSONObject> mySelf(JSONObject jsonObject);
+    /**
+     * @methodsName: mySelfFans
+     * @description: 我的界面
+     * @param:  JSONObject
+     * @return:  List<JSONObject>
+     */
+    List<JSONObject> mySelfFans(JSONObject jsonObject);
     }

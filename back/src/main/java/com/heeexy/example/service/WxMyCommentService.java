@@ -27,4 +27,11 @@ public interface WxMyCommentService {
      * @return: JSONObject
      */
     JSONObject getMyCommentListById(JSONObject jsonObject);
+     /**
+          * @methodsName: myselfComment
+          * @description: 我的评论
+          * @param:  JSONObject
+          * @return:  SONObject
+          */
+    JSONObject myselfComment(JSONObject jsonObject);
 }

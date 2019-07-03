@@ -90,4 +90,17 @@ public interface WxUserService {
      * @return: JSONObject
      */
     JSONObject updateFansById(Map map);
+    /**
+     * 我的界面信息
+     * @param jsonObject （uid）
+     * @return  List<JSONObject>
+     */
+    JSONObject mySelf(JSONObject jsonObject);
+    /**
+     * @methodsName: mySelfFans
+     * @description: 我的界面
+     * @param:  JSONObject
+     * @return:  JSONObject
+     */
+    JSONObject mySelfFans(JSONObject jsonObject);
 }

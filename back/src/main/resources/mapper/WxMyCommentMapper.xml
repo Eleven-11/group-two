@@ -35,4 +35,8 @@
           and users.user_id =l.from_user_id and l.to_comment_id =comment.comment_id
           and comment.from_user_id = #{onUserId}
     </select>
+    <!--我的评论-->
+    <select id="myselfComment" resultType="com.alibaba.fastjson.JSONObject" parameterType="com.alibaba.fastjson.JSONObject">
+
+    </select>
 </mapper>
