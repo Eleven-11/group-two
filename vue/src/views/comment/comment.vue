@@ -31,9 +31,15 @@
       </el-table-column>
       <el-table-column align="center" label="当前状态" width="200">
         <template slot-scope="scope">
-          <el-button type="danger"  icon="edit" v-if="scope.row.status<0" @click="changeStatus(scope.row.id, 0)">隐藏</el-button>
-          <el-button type="warning"  icon="edit" v-if="scope.row.status==0" @click="changeStatus(scope.row.id, 1)">未读</el-button>
-          <el-button type="success" icon="edit" v-if="scope.row.status>0" @click="changeStatus(scope.row.id, -1)">显示</el-button>
+          <el-tag type="success" v-if="scope.row.status>0">已读</el-tag>
+          <el-tag type="info" v-if="scope.row.status==0">未读</el-tag>
+          <el-tag type="danger" v-if="scope.row.status<0">删除</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="操作" width="200">
+        <template slot-scope="scope">
+          <el-button type="danger" icon="edit" v-if="scope.row.status>-1" @click="warn(scope.$index)">删除并警告</el-button>
+          <el-button type="danger" icon="edit" v-if="scope.row.status<0" disabled>删除并警告</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -79,9 +85,9 @@
         </el-table-column>
         <el-table-column align="center" label="当前状态" width="200">
           <template slot-scope="scope">
-            <el-button type="danger"  icon="edit" v-if="scope.row.status<0" @click="changeStatus(scope.row.id, 0)">隐藏</el-button>
-            <el-button type="warning"  icon="edit" v-if="scope.row.status==0" @click="changeStatus(scope.row.id, 1)">未读</el-button>
-            <el-button type="success" icon="edit" v-if="scope.row.status>0" @click="changeStatus(scope.row.id, -1)">已读</el-button>
+            <el-tag type="success" v-if="scope.row.status>0">已读</el-tag>
+            <el-tag type="info" v-if="scope.row.status==0">未读</el-tag>
+            <el-tag type="danger" v-if="scope.row.status<0">删除</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -127,9 +133,9 @@
         </el-table-column>
         <el-table-column align="center" label="当前状态" width="200">
           <template slot-scope="scope">
-            <el-button type="danger"  icon="edit" v-if="scope.row.status<0" @click="changeStatus(scope.row.id, 0)">隐藏</el-button>
-            <el-button type="warning"  icon="edit" v-if="scope.row.status==0" @click="changeStatus(scope.row.id, 1)">未读</el-button>
-            <el-button type="success" icon="edit" v-if="scope.row.status>0" @click="changeStatus(scope.row.id, -1)">已读</el-button>
+            <el-tag type="success" v-if="scope.row.status>0">已读</el-tag>
+            <el-tag type="info" v-if="scope.row.status==0">未读</el-tag>
+            <el-tag type="danger" v-if="scope.row.status<0">删除</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -172,9 +178,9 @@
           <span>{{tempComment2.ctime}}</span>
         </el-form-item>
         <el-form-item label="当前状态" label-width="100px">
-          <el-button type="danger"  icon="edit" v-if="tempComment2.status<0" @click="changeStatus(tempComment2.id, 0)">隐藏</el-button>
-          <el-button type="warning"  icon="edit" v-if="tempComment2.status==0" @click="changeStatus(tempComment2.id, 1)">未读</el-button>
-          <el-button type="success" icon="edit" v-if="tempComment2.status>0" @click="changeStatus(tempComment2.id, -1)">已读</el-button>
+          <el-tag type="success" v-if="tempComment2.status>0">已读</el-tag>
+          <el-tag type="info" v-if="tempComment2.status==0">未读</el-tag>
+          <el-tag type="danger" v-if="tempComment2.status<0">删除</el-tag>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -210,8 +216,10 @@
           uid: ''
         },
         tempComment: {
-          id: "",
-          status: ""
+          cid: "",
+          status: "",
+          uid: "",
+          content: ""
         },
         tempComment2: {
           id: "",
@@ -260,21 +268,30 @@
         //表格序号
         return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
       },
-      changeStatus(id, val) {
-        this.tempComment.id = id;
-        this.tempComment.status = val;
+      warn ($index) {
+        this.tempComment.id = this.list[$index].id;
+        this.tempComment.status = -1;
+        this.tempComment.uid = this.list[$index].fuid;
+        this.tempComment.content = this.list[$index].content;
+
         //修改评论状态
         this.api({
           url: "/comment/updateComment",
           method: "post",
           data: this.tempComment
         }).then(() => {
-          this.$message.success("修改成功");
-          this.getList();
-          this.dialogFormVisible = false;
-          this.userDialogVisible = false;
-          this.postDialogVisible = false;
-          this.commentDialogVisible = false;
+            this.api({
+              url: "/comment/updateComment",
+              method: "post",
+              data: this.tempComment
+            }).then(() => {
+              this.$message.success("操作成功");
+              this.getList();
+              this.dialogFormVisible = false;
+              this.userDialogVisible = false;
+              this.postDialogVisible = false;
+              this.commentDialogVisible = false;
+            })
         })
       },
       changeUserState(id, val) {
