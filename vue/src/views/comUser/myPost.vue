@@ -45,9 +45,6 @@
           <el-button type="primary"  v-if="scope.row.myPostState=='1'" icon="delete"@click="removeUser(scope.$index)">取消</el-button>
         </template>
       </el-table-column>
-
-
-
     </el-table>
 
     <el-pagination
