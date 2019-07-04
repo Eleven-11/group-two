@@ -34,6 +34,7 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         JSONObject condition = new JSONObject();
         condition.put("getType", null);
         condition.put("tagType", null);
+        condition.put("pageNum",jsonObject.get("pageNum"));
         List<JSONObject> list = null;
         if(test== 1){
             condition.put("isTop","1___");
@@ -58,7 +59,7 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         }
         //生成点赞状态，收藏状态，日期
         for(int i=0;i<list.size();i++){
-            int userId = (int) jsonObject.get("userId");
+            int userId = (int) jsonObject.get("uid");
             int postId = (int)list.get(i).get("tId");
             JSONObject object = new JSONObject();
             object.put("userId",userId);

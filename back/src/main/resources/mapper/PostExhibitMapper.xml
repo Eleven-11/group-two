@@ -60,7 +60,7 @@
                          and id=tpt.post_id and tag_type=#{tagType}
                      </if>
                  </where>
-                 LIMIT #{offSet}, #{pageRow}
+                 LIMIT #{pageNum}, 10
              ) op
              left join tyn_post_img tpi on tId=tpi.post_id
              left join fly_like fl on tId=fl.post_id and like_state=1
@@ -108,7 +108,7 @@
                     and categories_name='月租短租'
                  </if>
              </where>
-                LIMIT #{offSet}, #{pageRow}
+                LIMIT #{pageNum}, 10
              ) op
             left join tyn_post_img tpi on tId=tpi.post_id
             left join fly_like fl on tId=fl.post_id and like_state=1
