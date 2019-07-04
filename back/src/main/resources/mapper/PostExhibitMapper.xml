@@ -18,11 +18,12 @@
         <collection property="goods" ofType="String">
             <id column="good" property="good"/>
         </collection>
-        <collection property="comments" ofType="java.util.HashMap">
+        <collection property="comments" ofType="com.alibaba.fastjson.JSONObject">
             <id column="commentId" property="commentId"/>
-            <id column="commentUserId" property="commentUserId"/>
-            <id column="commentText" property="commentText"/>
-            <id column="commentName" property="commentName"/>
+            <result column="commentUserId" property="commentUserId"/>
+            <result column="toCommentId" property="toCommentId"/>
+            <result column="commentText" property="commentText"/>
+            <result column="commentName" property="commentName"/>
         </collection>
     </resultMap>
     <select id="getTopPost" resultMap="postMap">
@@ -30,6 +31,7 @@
     oop.*,
     comment_id                              commentId,
     from_user_id                            commentUserId,
+        to_comment_id           toCommentId,
     comment_content                         commentText,
     user_name                               commentName
     from
@@ -76,6 +78,7 @@
     oop.*,
     comment_id              commentId,
     from_user_id            commentUserId,
+    to_comment_id           toCommentId,
     comment_content         commentText,
     user_name               commentName
     from(
@@ -157,16 +160,17 @@
         <collection property="imgUrls" ofType="String">
             <id column="imgUrl" property="imgUrl"/>
         </collection>
-        <collection property="goodsDetail" ofType="java.util.HashMap">
+        <collection property="goodsDetail" ofType="com.alibaba.fastjson.JSONObject">
             <id column="likeId" property="likeId"/>
-            <id column="likeImg" property="likeImg"/>
-            <id column="likeName" property="likeName"/>
+            <result column="likeImg" property="likeImg"/>
+            <result column="likeName" property="likeName"/>
         </collection>
-        <collection property="comments" ofType="java.util.HashMap">
+        <collection property="comments" ofType="com.alibaba.fastjson.JSONObject">
             <id column="commentId" property="commentId"/>
-            <id column="commentUserId" property="commentUserId"/>
-            <id column="commentText" property="commentText"/>
-            <id column="commentName" property="commentName"/>
+            <result column="commentUserId" property="commentUserId"/>
+            <result column="toCommentId" property="toCommentId"/>
+            <result column="commentText" property="commentText"/>
+            <result column="commentName" property="commentName"/>
         </collection>
     </resultMap>
     <select id="queryThePost" resultMap="postDetailMap">
@@ -174,6 +178,7 @@
         oop.*,
         comment_id              commentId,
         from_user_id            commentUserId,
+        to_comment_id           toCommentId,
         comment_content         commentText,
         user_name               commentName
         from(
@@ -217,12 +222,17 @@
         left join fly_user on from_user_id = user_id
 
     </select>
+    <select id="queryCommentUserName" resultType="java.lang.String">
+        select user_name from lc_comment,fly_user
+        where comment_id=#{toCommentId} and from_user_id = user_id
+    </select>
 
     <select id="getThePost" resultMap="postMap">
         select
         oop.*,
         comment_id              commentId,
         from_user_id            commentUserId,
+        to_comment_id           toCommentId,
         comment_content         commentText,
         user_name               commentName
         from(
@@ -271,9 +281,13 @@
 
     <insert id="addPost">
         insert into tyn_post
-        (post_owner,post_time,post_content,post_sort,post_location,post_phone,price_low,price_high,time_start,time_end)
-        values(#{userid},NOW(),#{content},#{sortId},#{address},#{telephone},#{pricelow},#{pricehigh},#{startdate},#{enddate})
+        (post_owner,post_time,post_content,post_sort,post_location,post_phone,price_low,price_high,time_start,time_end,is_top,delete_state)
+        values(#{userid},#{now},#{content},#{sortId},#{address},#{telephone},#{pricelow},#{pricehigh},#{startdate},#{enddate},0,1)
     </insert>
+
+    <select id="queryPostId" resultType="java.lang.Integer">
+        select id from tyn_post
+    </select>
 
 
 

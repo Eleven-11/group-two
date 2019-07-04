@@ -30,5 +30,10 @@ public interface PostExhibitDao {
 
     Integer querySortId(JSONObject jsonObject);
 
+    int addPost(JSONObject jsonObject);
+
+    String queryCommentUserName(int con);
+
+
 
 }
