@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+
 /**
  * @author: lover_tyn
  * @description: todo
@@ -24,4 +25,10 @@ public interface PostExhibitDao {
     Integer isCollect(JSONObject jsonObject);
 
     JSONObject queryThePost(JSONObject jsonObject);
+
+    List<JSONObject> getThePost(JSONObject jsonObject);
+
+    Integer querySortId(JSONObject jsonObject);
+
+
 }

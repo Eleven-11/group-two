@@ -13,5 +13,9 @@ public interface PostExhibitService {
 
     JSONObject queryThePost(JSONObject jsonObject);
 
+    JSONObject getThePost(JSONObject jsonObject);
+
+    JSONObject addPost(JSONObject jsonObject);
+
 
 }

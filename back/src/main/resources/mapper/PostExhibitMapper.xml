@@ -7,7 +7,7 @@
         <id column="tId" property="tId"/>
         <result column="uId" property="uId"/>
         <result column="username" property="username"/>
-        <result column="time" property="time"/>
+        <result column="time" property="timet"/>
         <result column="address" property="address"/>
         <result column="descr" property="desc"/>
         <result column="types" property="types"/>
@@ -45,7 +45,7 @@
                      post_owner                              uId,
                      user_name                               username,
                      user_photo                              avatarUrl,
-                     DATE_FORMAT(post_time, '%Y.%m.%d %T')   time,
+                 UNIX_TIMESTAMP(post_time)   time,
                      post_location                           address,
                      post_content                            descr,
                      categories_name                         types,
@@ -57,7 +57,7 @@
                          and is_top like #{isTop}
                      </if>
                      <if test="tagType!=null and tagType!='' ">
-                         and id=tpt.post_id and tag_type=#{tagType}
+                         and tyn_post.id=tpt.post_id and tag_type=#{tagType}
                      </if>
                  </where>
                  LIMIT #{pageNum}, 10
@@ -90,7 +90,7 @@
             post_owner          uId,
             user_name           username,
             user_photo          avatarUrl,
-            DATE_FORMAT(post_time, '%Y.%m.%d %T') time,
+             UNIX_TIMESTAMP(post_time) time,
             post_location       address,
             post_content        descr,
             categories_name     types,
@@ -102,7 +102,7 @@
                     and is_top not like #{isTop}
                  </if>
                  <if test="tagType!=null and tagType!='' ">
-                    and id=tpt.post_id and tag_type=#{tagType}
+                    and tyn_post.id=tpt.post_id and tag_type=#{tagType}
                  </if>
                  <if test="getType==5">
                     and categories_name='月租短租'
@@ -151,6 +151,9 @@
         <result column="viewOff" property="viewOff"/>
         <result column="realLike" property="realLike"/>
         <result column="realView" property="realView"/>
+        <collection property="tagList" ofType="String">
+            <id column="tagName" property="tagName"/>
+        </collection>
         <collection property="imgUrls" ofType="String">
             <id column="imgUrl" property="imgUrl"/>
         </collection>
@@ -180,6 +183,7 @@
         user_name                                likeName,
         onuser_id                                likeId,
         user_photo                               likeImg,
+        business_subway_name                     tagName,
         (SELECT COUNT(0) FROM fly_browse b WHERE b.post_id=op.tId) realView,
         (SELECT COUNT(0) FROM fly_like l WHERE l.post_id=op.tId and l.like_state=1) realLike
         from(
@@ -188,7 +192,7 @@
         post_owner          uId,
         user_name           username,
         user_photo          avatarUrl,
-        DATE_FORMAT(post_time, '%Y.%m.%d %T') time,
+       UNIX_TIMESTAMP(post_time) time,
         post_phone          telephone,
         post_location       address,
         post_content        descr,
@@ -206,11 +210,70 @@
         left join tyn_post_img tpi on tId=tpi.post_id
         left join fly_like fl on tId=fl.post_id and like_state=1
         left join fly_user fu on onuser_id=fu.user_id
+        LEFT JOIN tyn_post_tag pt ON tId=pt.post_id
+        left join cqy_business_subway bs on pt.tag_id=bs.business_subway_id
         )oop
         left join lc_comment lc on tId=lc.post_id and comment_status in (0,1)
         left join fly_user on from_user_id = user_id
 
     </select>
+
+    <select id="getThePost" resultMap="postMap">
+        select
+        oop.*,
+        comment_id              commentId,
+        from_user_id            commentUserId,
+        comment_content         commentText,
+        user_name               commentName
+        from(
+        SELECT
+        op.*,
+        img                                      imgUrl,
+        user_name                                good,
+        business_subway_name                     tagName,
+        (SELECT COUNT(0) FROM fly_browse b WHERE b.post_id=op.tId)+viewOff seepeople
+        from(
+        SELECT
+        tyn_post.id         tId,
+        post_owner          uId,
+        user_name           username,
+        user_photo          avatarUrl,
+        UNIX_TIMESTAMP(post_time) time,
+        post_location       address,
+        post_content        descr,
+        categories_name     types,
+        view_offset         viewOff
+        FROM tyn_post,fly_user,cqy_post_categories
+        where
+            delete_state =1 and user_id=post_owner and categories_id=post_sort
+        LIMIT #{pageNum}, 10
+        ) op
+        left join tyn_post_img tpi on tId=tpi.post_id
+        left join fly_like fl on tId=fl.post_id and like_state=1
+        left join fly_user fu on onuser_id=fu.user_id
+        LEFT JOIN tyn_post_tag pt ON tId=pt.post_id
+        left join cqy_business_subway bs on pt.tag_id=bs.business_subway_id
+        )oop
+        left join lc_comment lc on tId=lc.post_id and comment_status in (0,1)
+        left join fly_user on from_user_id = user_id
+        <where>
+        <if test="keyword!=null and keyword!='' ">
+            descr like '%${keyword}%' or tagName like  '%${keyword}%'
+        </if>
+    </where>
+        ORDER BY time Desc
+
+    </select>
+
+    <select id="querySortId" resultType="java.lang.Integer">
+        select categories_id from cqy_post_categories where categories_name=#{type}
+    </select>
+
+    <insert id="addPost">
+        insert into tyn_post
+        (post_owner,post_time,post_content,post_sort,post_location,post_phone,price_low,price_high,time_start,time_end)
+        values(#{userid},NOW(),#{content},#{sortId},#{address},#{telephone},#{pricelow},#{pricehigh},#{startdate},#{enddate})
+    </insert>
 
 
 
