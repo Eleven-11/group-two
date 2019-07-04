@@ -23,5 +23,5 @@ public interface PostExhibitDao {
 
     Integer isCollect(JSONObject jsonObject);
 
-    JSONObject queryThePost(JSONObject jsonObject);
+    JSONObject queryThePost(int tid);
 }

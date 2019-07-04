@@ -9,7 +9,7 @@
         <result column="username" property="username"/>
         <result column="time" property="time"/>
         <result column="address" property="address"/>
-        <result column="describ" property="desc"/>
+        <result column="descr" property="desc"/>
         <result column="types" property="types"/>
         <result column="seepeople" property="seepeople"/>
         <collection property="imgUrls" ofType="String">
@@ -47,7 +47,7 @@
                      user_photo                              avatarUrl,
                      DATE_FORMAT(post_time, '%Y.%m.%d %T')   time,
                      post_location                           address,
-                     post_content                            desc,
+                     post_content                            descr,
                      categories_name                         types,
                      view_offset			                 viewOff
                  FROM tyn_post,fly_user,cqy_post_categories,tyn_post_tag tpt
@@ -68,7 +68,7 @@
         )oop
         left join lc_comment lc on tId=lc.post_id and comment_status in (0,1)
         left join fly_user on from_user_id = user_id
-        ORDER BY if(#{getType}==4,seepeople,time) Desc
+        ORDER BY if(#{getType}=4,seepeople,time) Desc
     </select>
 
     <select id="getNormalPost" resultMap="postMap">
@@ -81,7 +81,8 @@
     from(
         SELECT
         op.*,
-        img imgUrl,
+        img                                      imgUrl,
+        user_name                                good,
         (SELECT COUNT(0) FROM fly_browse b WHERE b.post_id=op.tId)+viewOff seepeople
         from(
             SELECT
@@ -91,7 +92,7 @@
             user_photo          avatarUrl,
             DATE_FORMAT(post_time, '%Y.%m.%d %T') time,
             post_location       address,
-            post_content        desc,
+            post_content        descr,
             categories_name     types,
             view_offset         viewOff
             FROM tyn_post,fly_user,cqy_post_categories,tyn_post_tag tpt
@@ -115,7 +116,7 @@
         )oop
         left join lc_comment lc on tId=lc.post_id and comment_status in (0,1)
         left join fly_user on from_user_id = user_id
-        ORDER BY if(#{getType}==4,seepeople,time) Desc
+        ORDER BY if(#{getType}=4,seepeople,time) Desc
 
     </select>
 
@@ -132,35 +133,31 @@
     </select>
 
 
-
     <resultMap id="postDetailMap" type="com.heeexy.example.util.model.One2Many">
         <id column="tId" property="tId"/>
-        <result column="uid" property="uid"/>
+        <result column="uid" property="uId"/>
         <result column="avatarUrl" property="avatarUrl"/>
         <result column="username" property="username"/>
         <result column="telephone" property="telephone"/>
         <result column="time" property="time"/>
-        <result column="sortId" property="sortId"/>
         <result column="types" property="types"/>
         <result column="desc" property="desc"/>
         <result column="address" property="address"/>
-        <result column="postPhone" property="postPhone"/>
         <result column="priceLow" property="priceLow"/>
         <result column="priceHigh" property="priceHigh"/>
         <result column="timeStart" property="timeStart"/>
         <result column="timeEnd" property="timeEnd"/>
-        <result column="isTop" property="isTop"/>
         <result column="likeOff" property="likeOff"/>
-        <result column="collectOff" property="collectOff"/>
         <result column="viewOff" property="viewOff"/>
-        <collection property="tagList" ofType="String">
-            <id column="tagName" property="tagName"/>
-        </collection>
+        <result column="realLike" property="realLike"/>
+        <result column="realView" property="realView"/>
         <collection property="imgUrls" ofType="String">
             <id column="imgUrl" property="imgUrl"/>
         </collection>
-        <collection property="goods" ofType="String">
-            <id column="good" property="good"/>
+        <collection property="goodsDetail" ofType="java.util.HashMap">
+            <id column="likeId" property="likeId"/>
+            <id column="likeImg" property="likeImg"/>
+            <id column="likeName" property="likeName"/>
         </collection>
         <collection property="comments" ofType="java.util.HashMap">
             <id column="commentId" property="commentId"/>
@@ -170,118 +167,51 @@
         </collection>
     </resultMap>
     <select id="queryThePost" resultMap="postDetailMap">
-           SELECT
-            p.*,
-            bs.business_subway_name                            tagName,
-            pi.img                                             imgName
-        FROM (
-                 SELECT
-                     id                                      tId,
-                     post_owner                              uid,
-                     user_name                               username,
-                     DATE_FORMAT(post_time, '%Y.%m.%d %T')   time,
-                     post_sort                               sortId,
-                     categories_name                         types,
-                     post_content                            desc,
-                     post_location                           address,
-                     post_phone                              postPhone,
-                     price_low                               priceLow,
-                     price_high                              priceHigh,
-                     time_start                              timeStart,
-                     time_end                                timeEnd,
-                     is_top                                  isTop,
-					 like_offset  							 likeOff,
-					 collect_offset					         collectOff,
-                     view_offset			                 viewOff
-                 FROM tyn_post,fly_user,cqy_post_categories
-                 WHERE id=#{tId} and user_id=post_owner and categories_id=post_sort
-             ) p
-            LEFT JOIN tyn_post_tag pt ON p.tId=pt.post_id
-            left join cqy_business_subway bs on pt.tag_id=bs.business_subway_id
-            left join tyn_post_img pi on pi.post_id=p.tId
-
-    </select>
-    <select id="getAllSorts" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        oop.*,
+        comment_id              commentId,
+        from_user_id            commentUserId,
+        comment_content         commentText,
+        user_name               commentName
+        from(
         SELECT
-            categories_id        sortId,
-            categories_name      types
-        FROM cqy_post_categories
-        WHERE display=1
-    </select>
-
-    <update id="updatePost">
-        update  tyn_post
-        set
-        post_sort= #{sortId},
-        post_content= #{desc},
-        like_offset= #{likeOff},
-        collect_offset= #{collectOff},
-        view_offset= #{viewOff}
+        op.*,
+        img imgUrl,
+        user_name                                likeName,
+        onuser_id                                likeId,
+        user_photo                               likeImg,
+        (SELECT COUNT(0) FROM fly_browse b WHERE b.post_id=op.tId) realView,
+        (SELECT COUNT(0) FROM fly_like l WHERE l.post_id=op.tId and l.like_state=1) realLike
+        from(
+        SELECT
+        tyn_post.id         tId,
+        post_owner          uid,
+        user_name           username,
+        user_photo          avatarUrl,
+        DATE_FORMAT(post_time, '%Y.%m.%d %T') time,
+        post_phone          telephone,
+        post_location       address,
+        post_content        descr,
+        categories_name     types,
+        price_low                               priceLow,
+        price_high                              priceHigh,
+        time_start                              timeStart,
+        time_end                                timeEnd,
+        view_offset         viewOff,
+        like_offset         likeOff
+        FROM tyn_post,fly_user,cqy_post_categories,tyn_post_tag tpt
         where
-        id= #{tId}
-    </update>
-    <update id="updatePostTop">
-        UPDATE tyn_post
-        SET
-        is_top = #{isTop}
-        WHERE id = #{tId}
-    </update>
+            tyn_post.id=#{tId} and user_id=post_owner and categories_id=post_sort
+        ) op
+        left join tyn_post_img tpi on tId=tpi.post_id
+        left join fly_like fl on tId=fl.post_id and like_state=1
+        left join fly_user fu on onuser_id=fu.user_id
+        )oop
+        left join lc_comment lc on tId=lc.post_id and comment_status in (0,1)
+        left join fly_user on from_user_id = user_id
 
-    <select id="getSomeTag"   resultType="com.alibaba.fastjson.JSONObject">
-        select
-        business_subway_id    tagId,
-        business_subway_name  tagName
-        from cqy_business_subway c
-        where  c.superior_id = (
-        select business_subway_id
-        from cqy_business_subway c
-        where c.business_subway_name = #{need}
-        )
     </select>
 
-    <select id="getNewTagId"   resultType="com.alibaba.fastjson.JSONObject">
-        select business_subway_id tId,
-        superior_id fId
-        from cqy_business_subway
-        <where>
-            <foreach collection="newTag" item="name" open="business_subway_name in(" close=")" separator=",">
-                #{name}
-            </foreach>
-        </where>
-    </select>
 
-    <insert id="addPostTag">
-        insert into tyn_post_tag
-        (post_id,tag_id,tag_type)
-        values
-        (#{tId},#{tId},(SELECT superior_id FROM cqy_business_subway WHERE business_subway_id = #{fId}))
-    </insert>
 
-    <select id="getDeleteTagId"   resultType="java.lang.Integer">
-        select
-        business_subway_id tId
-        from cqy_business_subway
-        <where>
-            <foreach collection="deleteTag" item="name" open="business_subway_name in(" close=")" separator=",">
-                #{name}
-            </foreach>
-        </where>
-    </select>
-
-    <delete id="deleteTag">
-        delete from tyn_post_tag
-        where tag_id=#{tId} and post_id=#{tId}
-    </delete>
-
-    <select id="getFirstTag" resultType="com.alibaba.fastjson.JSONObject">
-        select
-        business_subway_name tagName
-        from cqy_business_subway
-        where superior_id =0
-     </select>
-
-    <delete id="deleteImg">
-        delete from tyn_post_img
-        where img=#{img} and post_id=#{tId}
-    </delete>
 </mapper>

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.PostExhibitDao;
 import com.heeexy.example.service.PostExhibitService;
 import com.heeexy.example.util.CommonUtil;
+import org.apache.commons.codec.language.bm.Lang;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +70,29 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         return CommonUtil.successPage(list);
     }
 
+    @Override
+    public JSONObject queryThePost(int tid, int uid) {
+        JSONObject condition = new JSONObject();
+        condition.put("postId",tid);
+        condition.put("userId",uid);
+        JSONObject the = postExhibitDao.queryThePost(tid);
+        the.put("likeState",postExhibitDao.isLike(condition));
+        the.put("collectState",postExhibitDao.isCollect(condition));
 
+        if(uid==2){
+            System.out.println("xiangdeng ");
+            the.put("seePeople",the.get("realView"));
+            the.put("likePeople",the.get("realLike"));
+        }else {
+            the.put("seePeople",(long)the.get("realView")+(long)the.get("viewOff"));
+            the.put("likePeople",(long)the.get("realLike")+(long)the.get("likeOff"));
+        }
+        the.remove("likeOff");
+        the.remove("viewOff");
+        the.remove("realLike");
+        the.remove("realView");
+        return CommonUtil.successJsonOne(the);
+    }
 
 
     private List<JSONObject> generateList(JSONObject jsonObject){
