@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @vevsion 1.0
  */
 @RestController
-@RequestMapping("/api/frontPostCategorie")
+@RequestMapping("/api/types")
 public class apiPostCoategorieController {
 
     @Autowired
@@ -25,7 +25,7 @@ public class apiPostCoategorieController {
      * 查询帖子类别列表（不包含隐藏的）
      * @return
      */
-    @GetMapping("/getAllPostCategorie")
+    @GetMapping("/getBase.api")
     public JSONObject getAllPostCategorie() {
         return postCategorieService.RgetAllPostCategorie();
     }

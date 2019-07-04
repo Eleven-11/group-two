@@ -105,15 +105,14 @@
 
     <!--收藏帖子的详情-->
     <resultMap id="getAllPostCollectByUserIdMap" type="com.heeexy.example.util.model.One2Many">
-        <id column="postId" property="postId"/>
-        <result column="categoriesName" property="categoriesName"/>
-        <result column="postOwner" property="postOwner"/>
-        <result column="postContent" property="postContent"/>
-        <result column="postTime" property="postTime"/>
-        <result column="userId" property="userId"/>
-        <result column="userName" property="userName"/>
+        <id column="userId" property="userId"/>
+        <result column="postId" property="postId"/>
         <result column="userPhoto" property="userPhoto"/>
-        <result column="updateTime" property="updateTime"/>
+        <result column="userName" property="userName"/>
+        <result column="categoriesName" property="categoriesName"/>
+        <result column="postContent" property="postContent"/>
+        <result column="postLocation" property="postLocation"/>
+        <result column="postTime" property="postTime"/>
     </resultMap>
     <select id="getAllPostCollectByUserId" resultMap="getAllPostCollectByUserIdMap">
         SELECT
@@ -158,9 +157,7 @@
     </resultMap>
     <select id="getAllLikeByPostId" resultMap="getAllLikeByPostIdMap">
        select
-        L.user_id userId,
-        L.user_name userName,
-        L.user_photo userPhoto
+        L.user_name userName
       from
         fly_like F,
         fly_user L
@@ -176,7 +173,6 @@
         <result column="userName" property="userName"/>
         <result column="userPhoto" property="userPhoto"/>
         <result column="commentContent" property="commentContent"/>
-        <result column="commentTime" property="commentTime"/>
     </resultMap>
     <select id="getAllCommentByPostId" resultMap="getAllCommentByPostIdMap">
         select
@@ -184,45 +180,77 @@
             L.from_user_id fromUserId,
             F.user_name userName,
             F.user_photo userPhoto,
-            L.comment_content commentContent,
-            L.comment_time commentTime
+            L.comment_content commentContent
         from
             lc_comment L,
             fly_user F
         where
-            L.to_comment_id=0 and
             L.comment_status=1 and
             L.from_user_id = F.user_id and
-            L.comment_status = 1 and
             L.post_id = #{postId}
+        ORDER BY L.comment_time asc
     </select>
 
     <!--帖子的回复的回复-->
     <resultMap id="getAllCommentByToCommentIdMap" type="com.heeexy.example.util.model.One2Many">
-        <id column="commentId" property="commentId"/>
-        <result column="fromUserId" property="fromUserId"/>
-        <result column="userName" property="userName"/>
-        <result column="userPhoto" property="userPhoto"/>
-        <result column="commentContent" property="commentContent"/>
-        <result column="commentTime" property="commentTime"/>
+        <id column="userName" property="userName"/>
+        <result column="toCommentId" property="toCommentId"/>
     </resultMap>
     <select id="getAllCommentByToCommentId" resultMap="getAllCommentByToCommentIdMap">
        select
-            L.comment_id commentId,
-            L.from_user_id fromUserId,
-            F.user_name userName,
-            F.user_photo userPhoto,
-            L.comment_content commentContent,
-            L.comment_time commentTime
+        F.user_name userName,
+        L.to_comment_id toCommentId
        from
-            lc_comment L,
-            fly_user F
+        lc_comment L,
+        fly_user F
        where
-            L.comment_status=1 and
-            L.from_user_id = F.user_id and
-            L.to_comment_id= #{commentId}
+        L.to_comment_id !=0 AND
+        L.from_user_id = F.user_id and
+        L.post_id = #{postId}
     </select>
 
 
+    <!--通过toCommentId查询用户名-->
+    <resultMap id="gettoCommentIdMap" type="com.heeexy.example.util.model.One2Many">
+        <id column="userName" property="userName"/>
+    </resultMap>
+    <select id="gettoCommentId" resultMap="gettoCommentIdMap">
+       select
+        F.user_name userName
+       from
+        lc_comment L,
+        fly_user F
+       where
+        L.comment_id =#{toCommentId} AND
+        L.from_user_id = F.user_id
+    </select>
+
+    <!--通过userId和postId查询点赞状态-->
+    <!--<resultMap id="getlikeByUPMap" type="com.heeexy.example.util.model.One2Many">-->
+        <!--<id column="likeState" property="likeState"/>-->
+    <!--</resultMap>-->
+    <select id="getlikeByUP" resultType="java.lang.String" >
+        select
+        like_state likeState
+        from fly_like
+        where post_id = #{postId} and onuser_id=#{userIds}
+    </select>
+    <!--通过userId和postId收藏状态-->
+    <!--<resultMap id="getPsotCollectByUPMap" type="com.heeexy.example.util.model.One2Many">-->
+        <!--<id column="display" property="display"/>-->
+    <!--</resultMap>-->
+    <select id="getPsotCollectByUP" resultType="java.lang.String" >
+        select
+        display display
+        from cqy_post_collect
+        where post_id = #{postId} and user_id=#{userIds}
+    </select>
+    <!--通过postId查询浏览数-->
+    <select id="getBrowseByP" resultType="java.lang.String" >
+        select
+        count(*)
+        from fly_browse
+        where post_id=#{postId}
+    </select>
 
 </mapper>
