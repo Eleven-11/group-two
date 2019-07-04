@@ -34,7 +34,7 @@ public class PostCategorieServiceImpl implements PostCategorieService {
     public JSONObject addPostCategorie(JSONObject jsonObject) {
         int exist = postCategorieDao.queryExistPostCategorieName(jsonObject);
         if( exist > 0 ){
-                return CommonUtil.errorJson(ErrorEnum.E_10009);
+             return CommonUtil.errorJson(ErrorEnum.E_10009);
         }
         postCategorieDao.addPostCategorie(jsonObject);
         return CommonUtil.successJson();

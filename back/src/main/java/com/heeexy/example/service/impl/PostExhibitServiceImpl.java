@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.PostExhibitDao;
 import com.heeexy.example.service.PostExhibitService;
 import com.heeexy.example.util.CommonUtil;
+import org.apache.commons.codec.language.bm.Lang;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,7 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         JSONObject condition = new JSONObject();
         condition.put("getType", null);
         condition.put("tagType", null);
+        condition.put("pageNum",jsonObject.get("pageNum"));
         List<JSONObject> list = null;
         if(test== 1){
             condition.put("isTop","1___");
@@ -57,7 +59,7 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         }
         //生成点赞状态，收藏状态，日期
         for(int i=0;i<list.size();i++){
-            int userId = (int) jsonObject.get("userId");
+            int userId = (int) jsonObject.get("uid");
             int postId = (int)list.get(i).get("tId");
             JSONObject object = new JSONObject();
             object.put("userId",userId);
@@ -69,7 +71,30 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         return CommonUtil.successPage(list);
     }
 
+    @Override
+    public JSONObject queryThePost(JSONObject requestJson) {
+        JSONObject condition = new JSONObject();
+        condition.put("postId",requestJson.get("tid"));
+        condition.put("userId",requestJson.get("uid"));
+        JSONObject the = postExhibitDao.queryThePost(requestJson);
+        the.put("likeState",postExhibitDao.isLike(condition));
+        the.put("collectState",postExhibitDao.isCollect(condition));
+        int i =  requestJson.getInteger("uid");
+        int j = the.getInteger("uId");
+        if(i==j){
 
+            the.put("seePeople",the.get("realView"));
+            the.put("likePeople",the.get("realLike"));
+        }else {
+            the.put("seePeople",the.getInteger("realView")+the.getInteger("viewOff"));
+            the.put("likePeople",the.getInteger("realLike")+the.getInteger("likeOff"));
+        }
+        the.remove("likeOff");
+        the.remove("viewOff");
+        the.remove("realLike");
+        the.remove("realView");
+        return CommonUtil.successJsonOne(the);
+    }
 
 
     private List<JSONObject> generateList(JSONObject jsonObject){

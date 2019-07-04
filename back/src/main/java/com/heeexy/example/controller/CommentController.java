@@ -2,6 +2,7 @@ package com.heeexy.example.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.service.CommentService;
+import com.heeexy.example.service.ModuleService;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,9 @@ import java.util.List;
 public class CommentController {
     @Autowired
     private CommentService commentService;
+    //cqy
+    @Autowired
+    private ModuleService moduleService;
 
     /**
      * 获取评论列表
@@ -69,7 +73,13 @@ public class CommentController {
     @PostMapping("updateComment")
     public JSONObject updateComment(@RequestBody JSONObject requestJson){
         CommonUtil.hasAllRequired(requestJson, "id,status");
-
-        return commentService.updateComment(requestJson);
+        JSONObject jsonObject = commentService.updateComment( requestJson );
+        //cqy写
+        Object id = requestJson.get( "uid" );
+        Object content = requestJson.get( "content" );
+        requestJson.put( "userId",id );
+        requestJson.put( "commentContent",content);
+        moduleService.addMessageJ(requestJson);
+        return jsonObject;
     }
 }

@@ -25,6 +25,9 @@ import java.util.Map;
 public class ComUserWebController {
     @Autowired
     private WxUserService wxUserService;
+    //cqy
+    @Autowired
+    private ModuleService moduleService;
     /**
      * 查找用户
      */
@@ -130,7 +133,10 @@ public class ComUserWebController {
                 //存入session中
                 JSONObject maxNumber = wxUserService.getMaxNumber(requestJson);
                 session.setAttribute("onUserId", maxNumber.getString("userId"));
+                //cqy改(未测试)
+                moduleService.addMessageH(maxNumber);
                 return maxNumber ;
+
             }else {
                 String uuid = jsonObject.getString("uuid");
                 session.setAttribute("onUserId", jsonObject.getString("userId"));
