@@ -128,7 +128,29 @@ public interface PostCollectDao {
      */
     List<JSONObject> getAllCommentByToCommentId(Object commentId);
 
-
-
+    /**
+     * 通过toCommentId查询用户名
+     * @param
+     * @return
+     */
+    JSONObject gettoCommentId(Object toCommentId);
+    /**
+     * 通过userId和postId查询点赞状态
+     * @param
+     * @return
+     */
+    String getlikeByUP(JSONObject jsonObject);
+    /**
+     * 通过userId和postId收藏状态
+     * @param
+     * @return
+     */
+    String getPsotCollectByUP(JSONObject jsonObject);
+    /**
+     * 通过postId查询浏览数
+     * @param
+     * @return
+     */
+    String getBrowseByP(Object postId);
 
 }

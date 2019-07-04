@@ -102,7 +102,8 @@ address:’’ //用户所在的地，collectionstate:boolen //收藏状态，ti
     <!--我已发布的帖子-->
     <select id="myPost" resultMap="postMap">
       select
-          N.* ,m.commentsid,m.commentsimg,m.commentsname,m.commentstext
+          N.* ,z.commentsid,z.commentsimg,z.commentsname,z.commentstext,
+          (select count(0) from fly_browse b where b.post_id=N.tId) seepeople
       from
         (select
             p.id tId,u.user_id uid,u.user_photo  avatarUrl,u.user_name username,ptg.business_subway_name types,
@@ -121,11 +122,21 @@ address:’’ //用户所在的地，collectionstate:boolen //收藏状态，ti
         from tyn_post_img pig,tyn_post post
         where post.id= pig.post_id and post.delete_state = 1) pmg  on pmg.id =like2.post_id
         ) N,
-        (select
+        /*(select
           lc.post_id,lc.from_user_id commentsid,uu.user_name commentsname,
           uu.user_photo commentsimg,lc.comment_content commentstext
          from lc_comment lc ,fly_user uu
-         where uu.user_id=lc.from_user_id and lc.comment_status in (0,1)) m
-      where  m.post_id =N.tId and N.uid =#{uid}
+         where uu.user_id=lc.from_user_id and lc.comment_status in (0,1)) m*/
+          (select  m.post_id,m.commentsid,m.commentsname,m.commentsimg,
+        concat(concat(m.commentsname,user1.user_name),m.commentstext) commentstext
+        from
+        (select
+        lc.post_id,lc.from_user_id commentsid,uu.user_name commentsname,lc.to_comment_id ,
+        uu.user_photo commentsimg,lc.comment_content commentstext
+        from lc_comment lc ,fly_user uu,lc_comment cl
+        where uu.user_id=lc.from_user_id and lc.comment_status !=-1 order by lc.comment_time desc ) m,lc_comment cl,fly_user user1
+        where cl.comment_id =m.to_comment_id and user1.user_id = cl.from_user_id
+        ) z
+      where  z.post_id =N.tId and N.uid =#{uid}
     </select>
 </mapper>
