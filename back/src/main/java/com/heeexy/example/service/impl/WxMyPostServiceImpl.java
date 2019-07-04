@@ -5,6 +5,7 @@ import com.heeexy.example.dao.WxMyPostDao;
 import com.heeexy.example.service.WxMyPostService;
 import com.heeexy.example.util.CommonUtil;
 
+import com.heeexy.example.util.emjoy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -112,6 +113,11 @@ public class WxMyPostServiceImpl implements WxMyPostService {
     @Override
     public JSONObject myPost(JSONObject jsonObject) {
         List<JSONObject> list = wxMyPostDao.myPost(jsonObject);
+        for (JSONObject ments : list) {
+            String time = ments.getString("time");
+            String times = emjoy.getTimes(time);
+            ments.put("time", times);
+        }
         return CommonUtil.successPage(list);
     }
 

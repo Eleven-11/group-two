@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.WxLikeDao;
 import com.heeexy.example.service.WxLikeService;
 import com.heeexy.example.util.CommonUtil;
+import com.heeexy.example.util.emjoy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -134,6 +135,11 @@ public class WxLikeServiceImpl implements WxLikeService {
     @Override
     public JSONObject myLike(JSONObject jsonObject) {
         List<JSONObject> list = wxLikeDao.myLike(jsonObject);
+        for (JSONObject ments : list) {
+            String time = ments.getString("time");
+            String times = emjoy.getTimes(time);
+            ments.put("time", times);
+        }
         return CommonUtil.successPage(list);
     }
 }
