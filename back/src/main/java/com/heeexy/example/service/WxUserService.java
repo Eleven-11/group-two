@@ -29,23 +29,23 @@ public interface WxUserService {
      * @param:  JSONObject
      * @return: JSONObject
      */
-   /* JSONObject getMaxNumber(JSONObject jsonObject);*/
+   JSONObject getMaxNumber(JSONObject jsonObject);
 
     /**
      * @methodsName: addByUser
      * @description: 增加普通用户
-     * @param:  JSONObject
+     * @param:  map
      * @return: JSONObject
      */
-    JSONObject addByUser(JSONObject jsonObject);
+    JSONObject addByUser(Map map);
 
     /**
      * @methodsName: addGuestUser
      * @description: 添加游客用户
-     * @param:  JSONObject
+     * @param:  map
      * @return: JSONObject
      */
-    JSONObject addGuestUser(JSONObject jsonObject);
+    JSONObject addGuestUser(Map map);
     /**
      * @methodsName: updateFansfById
      * @description: 修改虚假粉丝数和封禁状态
@@ -106,8 +106,8 @@ public interface WxUserService {
     /**
      * @methodsName: queryUserByUuId
      * @description: 根据uuid查找用户
-     * @param:  JSONObject
+     * @param:  map
      * @return: JSONObject
      */
-    JSONObject queryUserByUuId(JSONObject jsonObject);
+    JSONObject queryUserByUuId(Map map);
 }

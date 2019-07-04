@@ -5,20 +5,20 @@
 
     <!--查找最大id数-->
     <select id="getMaxNumber" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-      /* select
+      select
          user_id  userId,user_name userName, user_photo userPhoto,
       user_sex  userSex,user_fans userFans,user_fans_f userFansf,
       guest guest, user_state userState,DATE_FORMAT(first_time, '%Y.%m.%d %T') firstTime,
       DATE_FORMAT(update_time, '%Y.%m.%d %T')  updateTime
-        from  fly_user where user_id = (select max(user_id) from fly_user)*/
+        from  fly_user where user_id = (select max(user_id) from fly_user)
     </select>
     <!--增加普通用户-->
-    <insert id="addByUser" parameterType="com.alibaba.fastjson.JSONObject">
+    <insert id="addByUser" parameterType="java.util.Map">
     insert  into  fly_user (user_uuid userUuid,user_name, user_photo, user_sex, user_fans, user_fans_f, guest, user_state)
     values (#{userUuid},#{userName},#{userPhoto},#{userSex},0,0,0,0);
     </insert>
     <!--增加游客用户-->
-    <insert id="addGuestUser" parameterType="com.alibaba.fastjson.JSONObject">
+    <insert id="addGuestUser" parameterType="java.util.Map">
     insert  into  fly_user (user_uuid userUuid,user_name, user_photo, user_sex, user_fans, user_fans_f, guest, user_state)
     values (0,'游客','http://img.duoziwang.com/2018/17/05282053226540.jpg','男',0,0,1,0);
     </insert>
@@ -109,7 +109,7 @@
     <select id="mySelfFans" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
         select u.user_name mySelfFansName ,u.user_photo mySelfFansImg,u.user_id mySelfFansId
         from fly_user u,fly_fans f
-        where   u.user_id =f.onuser_id  and f.state =1 and f.user_id = #{keyword}
+        where   u.user_id =f.onuser_id  and f.state =1 and f.user_id = #{uid}
     </select>
     <!--根据uuid查找用户-->
     <select id="queryUserByUuId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">

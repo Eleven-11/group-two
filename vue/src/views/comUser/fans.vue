@@ -116,7 +116,7 @@
           pageRow: 50,//每页条数
         },
         MoreFans:{
-          onUserId:'',//获取输入框的值
+          onUserId:'',//获取值
           pageNum: 1,//页码
           pageRow: 50,//每页条数
         },

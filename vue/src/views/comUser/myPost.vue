@@ -30,11 +30,11 @@
       <el-table-column align="center" label="帖子内容" prop="postContent" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="帖子状态" prop="myPostState" style="width: 60px;">
         <template slot-scope="scope">
-          <p v-if="scope.row.myPostState=='1'">
-            已删除
-          </p>
-          <p v-else-if="scope.row.myPostState=='0'">
+          <p v-if="scope.row.myPostState=='0'">
             未删除
+          </p>
+          <p v-else-if="scope.row.myPostState=='1'">
+            已删除
           </p>
         </template>
       </el-table-column>
@@ -45,9 +45,6 @@
           <el-button type="primary"  v-if="scope.row.myPostState=='1'" icon="delete"@click="removeUser(scope.$index)">取消</el-button>
         </template>
       </el-table-column>
-
-
-
     </el-table>
 
     <el-pagination
