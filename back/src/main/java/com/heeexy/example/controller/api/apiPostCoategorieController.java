@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.service.PostCategorieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +26,7 @@ public class apiPostCoategorieController {
      * 查询帖子类别列表（不包含隐藏的）
      * @return
      */
-    @GetMapping("/getTypes")
+    @PostMapping("/getTypes")
     public JSONObject getAllPostCategorie() {
         return postCategorieService.RgetAllPostCategorie();
     }
