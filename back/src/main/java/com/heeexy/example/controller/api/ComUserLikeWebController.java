@@ -45,7 +45,7 @@ public class ComUserLikeWebController {
      */
     @PostMapping("/addLikesByUser")
     public JSONObject addLikeByUser(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "onUserId,likeId,postId");
+        CommonUtil.hasAllRequired(requestJson, "onUserId,likeId,postId,userId");
        JSONObject userByUsername = wxUserService.getUserByUsername(requestJson);
         String userState = userByUsername.getString("userState");
         if (userState =="1"){
