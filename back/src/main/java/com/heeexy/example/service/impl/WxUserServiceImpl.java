@@ -36,26 +36,38 @@ public class WxUserServiceImpl implements WxUserService {
         List<JSONObject> list = wxUserDao.getListUser(jsonObject);
         return CommonUtil.successPage(jsonObject, list, count);
     }
+
     /**
-     * 增加普通用户
-     * @param jsonObject (userUuid,userName,userPhoto,userSex)
+     * 查找出userId最大的用户
+     * @param jsonObject
      * @return JSONObject
      */
     @Override
-    public JSONObject addByUser(JSONObject jsonObject) {
+    public JSONObject getMaxNumber(JSONObject jsonObject) {
+        JSONObject maxNumber = wxUserDao.getMaxNumber(jsonObject);
+        return maxNumber;
+    }
+
+    /**
+     * 增加普通用户
+     * @param map (userUuid,userName,userPhoto,userSex)
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject addByUser(Map map) {
         //增加普通用户
-         wxUserDao.addByUser(jsonObject);
+         wxUserDao.addByUser(map);
         return CommonUtil.successJson();
     }
     /**
      * 增加游客用户
-     * @param jsonObject jsonObject
+     * @param map jsonObject
      * @return JSONObject
      */
     @Override
-    public JSONObject addGuestUser(JSONObject jsonObject) {
+    public JSONObject addGuestUser(Map map) {
         //增加游客用户
-        wxUserDao.addGuestUser(jsonObject);
+        wxUserDao.addGuestUser(map);
         return CommonUtil.successJson();
     }
     /**
@@ -138,12 +150,12 @@ public class WxUserServiceImpl implements WxUserService {
 
     /**
      * 根据用户uuid查找信息
-     * @param jsonObject (uuid)
+     * @param map (uuid)
      * @return JSONObject
      */
     @Override
-    public JSONObject queryUserByUuId(JSONObject jsonObject) {
-        JSONObject jsonObject1 = wxUserDao.queryUserByUuId(jsonObject);
+    public JSONObject queryUserByUuId(Map map) {
+        JSONObject jsonObject1 = wxUserDao.queryUserByUuId(map);
         return jsonObject1;
     }
 

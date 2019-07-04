@@ -35,8 +35,59 @@
           and users.user_id =l.from_user_id and l.to_comment_id =comment.comment_id
           and comment.from_user_id = #{onUserId}
     </select>
+    <resultMap id="postMap" type="com.heeexy.example.util.model.One2Many">
+        <id column="tId" property="tId"/>
+        <result column="uid" property="uid"/>
+        <result column="avatarUrl" property="avatarUrl"/>
+        <result column="username" property="username"/>
+        <result column="types" property="types"/>
+        <result column="time1" property="time"/>
+        <result column="address" property="address"/>
+        <result column="descrb" property="desc"/>
+        <result column="likestate" property="likestate"/>
+        <result column="collectionstate" property="collectionstate"/>
+        <result column="seepeople" property="seepeople"/>
+        <collection property="imgUrls" ofType="String">
+            <id column="imgUrl" property="imgUrl"/>
+        </collection>
+        <collection property="goods" ofType="String">
+            <id column="good" property="good"/>
+        </collection>
+        <collection property="lcments" ofType="java.util.Map">
+            <id column="commentsid" property="commentsId"/>
+            <id column="commentsimg" property="commentUserId"/>
+            <id column="commentstext" property="commentsText"/>
+            <id column="commentsname" property="commentsName"/>
+        </collection>
+    </resultMap>
     <!--我的评论-->
-    <select id="myselfComment" resultType="com.alibaba.fastjson.JSONObject" parameterType="com.alibaba.fastjson.JSONObject">
-
+    <select id="myselfComment" resultMap="postMap">
+      select
+        N.* ,m.commentsid,m.commentsimg,m.commentsname,m.commentstext
+      from
+        (select
+            p.id tId,u.user_id uid,u.user_photo  avatarUrl,u.user_name username,ptg.business_subway_name types,
+            p.post_content descrb, like2.usersPhoto good,l.like_state likestate,c.display collectionstate,
+            pmg.img imgUrl,p.post_location address,DATE_FORMAT(p.post_time, '%Y.%m.%d %T')  time1
+        from fly_user u
+        left join tyn_post p on u.user_id =p.post_owner and p.delete_state =1
+        left join  (select pt.post_id,cqy.business_subway_name
+        from cqy_business_subway cqy,tyn_post_tag  pt
+        where cqy.business_subway_id = pt.tag_type )  ptg on p.id = ptg.post_id
+        left join cqy_post_collect c on c.post_id =ptg.post_id
+         left join fly_like l on l.post_id =c.post_id
+        left  join (select users.user_photo usersPhoto,likes.post_id
+        from fly_like likes,fly_user users
+        where users.user_id= likes.onuser_id and likes.like_state =1) like2 on l.post_id =like2.post_id
+          left join   (select post.id,pig.img
+        from tyn_post_img pig,tyn_post post
+        where post.id= pig.post_id and post.delete_state = 1) pmg  on pmg.id =like2.post_id
+        ) N,
+        (select
+        lc.post_id,lc.from_user_id commentsid,uu.user_name commentsname,
+        uu.user_photo commentsimg,lc.comment_content commentstext
+        from lc_comment lc ,fly_user uu
+        where uu.user_id=lc.from_user_id and lc.comment_status in (0,1)) m
+      where  m.post_id =N.tId and m.commentsid =#{uid}
     </select>
 </mapper>

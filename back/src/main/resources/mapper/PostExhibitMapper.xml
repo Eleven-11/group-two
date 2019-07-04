@@ -169,7 +169,7 @@
             <id column="commentName" property="commentName"/>
         </collection>
     </resultMap>
-    <select id="queryThePost." resultMap="postDetailMap">
+    <select id="queryThePost" resultMap="postDetailMap">
            SELECT
             p.*,
             bs.business_subway_name                            tagName,

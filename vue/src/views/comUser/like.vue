@@ -8,7 +8,7 @@
           <el-button type="primary"  icon="el-icon-search"  @click="selectUser">查询</el-button>
         </el-form-item>
       </el-form>
-       <el-button type="primary" icon="delete"  @click="addUserlikes">添加点赞</el-button>
+       <!--<el-button type="primary" icon="delete"  @click="addUserlikes">添加点赞</el-button>-->
     </div>
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
