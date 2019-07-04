@@ -25,7 +25,7 @@ public class apiPostCoategorieController {
      * 查询帖子类别列表（不包含隐藏的）
      * @return
      */
-    @GetMapping("/getBase.api")
+    @GetMapping("/getTypes")
     public JSONObject getAllPostCategorie() {
         return postCategorieService.RgetAllPostCategorie();
     }

@@ -67,14 +67,14 @@
         update cqy_post_collect
         set
         display = 0
-        where post_collect_id= #{postCollectId}
+        where post_id=#{postId} and user_id=#{userId}
      </update>
     <!--修改 Display为0-->
     <update id="updatePostCollectDisplayTwo">
         update cqy_post_collect
         set
         display = 1
-        where post_collect_id= #{postCollectId}
+        where post_id=#{postId} and user_id=#{userId}
      </update>
     <!--查询模块名是否存在-->
     <select id="queryExistPostCollectPU" resultType="int">
@@ -91,9 +91,9 @@
 
     <!--校验帖子id是否存在（在帖子表中）-->
     <select id="queryExistPostCollectPostId" resultType="int">
-        select count(0)
+        select count(*)
         from tyn_post
-        where post_id= #{postId}
+        where id= #{postId}
     </select>
     <!--校验用户id是否已存在（在用户表中）-->
     <select id="queryExistPostCollectUserId" resultType="int">

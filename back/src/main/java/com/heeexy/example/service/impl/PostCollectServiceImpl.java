@@ -198,7 +198,7 @@ public class PostCollectServiceImpl implements PostCollectService {
                         postCollectDao.updatePostCollectDisplay( jsonObject );
                     }
                 }else {
-                    postCollectDao.addPostCollect( jsonObject );
+                    postCollectDao.addPostCollect(jsonObject);
                 }
             }
         }
