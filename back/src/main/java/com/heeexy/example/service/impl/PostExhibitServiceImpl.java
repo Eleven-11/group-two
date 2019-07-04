@@ -71,21 +71,22 @@ public class PostExhibitServiceImpl implements PostExhibitService {
     }
 
     @Override
-    public JSONObject queryThePost(int tid, int uid) {
+    public JSONObject queryThePost(JSONObject requestJson) {
         JSONObject condition = new JSONObject();
-        condition.put("postId",tid);
-        condition.put("userId",uid);
-        JSONObject the = postExhibitDao.queryThePost(tid);
+        condition.put("postId",requestJson.get("tid"));
+        condition.put("userId",requestJson.get("uid"));
+        JSONObject the = postExhibitDao.queryThePost(requestJson);
         the.put("likeState",postExhibitDao.isLike(condition));
         the.put("collectState",postExhibitDao.isCollect(condition));
+        int i =  requestJson.getInteger("uid");
+        int j = the.getInteger("uId");
+        if(i==j){
 
-        if(uid==2){
-            System.out.println("xiangdeng ");
             the.put("seePeople",the.get("realView"));
             the.put("likePeople",the.get("realLike"));
         }else {
-            the.put("seePeople",(long)the.get("realView")+(long)the.get("viewOff"));
-            the.put("likePeople",(long)the.get("realLike")+(long)the.get("likeOff"));
+            the.put("seePeople",the.getInteger("realView")+the.getInteger("viewOff"));
+            the.put("likePeople",the.getInteger("realLike")+the.getInteger("likeOff"));
         }
         the.remove("likeOff");
         the.remove("viewOff");

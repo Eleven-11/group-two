@@ -11,7 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 public interface PostExhibitService {
     JSONObject getIndexPost(JSONObject jsonObject);
 
-    JSONObject queryThePost(int tid,int uid);
+    JSONObject queryThePost(JSONObject jsonObject);
 
 
 }

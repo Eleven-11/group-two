@@ -28,9 +28,9 @@ public class PostExhibitController {
     }
 
     @PostMapping("/detail")
-    public JSONObject detail(int tid,int uid){
+    public JSONObject detail(@RequestBody JSONObject requestJson){
 
-        return postExhibitService.queryThePost(tid,uid);
+        return postExhibitService.queryThePost(requestJson);
     }
 
 }

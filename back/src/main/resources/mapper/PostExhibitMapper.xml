@@ -5,7 +5,7 @@
 
     <resultMap id="postMap" type="com.heeexy.example.util.model.One2Many">
         <id column="tId" property="tId"/>
-        <result column="uid" property="uid"/>
+        <result column="uId" property="uId"/>
         <result column="username" property="username"/>
         <result column="time" property="time"/>
         <result column="address" property="address"/>
@@ -42,7 +42,7 @@
          from(
                  SELECT
                      tyn_post.id                            tId,
-                     post_owner                              uid,
+                     post_owner                              uId,
                      user_name                               username,
                      user_photo                              avatarUrl,
                      DATE_FORMAT(post_time, '%Y.%m.%d %T')   time,
@@ -87,7 +87,7 @@
         from(
             SELECT
             tyn_post.id         tId,
-            post_owner          uid,
+            post_owner          uId,
             user_name           username,
             user_photo          avatarUrl,
             DATE_FORMAT(post_time, '%Y.%m.%d %T') time,
@@ -135,7 +135,7 @@
 
     <resultMap id="postDetailMap" type="com.heeexy.example.util.model.One2Many">
         <id column="tId" property="tId"/>
-        <result column="uid" property="uId"/>
+        <result column="uId" property="uId"/>
         <result column="avatarUrl" property="avatarUrl"/>
         <result column="username" property="username"/>
         <result column="telephone" property="telephone"/>
@@ -185,7 +185,7 @@
         from(
         SELECT
         tyn_post.id         tId,
-        post_owner          uid,
+        post_owner          uId,
         user_name           username,
         user_photo          avatarUrl,
         DATE_FORMAT(post_time, '%Y.%m.%d %T') time,
@@ -201,7 +201,7 @@
         like_offset         likeOff
         FROM tyn_post,fly_user,cqy_post_categories,tyn_post_tag tpt
         where
-            tyn_post.id=#{tId} and user_id=post_owner and categories_id=post_sort
+            tyn_post.id=#{tid} and user_id=post_owner and categories_id=post_sort
         ) op
         left join tyn_post_img tpi on tId=tpi.post_id
         left join fly_like fl on tId=fl.post_id and like_state=1
