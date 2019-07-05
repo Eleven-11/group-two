@@ -13,11 +13,15 @@
             date_format(c.comment_time, '%Y.%m.%d %T')    ctime,
             c.comment_status  status,
             u.user_name       uname,
-            u.user_state      ustate
+            u.user_state      ustate,
+            u.user_photo      head
         FROM lc_comment c, fly_user u
         WHERE c.from_user_id = u.user_id
-        <if test="status != null and status != ''">
+        <if test="status != null and status != '' and status != 2">
             AND c.comment_status = #{status}
+        </if>
+        <if test="status == 2">
+            AND c.comment_status > -1
         </if>
         <if test="uid != null and uid != ''">
             AND c.from_user_id = #{uid}
@@ -26,7 +30,9 @@
             AND c.post_id = #{pid}
         </if>
         ORDER BY c.comment_id
-        LIMIT #{offSet}, #{pageRow}
+        <if test="offSet != null and offSet != '' and pageRow != null and pageRow != ''">
+            LIMIT #{offSet}, #{pageRow}
+        </if>
     </select>
 
     <select id="countComment" resultType="Integer">
@@ -54,7 +60,8 @@
             date_format(c.comment_time, '%Y.%m.%d %T')    ctime,
             c.comment_status  status,
             u.user_name       uname,
-            u.user_state      ustate
+            u.user_state      ustate,
+            u.user_photo      head
         FROM lc_comment c, fly_user u
         WHERE c.from_user_id = u.user_id AND c.comment_id = #{id}
     </select>

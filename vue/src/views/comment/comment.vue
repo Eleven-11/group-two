@@ -269,7 +269,7 @@
         return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
       },
       warn ($index) {
-        this.tempComment.id = this.list[$index].id;
+        this.tempComment.cid = this.list[$index].id;
         this.tempComment.status = -1;
         this.tempComment.uid = this.list[$index].fuid;
         this.tempComment.content = this.list[$index].content;
@@ -280,18 +280,12 @@
           method: "post",
           data: this.tempComment
         }).then(() => {
-            this.api({
-              url: "/comment/updateComment",
-              method: "post",
-              data: this.tempComment
-            }).then(() => {
-              this.$message.success("操作成功");
-              this.getList();
-              this.dialogFormVisible = false;
-              this.userDialogVisible = false;
-              this.postDialogVisible = false;
-              this.commentDialogVisible = false;
-            })
+          this.$message.success("操作成功");
+          this.getList();
+          this.dialogFormVisible = false;
+          this.userDialogVisible = false;
+          this.postDialogVisible = false;
+          this.commentDialogVisible = false;
         })
       },
       changeUserState(id, val) {

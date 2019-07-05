@@ -37,21 +37,17 @@ public class MessageServiceImpl implements MessageService {
      */
     @Override
     public JSONObject getChatByUserId(JSONObject jsonObject) {
-        CommonUtil.fillPageParam(jsonObject);
-        int count = messageDao.countChatByUserId(jsonObject);
         List<JSONObject> list = messageDao.getChatByUserId(jsonObject);
-        return CommonUtil.successPage(jsonObject, list, count);
+        return CommonUtil.successJson(list);
     }
 
     /**
      * 根据用户ID获取消息列表
      */
     @Override
-    public JSONObject getMessageByUserId(JSONObject jsonObject) {
-        CommonUtil.fillPageParam(jsonObject);
-        int count = messageDao.countMessageByUserId(jsonObject);
-        List<JSONObject> list = messageDao.getMessageByUserId(jsonObject);
-        return CommonUtil.successPage(jsonObject, list, count);
+    public JSONObject getMessageByChatId(JSONObject jsonObject) {
+        List<JSONObject> list = messageDao.getMessageByChatId(jsonObject);
+        return CommonUtil.successJson(list);
     }
 
     /**

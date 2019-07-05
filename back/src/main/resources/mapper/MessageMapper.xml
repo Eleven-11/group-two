@@ -37,38 +37,37 @@
 
     <select id="getChatByUserId" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
-        m.chat_id                                   cid,
-        m.chat_id                                   cid,
-        m.user_id                                   uid,
+        m.chat_id                                   chat,
+        m.user_id                                   sender,
+        u.user_id                                   uid,
+        u.user_name                                 username,
+        u.user_photo                                head,
         m.message_content                           content,
         date_format(m.message_time, '%Y.%m.%d %T')  mtime,
-        m.status                                    status,
-        c.user_id                                   uid,
-        c.another_id                                tuid
-        FROM lc_message m, lc_chat c
-        WHERE m.chat_id = c.chat_id AND c.user_id = #{uid} OR c.another_id = #{uid}
-        <if test="status != null and status != ''">
-            AND m.status = #{status}
-        </if>
+        m.status                                    status
+        FROM lc_message m, lc_chat c, fly_user u
+        WHERE m.chat_id = c.chat_id AND (c.user_id = #{uid} OR c.another_id = #{uid})
+        AND (u.user_id = c.user_id OR u.user_id = c.another_id) AND u.user_id != #{uid}
+        AND m.status != -#{uid} AND m.status != -(c.user_id+c.another_id)
         GROUP BY m.chat_id
         ORDER BY m.message_time DESC
     </select>
 
-    <select id="getMessageByUserId" resultType="com.alibaba.fastjson.JSONObject">
+    <select id="getMessageByChatId" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
         m.message_id                                mid,
-        m.chat_id                                   cid,
-        m.user_id                                   uid,
+        m.chat_id                                   chat,
+        m.user_id                                   sender,
+        u.user_id                                   uid,
+        u.user_name                                 username,
+        u.user_photo                                head,
         m.message_content                           content,
         date_format(m.message_time, '%Y.%m.%d %T')  mtime,
-        m.status                                    status,
-        c.user_id                                   uid,
-        c.another_id                                tuid
-        FROM lc_message m, lc_chat c
-        WHERE m.chat_id = c.chat_id AND c.user_id = #{uid} OR c.another_id = #{uid}
-        <if test="status != null and status != ''">
-            AND m.status = #{status}
-        </if>
+        m.status                                    status
+        FROM lc_message m, lc_chat c, fly_user u
+        WHERE m.chat_id = c.chat_id AND c.chat_id = #{cid}
+        AND (u.user_id = c.user_id OR u.user_id = c.another_id) AND u.user_id != #{uid}
+        AND m.status != -#{uid} AND m.status != -(c.user_id+c.another_id)
         ORDER BY m.message_time DESC
     </select>
 
@@ -76,19 +75,15 @@
         SELECT count(0)
         FROM lc_message m, lc_chat c
         WHERE m.chat_id = c.chat_id AND c.user_id = #{uid} OR c.another_id = #{uid}
-        <if test="status != null and status != ''">
-            AND m.status = #{status}
-        </if>
+        AND m.status != -#{uid} AND m.status != -(c.user_id+c.another_id)
         GROUP BY m.chat_id
     </select>
 
     <select id="countMessageByUserId" resultType="com.alibaba.fastjson.JSONObject">
         SELECT count(0)
         FROM lc_message m, lc_chat c
-        WHERE m.chat_id = c.chat_id AND c.user_id = #{uid} OR c.another_id = #{uid}
-        <if test="status != null and status != ''">
-            AND m.status = #{status}
-        </if>
+        WHERE m.chat_id = c.chat_id AND (c.user_id = #{uid} OR c.another_id = #{uid})
+        AND m.status != -#{uid} AND m.status != -(c.user_id+c.another_id)
     </select>
 
     <select id="getPictureByMessageId" resultType="com.alibaba.fastjson.JSONObject">

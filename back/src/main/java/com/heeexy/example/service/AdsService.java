@@ -37,4 +37,9 @@ public interface AdsService {
      * 删除广告信息
      */
     JSONObject removeAdsById(int id);
+
+    /**
+     * 获取启用的广告
+     */
+    JSONObject swiper();
 }
