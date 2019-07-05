@@ -1,12 +1,14 @@
 package com.heeexy.example.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.aliyun.oss.OSSClient;
 import com.heeexy.example.service.PostCategorieService;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -29,54 +31,95 @@ public class PostCategorieController {
 //    List<String> list = new ArrayList<>();
     String string=new String();
 
+    public static String ENDPOINT = "http://oss-cn-shenzhen.aliyuncs.com";
+    public static String ACCESSKEYID = "LTAIwBZ9y0vYYX7f";
+    public static String ACCESSKEYSECRET = "ch00fGXs3NoO7fdcPpZ7Ko60fPp4eg";
+    public static String BUCKETNAME = "group-one";
+    public static String KEY = "images/";
 
-    /**
-     * 获取上传图片
-     * @param req 图片地址
-     * @param multiReq 图片名字
-     * @return
-     * @throws IOException
-     */
-    @RequestMapping(value = "/upload")
-    public Map imgUpload(HttpServletRequest req, MultipartHttpServletRequest multiReq) throws IOException {
-        Map<String,Object> map = new HashMap<>();
-        MultipartFile file = multiReq.getFile("file");
-        String originalFilename = file.getOriginalFilename();
-        String temp = UUID.randomUUID().toString();
-        String desFilePath =
-                "F:"      + File.separator+"OTA"
-//                        + File.separator+"ideaworkspace"
-//                        + File.separator+"group-two"
-//                        + File.separator+"back"
-//                        + File.separator+"src"
-//                        + File.separator+"main"
-//                        + File.separator+"resources"
-//                        + File.separator+"OTA"
-                        + "/"
-                        + temp
-                        + originalFilename;
-        File localFile  = new File(desFilePath);
-//        String srcUrl = "F:/OTA/"+ temp +originalFilename;
-        String srcUrl = desFilePath.replaceFirst( "F:\\\\", "http://localhost:8080/");
-        string=srcUrl;
-        if (!localFile.exists()) {
-            localFile.createNewFile();
-            file.transferTo(localFile);
+    @ResponseBody
+    @RequestMapping(value = "/photoupload")
+    public JSONObject myphotoupload(HttpServletRequest request) {
+        JSONObject ret = new JSONObject();
+        String key = "";
+        String fileName = "";
+        String fileNames = "";
+        ret.put("success", false);
+        ret.put("msg", "请求失败[PU01]");
+        try {
+            StandardMultipartHttpServletRequest req = (StandardMultipartHttpServletRequest) request;
+            Iterator<String> iterator = req.getFileNames();
+            while (iterator.hasNext()) {
+                MultipartFile file = req.getFile(iterator.next());
+                fileName = file.getOriginalFilename();
+                String prefix = fileName.substring(fileName.lastIndexOf(".") + 1);
+                fileNames = UUID.randomUUID() + String.valueOf(new Date().getTime()) + "." + prefix;
+                InputStream input = file.getInputStream();
+                // 创建OSSClient实例
+                OSSClient ossClient = new OSSClient(ENDPOINT, ACCESSKEYID, ACCESSKEYSECRET);
+                // 上传文件流
+                ossClient.putObject(BUCKETNAME, KEY + fileNames, input);
+                ossClient.shutdown();
+            }
+            ret.put("success", true);
+            ret.put("msg", key + fileNames);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        BufferedInputStream in = new BufferedInputStream( new FileInputStream( desFilePath ) );
-        Image bi = ImageIO.read(in);
-        BufferedImage tag = new BufferedImage( 80,80, BufferedImage.TYPE_INT_RGB);
-        tag.getGraphics().drawImage( bi,0,0,80,80,null );
-        localFile.delete();
-        BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream(desFilePath) );
-        ImageIO.write( tag,"JPG",out);
-        in.close();
-        out.close();
-        map.put("code", 0);
-        map.put("msg", "上传成功");
-        map.put("url", desFilePath);
-        return map;
+        string="http://group-one.oss-cn-shenzhen.aliyuncs.com/images/" + key + fileNames;
+        ret.put("url","http://group-one.oss-cn-shenzhen.aliyuncs.com/images/" + key + fileNames);
+        return ret;
     }
+
+//
+//    /**
+//     * 获取上传图片
+//     * @param req 图片地址
+//     * @param multiReq 图片名字
+//     * @return
+//     * @throws IOException
+//     */
+//    @RequestMapping(value = "/upload")
+//    public Map imgUpload(HttpServletRequest req, MultipartHttpServletRequest multiReq) throws IOException {
+//        Map<String,Object> map = new HashMap<>();
+//        MultipartFile file = multiReq.getFile("file");
+//        String originalFilename = file.getOriginalFilename();
+//        String temp = UUID.randomUUID().toString();
+//        String desFilePath =
+//                "F:"      + File.separator+"OTA"
+////                        + File.separator+"ideaworkspace"
+////                        + File.separator+"group-two"
+////                        + File.separator+"back"
+////                        + File.separator+"src"
+////                        + File.separator+"main"
+////                        + File.separator+"resources"
+////                        + File.separator+"OTA"
+//                        + "/"
+//                        + temp
+//                        + originalFilename;
+//        File localFile  = new File(desFilePath);
+////        String srcUrl = "F:/OTA/"+ temp +originalFilename;
+//        String srcUrl = desFilePath.replaceFirst( "F:\\\\", "http://localhost:8080/");
+//        string=srcUrl;
+//        if (!localFile.exists()) {
+//            localFile.createNewFile();
+//            file.transferTo(localFile);
+//        }
+//        BufferedInputStream in = new BufferedInputStream( new FileInputStream( desFilePath ) );
+//        Image bi = ImageIO.read(in);
+//        BufferedImage tag = new BufferedImage( 80,80, BufferedImage.TYPE_INT_RGB);
+//        tag.getGraphics().drawImage( bi,0,0,80,80,null );
+//        localFile.delete();
+//        BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream(desFilePath) );
+//        ImageIO.write( tag,"JPG",out);
+//        in.close();
+//        out.close();
+//        map.put("code", 0);
+//        map.put("msg", "上传成功");
+//        map.put("url", desFilePath);
+//        return map;
+//    }
 //    /**
 //     * 删除图片
 //     * @param jsonObject
