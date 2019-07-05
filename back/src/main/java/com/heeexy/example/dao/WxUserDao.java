@@ -38,17 +38,17 @@ public interface WxUserDao {
      /**
           * @methodsName: addByUser
           * @description: 增加普通用户
-          * @param:  JSONObject
+          * @param:  map
           * @return: int
           */
-    int addByUser(JSONObject jsonObject);
+    int addByUser(Map map);
      /**
           * @methodsName: addGuestUser
           * @description: 添加游客用户
-          * @param:  JSONObject
+          * @param:  map
           * @return: int
           */
-    int addGuestUser(JSONObject jsonObject);
+    int addGuestUser(Map map);
      /**
           * @methodsName: updateFansfById
           * @description: 修改虚假粉丝数
@@ -64,7 +64,7 @@ public interface WxUserDao {
           */
     JSONObject getUserByUsername(JSONObject jsonObject);
 
-    //修改用户封禁状态
+
      /**
           * @methodsName: updateStateByUserId
           * @description: 修改用户封禁状态
@@ -72,14 +72,6 @@ public interface WxUserDao {
           * @return: int
           */
     int updateStateByUserId(JSONObject jsonObject);
-
-     /**
-          * @methodsName: listUserState
-          * @description: 查找封禁状态集合
-          * @param:
-          * @return: List<JSONObject>
-          */
-    List<JSONObject> listUserState();
          /**
               * @methodsName: countFansByUserId
               * @description: 计算用户粉丝数
@@ -108,4 +100,26 @@ public interface WxUserDao {
                * @return: int
                */
          int getFansByUserId(JSONObject jsonObject);
+
+    /**
+     * @methodsName: mySelf
+     * @description: 我的界面
+     * @param:  JSONObject
+     * @return:  List<JSONObject>
+     */
+    List<JSONObject> mySelf(JSONObject jsonObject);
+    /**
+     * @methodsName: mySelfFans
+     * @description: 我的界面
+     * @param:  JSONObject
+     * @return:  List<JSONObject>
+     */
+    List<JSONObject> mySelfFans(JSONObject jsonObject);
+     /**
+          * @methodsName: queryUserByUuId
+          * @description: 根据uuid查找用户
+          * @param:  Map
+          * @return: JSONObject
+          */
+    JSONObject queryUserByUuId(Map map);
     }

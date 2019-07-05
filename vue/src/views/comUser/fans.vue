@@ -34,6 +34,7 @@
       <el-table-column align="center" label="更新时间" prop="updateTime" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
+          <el-button type="primary" icon="delete"  @click="addUserfans(scope.row.onUserId)">添加关注</el-button>
           <el-button type="primary" icon="delete" v-if="scope.row.state=='0'" @click="addfans(scope.$index)">关注</el-button>
           <el-button type="danger" icon="delete" v-if="scope.row.state=='1'" @click="removeUser(scope.$index)">取消</el-button>
         </template>
@@ -48,6 +49,52 @@
       :page-sizes="[10, 20, 50, 100]"
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
+    <el-dialog
+      title="关注粉丝"
+      :visible.sync="fansDialogVisible"
+      width="80%"
+      v-if="fansDialogVisible">
+      <el-row>
+        <el-col>
+          <el-button type="primary" icon="delete" :disabled="this.checkBoxData.length===0"
+                     @click="addmany(checkBoxData)">选择修改
+          </el-button>
+        </el-col>
+      </el-row>
+      <el-table :data="dialogList"  v-loading.body="listLoading" @selection-change="changeFun" element-loading-text="拼命加载中" border fit
+                highlight-current-row>
+        <el-table-column type="selection"></el-table-column>
+        <el-table-column align="center" label="序号" width="60">
+          <template slot-scope="scope">
+            <span v-text="getIndex(scope.$index)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="关注Id" v-if="false" prop="userId" width="170">
+          <template slot-scope="scope">
+            <span>{{scope.row.fansId}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="用户Id" v-if="false" prop="userId" width="170">
+          <template slot-scope="scope">
+           <span>{{scope.row.userId}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="用户名" prop="userName" width="170">
+         <template slot-scope="scope">
+          <span>{{scope.row.userName}}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="MoreFans.pageNum"
+        :page-size="MoreFans.pageRow"
+        :total="totalCount"
+        :page-sizes="[10, 20, 50, 100]"
+        layout="total, sizes, prev, pager, next, jumper">
+      </el-pagination>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -56,6 +103,9 @@
   export default {
     data() {
       return {
+        dialogList:[],
+        ids:[],
+        checkBoxData:[],//被选中的记录数据
         userName:"",//搜索框中信息
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
@@ -65,11 +115,18 @@
           pageNum: 1,//页码
           pageRow: 50,//每页条数
         },
+        MoreFans:{
+          onUserId:'',//获取值
+          pageNum: 1,//页码
+          pageRow: 50,//每页条数
+        },
         roles: [],//角色列表
         dialogStatus: 'update',
+        fansDialogVisible:false,
         dialogFormVisible: false,
         textMap: {
           update: '编辑',
+          add:'添加',
         },
         tempFans: {
           onUserId:'',
@@ -90,6 +147,55 @@
       ])
     },
     methods: {
+      changeFun(val) {
+        console.log("changeFun",val)
+        this.checkBoxData = val;
+      },
+      addmany(rows){
+        //批量添加
+        let _vue = this;
+        _vue.$confirm('是否确认此操作?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          rows.forEach(element =>{
+            _vue.ids.push(element);
+            let param = {
+              "fansId":_vue.ids,
+            }
+            _vue.api({
+              url: "/comUserFans/addMoreFans",
+              method: "post",
+              data: param
+            }).then(() => {
+              _vue.getList();
+              this.fansDialogVisible = false;
+            }).catch(() => {
+              _vue.$message.error("删除失败")
+            })
+          })
+          console.log(this.postId);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
+      },
+      addUserfans(val){
+        this.MoreFans.onUserId = val;
+        this.api({
+          url: "/comUserFans/getMoreFansList",
+          method: "get",
+          params: this.MoreFans,
+        }).then(data => {
+          this.dialogList = data.list;
+          this.totalCount = data.totalCount;
+
+        })
+        this.fansDialogVisible = true;
+      },
       selectUser(){
         this.getList();
       },

@@ -94,7 +94,7 @@
         </el-input>
       </el-form-item>
       <el-form-item label="总粉丝数" required >
-        <el-input type="text"  v-model="sumFans">
+        <el-input type="text"  v-model="sumFans" :disabled="true">
         </el-input>
       </el-form-item>
      <!-- <el-form-item label="封禁状态" required>

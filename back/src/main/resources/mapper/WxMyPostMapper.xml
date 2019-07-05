@@ -6,8 +6,8 @@
     <!--后台每个用户自己的帖子记录-->
     <select id="getMyPostList" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
 
-        select  post.id postId,post.post_content postContent,users.user_name onUserName,post.
-        delete_state myPostState, DATE_FORMAT(post.post_time, '%Y.%m.%d %T')  createTime
+        select  post.id postId,post.post_content postContent,users.user_name onUserName,
+                post.delete_state myPostState, DATE_FORMAT(post.post_time, '%Y.%m.%d %T')  createTime
         from  tyn_post post,fly_user users
         <where>
             post.post_owner = users.user_id
@@ -23,12 +23,12 @@
     </select>
     <!--修改自己帖子隐藏状态-->
     <update id="updateMyPostById" parameterType="com.alibaba.fastjson.JSONObject">
-        <if test="myPostState == 0">
-            update  tyn_post  set delete_state = 1 where id = #{postId} ;
-        </if>
-        <if test="myPostState == 1">
+
             update  tyn_post  set delete_state = 0 where id = #{postId} ;
-        </if>
+
+    <!--    <if test="myPostState == 0">
+            update  tyn_post  set delete_state = 1 where id = #{postId} ;
+        </if>-->
 
     </update>
     <!--前台用户自己的帖子记录-->
@@ -40,22 +40,101 @@
 
         from  tyn_post post,fly_user users
         where  post.post_owner =users.user_id
-        and post.delete_state = 0 and post_owner = #{onUserId}
+        and post.delete_state = 1 and post_owner = #{onUserId}
     </select>
     <!--前台本人发帖数量-->
     <select id="countMyPostByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-        select count(0) postNumber,tyn_post.post_owner userId from tyn_post where post_owner =#{onUserId} and delete_state =0
+        select count(0) postNumber,tyn_post.post_owner userId from tyn_post
+        where post_owner =#{onUserId} and delete_state =1
     </select>
     <!--批量删除帖子-->
     <update id="updateByPostIdMany" parameterType="java.util.Map">
-
-
-                <if test="myPostState ==0 ">
-                    update  tyn_post  set delete_state = 1 where id = #{postId}
-                </if>
-            <if test="myPostState ==1 ">
+        <if test="myPostState ==1">
                 update  tyn_post  set delete_state = 0 where id = #{postId}
-            </if>
-
+        </if>
+        <if test="myPostState ==0 ">
+                update  tyn_post  set delete_state = 1 where id = #{postId}
+        </if>
     </update>
+    <!--前台收藏帖子列表-->
+    <select id="getPostCollectListByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select c.post_id postId, post.post_content postContent,post.post_owner userId,DATE_FORMAT(c.create_time, '%Y.%m.%d %T')  createTime
+        from cqy_post_collect c,tyn_post post
+        where post.id=c.post_id and c.user_id =#{onUserId} and c.display = 1
+    </select>
+    <!--某用户收藏帖子计数-->
+    <select id="countPostCollectByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select count(0) collectNumber from cqy_post_collect c  where c.user_id =#{onUserId} and c.display =1
+    </select>
+    <resultMap id="postMap" type="com.heeexy.example.util.model.One2Many">
+        <id column="tId" property="tId"/>
+        <result column="uid" property="uid"/>
+        <result column="avatarUrl" property="avatarUrl"/>
+        <result column="username" property="username"/>
+        <result column="types" property="types"/>
+        <result column="time1" property="time"/>
+        <result column="address" property="address"/>
+        <result column="descrb" property="desc"/>
+        <result column="likestate" property="likestate"/>
+        <result column="collectionstate" property="collectionstate"/>
+        <result column="seepeople" property="seepeople"/>
+        <collection property="imgUrls" ofType="String">
+            <id column="imgUrl" property="imgUrl"/>
+        </collection>
+        <collection property="goods" ofType="String">
+            <id column="good" property="good"/>
+        </collection>
+        <collection property="lcments" ofType="com.alibaba.fastjson.JSONObject">
+            <id column="commentsid" property="commentsid"/>
+            <id column="commentsimg" property="commentsimg"/>
+            <id column="commentstext" property="commentstext"/>
+            <id column="commentsname" property="commentsname"/>
+            <id column="toComentName" property="toComentName"/>
+            <id column="commentid" property="commentid"/>
+        </collection>
+    </resultMap>
+    <!--uid:  //帖子对应用户的id
+tId:’’,//帖子id,avatarUrl：”” //用户的头像（以下用户都为帖子对应用户）,username:”” //用户昵称，types:”” //帖子类型
+desc:””//帖子描述，imgUrl:[ ] //帖子所对应的图片，good:[] //点赞这条信息的用户的头像, likestate:””//点赞状态
+address:’’ //用户所在的地，collectionstate:boolen //收藏状态，time:’’ //用户发表的时间，seepeople:””//帖子浏览数
+
+    commentsid：””//评论人id，commentsimg:””//评论人头像，commentsname:’’//评论昵称，commentstext:””//评论内容
+
+-->
+    <!--我已发布的帖子-->
+    <select id="myPost" resultMap="postMap">
+      select
+          N.* ,z.commentsid,z.commentsimg,z.commentsname,z.commentstext,z.commentid,
+          (select lu.user_name  from fly_user lu,lc_comment l
+        where lu.user_id=l.from_user_id and  l.comment_id =z.to_comment_id) toComentName,
+          (select count(0) from fly_browse b where b.post_id=N.tId) seepeople
+      from
+        (select
+            p.id tId,u.user_id uid,u.user_photo  avatarUrl,u.user_name username,ptg.business_subway_name types,
+            p.post_content descrb, like2.usersPhoto good,l.like_state likestate,c.display collectionstate,
+            pmg.img imgUrl,p.post_location address,DATE_FORMAT(p.post_time, '%Y-%m-%d %T')  time1
+        from fly_user u
+          left join tyn_post p on u.user_id =p.post_owner and p.delete_state =1
+          left join  (select pt.post_id,cqy.business_subway_name from cqy_business_subway cqy,tyn_post_tag  pt
+        where cqy.business_subway_id = pt.tag_type )  ptg on p.id = ptg.post_id
+        right  join (select users.user_photo usersPhoto,likes.post_id
+        from fly_like likes,fly_user users
+        where users.user_id= likes.onuser_id and likes.like_state =1) like2 on p.id =like2.post_id
+          left join cqy_post_collect c on c.post_id =like2.post_id
+          left join fly_like l on l.post_id =c.post_id
+         /* left  join (select users.user_photo usersPhoto,likes.post_id
+        from fly_like likes,fly_user users
+        where users.user_id= likes.onuser_id and likes.like_state =1) like2 on l.post_id =like2.post_id*/
+          left join   (select post.id,pig.img
+        from tyn_post_img pig,tyn_post post
+        where post.id= pig.post_id and post.delete_state = 1) pmg  on pmg.id =l.post_id
+        ) N,
+        (select
+        lc.post_id,lc.from_user_id commentsid,uu.user_name commentsname,lc.to_comment_id ,
+        uu.user_photo commentsimg,lc.comment_content commentstext,lc.comment_id commentid
+        from lc_comment lc ,fly_user uu
+        where uu.user_id=lc.from_user_id and lc.comment_status !=-1 ) z
+
+      where  z.post_id =N.tId and N.uid =#{uid}
+    </select>
 </mapper>

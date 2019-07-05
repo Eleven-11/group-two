@@ -59,7 +59,7 @@
           <el-upload
             ref="upload"
             class="avatar-uploader"
-            action="/api/postcategorie/upload"
+            action="/api/postcategorie/photoupload"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">

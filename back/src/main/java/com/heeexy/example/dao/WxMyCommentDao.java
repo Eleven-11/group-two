@@ -1,6 +1,7 @@
 package com.heeexy.example.dao;
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.ibatis.annotations.Param;
 
 import javax.swing.*;
 import java.util.List;
@@ -35,4 +36,18 @@ public interface WxMyCommentDao {
           * @return: List<JSONObject>
           */
     List<JSONObject> getMyCommentListById(JSONObject jsonObject);
+    /**
+     * @methodsName: myselfComment
+     * @description: 我的评论
+     * @param:  JSONObject
+     * @return:  List<JSONObject>
+     */
+    List<JSONObject> myselfComment(JSONObject jsonObject);
+     /**
+          * @methodsName: selectUserName
+          * @description: 根据被评论idtoComnetId查找用户名
+          * @param:  String
+          * @return: String
+          */
+    String selectUserName(@Param("toComentId") String toComentId);
 }

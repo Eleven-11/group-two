@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonAlias;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ Author     ：良优
@@ -75,4 +76,26 @@ public interface WxFansDao {
            * @return: int
            */
      int countUserFans(JSONObject jsonObject);
+      /**
+           * @methodsName: getListMoreFansById
+           * @description: 查找用户未关注的用户集合
+           * @param:  JSONObject
+           * @return:  List<JSONObject>
+           */
+     List<JSONObject> getListMoreFansById(JSONObject jsonObject);
+      /**
+           * @methodsName: addMoreFans
+           * @description: 批量添加关注
+           * @param:  Map
+           * @return: int
+           */
+     int addMoreFans(Map map);
+
+    /**
+     * @methodsName: myFans
+     * @description: 我的关注
+     * @param:  JSONObject
+     * @return:  List<JSONObject>
+     */
+     List<JSONObject> myFans(JSONObject jsonObject);
 }

@@ -178,11 +178,44 @@ public class CommonUtil {
 		fillPageParam(paramObject, 10);
 	}
 
+
+	/**
+	 *@authur:tyn
+	 * @Description //TODO
+	 * @Date  2019/7/5 11:09
+	 * @Param
+	 * @return
+	 */
 	public static JSONObject successJsonOne(JSONObject thePost) {
 		JSONObject result = successJson();
 		JSONObject info = new JSONObject();
 		info.put("thePost", thePost);
 		result.put("info", info);
+		return result;
+	}
+	
+
+	/**
+	
+	 * @Description //前台的数据
+	 * @Date  2019/7/5 11:15
+	 * @Param 
+	 * @return 
+	 */
+	
+	public static JSONObject successList(List<JSONObject> list) {
+		JSONObject result = new  JSONObject();
+		result.put("code",200);
+		result.put("data", list);
+		result.put("msg", "success");
+		return result;
+	}
+
+	public static JSONObject successOne(JSONObject one) {
+		JSONObject result = new  JSONObject();
+		result.put("code",200);
+		result.put("data", one);
+		result.put("msg", "success");
 		return result;
 	}
 }

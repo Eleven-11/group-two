@@ -90,6 +90,8 @@
         categories_img categoriesImg
         from cqy_post_categories
         where display=1
+        order by  update_time DESC
+        limit 8 offset 0
     </select>
 
 </mapper>

@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.PostExhibitDao">
+
+    <resultMap id="postMap" type="com.heeexy.example.util.model.One2Many">
+        <id column="tId" property="tId"/>
+        <result column="uId" property="uId"/>
+        <result column="username" property="username"/>
+        <result column="time" property="timet"/>
+        <result column="address" property="address"/>
+        <result column="descr" property="desc"/>
+        <result column="types" property="types"/>
+        <result column="seepeople" property="seepeople"/>
+        <collection property="imgUrls" ofType="String">
+            <id column="imgUrl" property="imgUrl"/>
+        </collection>
+        <collection property="goods" ofType="String">
+            <id column="good" property="good"/>
+        </collection>
+        <collection property="comments" ofType="com.alibaba.fastjson.JSONObject">
+            <id column="commentId" property="commentId"/>
+            <result column="commentUserId" property="commentUserId"/>
+            <result column="toCommentId" property="toCommentId"/>
+            <result column="commentText" property="commentText"/>
+            <result column="commentName" property="commentName"/>
+        </collection>
+    </resultMap>
+    <select id="getTopPost" resultMap="postMap">
+    select
+    oop.*,
+    comment_id                              commentId,
+    from_user_id                            commentUserId,
+        to_comment_id           toCommentId,
+    comment_content                         commentText,
+    user_name                               commentName
+    from
+        (
+        SELECT
+        op.*,
+        img                                      imgUrl,
+        user_name                                good,
+        (SELECT COUNT(0) FROM fly_browse b WHERE b.post_id=op.tId)+viewOff seepeople
+         from(
+                 SELECT
+                     tyn_post.id                            tId,
+                     post_owner                              uId,
+                     user_name                               username,
+                     user_photo                              avatarUrl,
+                 UNIX_TIMESTAMP(post_time)   time,
+                     post_location                           address,
+                     post_content                            descr,
+                     categories_name                         types,
+                     view_offset			                 viewOff
+                 FROM tyn_post,fly_user,cqy_post_categories,tyn_post_tag tpt
+                 <where>
+                     delete_state =1  and user_id=post_owner and categories_id=post_sort
+                     <if test="isTop!= null and isTop != ''">
+                         and is_top like #{isTop}
+                     </if>
+                     <if test="tagType!=null and tagType!='' ">
+                         and tyn_post.id=tpt.post_id and tag_type=#{tagType}
+                     </if>
+                 </where>
+        ORDER BY post_time Desc
+                 LIMIT #{pageNum}, 10
+             ) op
+             left join tyn_post_img tpi on tId=tpi.post_id
+             left join fly_like fl on tId=fl.post_id and like_state=1
+             left join fly_user fu on onuser_id=fu.user_id
+        )oop
+        left join lc_comment lc on tId=lc.post_id and comment_status in (0,1)
+        left join fly_user on from_user_id = user_id
+        ORDER BY if(#{getType}=4,seepeople,time) Desc
+    </select>
+
+    <select id="getNormalPost" resultMap="postMap">
+    select
+    oop.*,
+    comment_id              commentId,
+    from_user_id            commentUserId,
+    to_comment_id           toCommentId,
+    comment_content         commentText,
+    user_name               commentName
+    from(
+        SELECT
+        op.*,
+        img                                      imgUrl,
+        user_name                                good,
+        (SELECT COUNT(0) FROM fly_browse b WHERE b.post_id=op.tId)+viewOff seepeople
+        from(
+            SELECT
+            tyn_post.id         tId,
+            post_owner          uId,
+            user_name           username,
+            user_photo          avatarUrl,
+             UNIX_TIMESTAMP(post_time) time,
+            post_location       address,
+            post_content        descr,
+            categories_name     types,
+            view_offset         viewOff
+            FROM tyn_post,fly_user,cqy_post_categories,tyn_post_tag tpt
+            <where>
+                delete_state =1 and user_id=post_owner and categories_id=post_sort
+                 <if test="isTop!= null and isTop != ''">
+                    and is_top not like #{isTop}
+                 </if>
+                 <if test="tagType!=null and tagType!='' ">
+                    and tyn_post.id=tpt.post_id and tag_type=#{tagType}
+                 </if>
+                 <if test="getType==5">
+                    and categories_name='月租短租'
+                 </if>
+             </where>
+        ORDER BY post_time Desc
+                LIMIT #{pageNum}, 10
+             ) op
+            left join tyn_post_img tpi on tId=tpi.post_id
+            left join fly_like fl on tId=fl.post_id and like_state=1
+            left join fly_user fu on onuser_id=fu.user_id
+        )oop
+        left join lc_comment lc on tId=lc.post_id and comment_status in (0,1)
+        left join fly_user on from_user_id = user_id
+        ORDER BY if(#{getType}=4,seepeople,time) Desc
+
+    </select>
+
+    <select id="queryTagType" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select business_subway_id
+        from cqy_business_subway
+        where business_subway_name=#{tagName}
+    </select>
+    <select id="isLike" resultType="java.lang.Integer">
+        select count(0) from fly_like where post_id=#{postId} and onuser_id=#{userId}
+    </select>
+    <select id="isCollect" resultType="java.lang.Integer">
+        select count(0) from cqy_post_collect where post_id=#{postId} and user_id=#{userId} and  display=1
+    </select>
+
+
+    <resultMap id="postDetailMap" type="com.heeexy.example.util.model.One2Many">
+        <id column="tId" property="tId"/>
+        <result column="uId" property="uId"/>
+        <result column="avatarUrl" property="avatarUrl"/>
+        <result column="username" property="username"/>
+        <result column="telephone" property="telephone"/>
+        <result column="time" property="time"/>
+        <result column="types" property="types"/>
+        <result column="desc" property="desc"/>
+        <result column="address" property="address"/>
+        <result column="priceLow" property="priceLow"/>
+        <result column="priceHigh" property="priceHigh"/>
+        <result column="timeStart" property="timeStart"/>
+        <result column="timeEnd" property="timeEnd"/>
+        <result column="likeOff" property="likeOff"/>
+        <result column="viewOff" property="viewOff"/>
+        <result column="realLike" property="realLike"/>
+        <result column="realView" property="realView"/>
+        <collection property="tagList" ofType="String">
+            <id column="tagName" property="tagName"/>
+        </collection>
+        <collection property="imgUrls" ofType="String">
+            <id column="imgUrl" property="imgUrl"/>
+        </collection>
+        <collection property="goodsDetail" ofType="com.alibaba.fastjson.JSONObject">
+            <id column="likeId" property="likeId"/>
+            <result column="likeImg" property="likeImg"/>
+            <result column="likeName" property="likeName"/>
+        </collection>
+        <collection property="comments" ofType="com.alibaba.fastjson.JSONObject">
+            <id column="commentId" property="commentId"/>
+            <result column="commentUserId" property="commentUserId"/>
+            <result column="toCommentId" property="toCommentId"/>
+            <result column="commentText" property="commentText"/>
+            <result column="commentName" property="commentName"/>
+        </collection>
+    </resultMap>
+    <select id="queryThePost" resultMap="postDetailMap">
+        select
+        oop.*,
+        comment_id              commentId,
+        from_user_id            commentUserId,
+        to_comment_id           toCommentId,
+        comment_content         commentText,
+        user_name               commentName
+        from(
+        SELECT
+        op.*,
+        img imgUrl,
+        user_name                                likeName,
+        onuser_id                                likeId,
+        user_photo                               likeImg,
+        business_subway_name                     tagName,
+        (SELECT COUNT(0) FROM fly_browse b WHERE b.post_id=op.tId) realView,
+        (SELECT COUNT(0) FROM fly_like l WHERE l.post_id=op.tId and l.like_state=1) realLike
+        from(
+        SELECT
+        tyn_post.id         tId,
+        post_owner          uId,
+        user_name           username,
+        user_photo          avatarUrl,
+       UNIX_TIMESTAMP(post_time) time,
+        post_phone          telephone,
+        post_location       address,
+        post_content        descr,
+        categories_name     types,
+        price_low                               priceLow,
+        price_high                              priceHigh,
+        time_start                              timeStart,
+        time_end                                timeEnd,
+        view_offset         viewOff,
+        like_offset         likeOff
+        FROM tyn_post,fly_user,cqy_post_categories,tyn_post_tag tpt
+        where
+            tyn_post.id=#{tid} and user_id=post_owner and categories_id=post_sort
+
+        ) op
+        left join tyn_post_img tpi on tId=tpi.post_id
+        left join fly_like fl on tId=fl.post_id and like_state=1
+        left join fly_user fu on onuser_id=fu.user_id
+        LEFT JOIN tyn_post_tag pt ON tId=pt.post_id
+        left join cqy_business_subway bs on pt.tag_id=bs.business_subway_id
+        )oop
+        left join lc_comment lc on tId=lc.post_id and comment_status in (0,1)
+        left join fly_user on from_user_id = user_id
+
+    </select>
+    <select id="queryCommentUserName" resultType="java.lang.String">
+        select user_name from lc_comment,fly_user
+        where comment_id=#{toCommentId} and from_user_id = user_id
+    </select>
+
+    <select id="getThePost" resultMap="postMap">
+        select
+        oop.*,
+        comment_id              commentId,
+        from_user_id            commentUserId,
+        to_comment_id           toCommentId,
+        comment_content         commentText,
+        user_name               commentName
+        from(
+        SELECT
+        op.*,
+        img                                      imgUrl,
+        user_name                                good,
+        business_subway_name                     tagName,
+        (SELECT COUNT(0) FROM fly_browse b WHERE b.post_id=op.tId)+viewOff seepeople
+        from(
+        SELECT
+        tyn_post.id         tId,
+        post_owner          uId,
+        user_name           username,
+        user_photo          avatarUrl,
+        UNIX_TIMESTAMP(post_time) time,
+        post_location       address,
+        post_content        descr,
+        categories_name     types,
+        view_offset         viewOff
+        FROM tyn_post,fly_user,cqy_post_categories
+        where
+            delete_state =1 and user_id=post_owner and categories_id=post_sort
+        ORDER BY post_time Desc
+        LIMIT #{pageNum}, 10
+        ) op
+        left join tyn_post_img tpi on tId=tpi.post_id
+        left join fly_like fl on tId=fl.post_id and like_state=1
+        left join fly_user fu on onuser_id=fu.user_id
+        LEFT JOIN tyn_post_tag pt ON tId=pt.post_id
+        left join cqy_business_subway bs on pt.tag_id=bs.business_subway_id
+        )oop
+        left join lc_comment lc on tId=lc.post_id and comment_status in (0,1)
+        left join fly_user on from_user_id = user_id
+        <where>
+        <if test="keyword!=null and keyword!='' ">
+            descr like '%${keyword}%' or tagName like  '%${keyword}%'
+        </if>
+    </where>
+        ORDER BY time Desc
+
+    </select>
+
+    <select id="getSortPost" resultMap="postMap">
+        select
+        oop.*,
+        comment_id              commentId,
+        from_user_id            commentUserId,
+        to_comment_id           toCommentId,
+        comment_content         commentText,
+        user_name               commentName
+        from(
+        SELECT
+        op.*,
+        img                                      imgUrl,
+        user_name                                good,
+        business_subway_name                     tagName,
+        (SELECT COUNT(0) FROM fly_browse b WHERE b.post_id=op.tId)+viewOff seepeople
+        from(
+        SELECT
+        tyn_post.id         tId,
+        post_owner          uId,
+        user_name           username,
+        user_photo          avatarUrl,
+        UNIX_TIMESTAMP(post_time) time,
+        post_location       address,
+        post_content        descr,
+        categories_name     types,
+        view_offset         viewOff
+        FROM tyn_post,fly_user,cqy_post_categories
+        where
+        delete_state =1 and user_id=post_owner and categories_id=post_sort and post_sort=#{type}
+        ORDER BY post_time Desc
+        LIMIT #{pageNum}, 10
+        ) op
+        left join tyn_post_img tpi on tId=tpi.post_id
+        left join fly_like fl on tId=fl.post_id and like_state=1
+        left join fly_user fu on onuser_id=fu.user_id
+        LEFT JOIN tyn_post_tag pt ON tId=pt.post_id
+        left join cqy_business_subway bs on pt.tag_id=bs.business_subway_id
+        )oop
+        left join lc_comment lc on tId=lc.post_id and comment_status in (0,1)
+        left join fly_user on from_user_id = user_id
+        ORDER BY time Desc
+    </select>
+
+    <select id="querySortId" resultType="java.lang.Integer">
+        select categories_id from cqy_post_categories where categories_name=#{type}
+    </select>
+
+    <insert id="addPost">
+        insert into tyn_post
+        (post_owner,post_time,post_content,post_sort,post_location,post_phone,price_low,price_high,time_start,time_end,is_top,delete_state)
+        values(#{userid},#{now},#{content},#{sortId},#{address},#{telephone},#{pricelow},#{pricehigh},#{startdate},#{enddate},0,1);
+        commit;
+    </insert>
+
+    <select id="queryPostId" resultType="java.lang.Integer">
+        select id from tyn_post where post_owner=#{userid} and post_time = #{now}
+    </select>
+
+    <insert id="addPostImg">
+        insert into tyn_post_img
+        (post_id,img)
+        values(#{postId},#{img})
+    </insert>
+
+    <insert id="addPostTag">
+        insert into tyn_post_tag
+        (post_id,tag_id,tag_type)
+        values(#{postId},#{tagId},#{typeId})
+    </insert>
+
+
+
+</mapper>

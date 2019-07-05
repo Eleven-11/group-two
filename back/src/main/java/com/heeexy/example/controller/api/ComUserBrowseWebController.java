@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Version: 1.0
  */
 @RestController
-@RequestMapping("/comUserBrowseWeb")
+@RequestMapping("/api/comUserBrowseWeb")
 public class ComUserBrowseWebController {
 
     @Autowired
@@ -36,6 +36,15 @@ public class ComUserBrowseWebController {
     public JSONObject getListUserBrowse(HttpServletRequest request) {
 
         return wxBrowserService.getBrowseByUser(CommonUtil.request2Json(request));
+
+    }
+    /**
+     * 前台展示用户浏览记录列表
+     */
+    @GetMapping("/searchbrowse")
+    public JSONObject searchbrowse(HttpServletRequest request) {
+
+        return wxBrowserService.myBrowse(CommonUtil.request2Json(request));
 
     }
 

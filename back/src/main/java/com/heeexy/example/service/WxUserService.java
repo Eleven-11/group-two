@@ -29,23 +29,23 @@ public interface WxUserService {
      * @param:  JSONObject
      * @return: JSONObject
      */
-    JSONObject getMaxNumber(JSONObject jsonObject);
+   JSONObject getMaxNumber(JSONObject jsonObject);
 
     /**
      * @methodsName: addByUser
      * @description: 增加普通用户
-     * @param:  JSONObject
+     * @param:  map
      * @return: JSONObject
      */
-    JSONObject addByUser(JSONObject jsonObject);
+    JSONObject addByUser(Map map);
 
     /**
      * @methodsName: addGuestUser
      * @description: 添加游客用户
-     * @param:  JSONObject
+     * @param:  map
      * @return: JSONObject
      */
-    JSONObject addGuestUser(JSONObject jsonObject);
+    JSONObject addGuestUser(Map map);
     /**
      * @methodsName: updateFansfById
      * @description: 修改虚假粉丝数和封禁状态
@@ -70,13 +70,6 @@ public interface WxUserService {
      */
     JSONObject getUserByUsername(JSONObject jsonObject);
     /**
-     * @methodsName: listUserState
-     * @description: 查找封禁状态集合
-     * @param:
-     * @return: JSONObject
-     */
-    JSONObject listUserState();
-    /**
      * @methodsName: countFansByUserId
      * @description: 计算用户粉丝数
      * @param:  JSONObject
@@ -89,7 +82,7 @@ public interface WxUserService {
      * @param:  JSONObject
      * @return: JSONObject
      */
-    JSONObject getDetailUserById(JSONObject jsonObject);
+   /* JSONObject getDetailUserById(JSONObject jsonObject);*/
     /**
      * @methodsName: updateFansById
      * @description: 修改真实粉丝数
@@ -97,4 +90,24 @@ public interface WxUserService {
      * @return: JSONObject
      */
     JSONObject updateFansById(Map map);
+    /**
+     * 我的界面信息
+     * @param jsonObject （uid）
+     * @return  List<JSONObject>
+     */
+    JSONObject mySelf(JSONObject jsonObject);
+    /**
+     * @methodsName: mySelfFans
+     * @description: 我的界面
+     * @param:  JSONObject
+     * @return:  JSONObject
+     */
+    JSONObject mySelfFans(JSONObject jsonObject);
+    /**
+     * @methodsName: queryUserByUuId
+     * @description: 根据uuid查找用户
+     * @param:  map
+     * @return: JSONObject
+     */
+    JSONObject queryUserByUuId(Map map);
 }

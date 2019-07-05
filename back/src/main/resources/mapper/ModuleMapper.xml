@@ -52,16 +52,16 @@
         values (#{moduleName},#{moduleContent},1)
     </insert>
 
-    <!--新增信息-->
+    <!--在Message中新增信息-->
     <insert id="addMessage" useGeneratedKeys="true" keyProperty="messageid">
-        INSERT into lc_message(chat_id,message_content,status)
+        INSERT into lc_message(chat_id,user_id,message_content,status)
         values
         <foreach collection="clist" item="c" separator=",">
-            (#{c.chatid},#{moduleContent},0)
+            (#{c.chatid},1,#{moduleContent},0)
         </foreach>
     </insert>
 
-    <!--在chat中新增信息-->
+    <!--在chat中新增信息(群发)-->
     <insert id="addChat" useGeneratedKeys="true" keyProperty="chat_id">
         INSERT into lc_chat(user_id,another_id)
         values
@@ -69,6 +69,44 @@
                 (1,#{u.userid})
         </foreach>
     </insert>
+
+      <!--验证chat中userid=1,anotherid=传进来的数据的chatid-->
+    <select id="getChatidByU" resultType="java.lang.String">
+        select chat_id chatId
+        from lc_chat
+        where user_id= 1 and another_id = #{userId}
+    </select>
+    <!--插入chat表中信息(单条)-->
+    <insert id="addChatByUA" useGeneratedKeys="true" keyProperty="chat_id">
+        INSERT into lc_chat(user_id,another_id)
+        values
+            (1,#{userId})
+    </insert>
+
+    <!--发送给人封禁,警告消息-->
+    <insert id="addMessageAlone" useGeneratedKeys="true" keyProperty="messageid">
+        INSERT into lc_message(chat_id,user_id,message_content,status)
+        values
+            (#{chatId},1,#{messageContent},0)
+    </insert>
+
+    <!--查询警告,封禁,欢迎 模块消息-->
+    <select id="getModuleByJ" resultType="java.lang.String">
+        select module_content moduleContent
+        from cqy_module
+        where module_name = "警告模块"
+    </select>
+    <select id="getModuleByF" resultType="java.lang.String">
+        select module_content moduleContent
+        from cqy_module
+        where module_name = "封禁模块"
+    </select>
+    <select id="getModuleByH" resultType="java.lang.String">
+        select module_content moduleContent
+        from cqy_module
+        where module_name = "欢迎引导语模块"
+    </select>
+
 
     <!--获取聊天表中不存在的用户id-->
     <select id="getAllUserId" resultType="com.alibaba.fastjson.JSONObject">

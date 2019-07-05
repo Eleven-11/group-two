@@ -34,7 +34,7 @@ public class PostCategorieServiceImpl implements PostCategorieService {
     public JSONObject addPostCategorie(JSONObject jsonObject) {
         int exist = postCategorieDao.queryExistPostCategorieName(jsonObject);
         if( exist > 0 ){
-                return CommonUtil.errorJson(ErrorEnum.E_10009);
+             return CommonUtil.errorJson(ErrorEnum.E_10009);
         }
         postCategorieDao.addPostCategorie(jsonObject);
         return CommonUtil.successJson();
@@ -105,6 +105,11 @@ public class PostCategorieServiceImpl implements PostCategorieService {
     @Override
     public JSONObject RgetAllPostCategorie() {
         List<JSONObject> roles = postCategorieDao.RgetAllPostCategorie();
+        for (JSONObject role : roles) {
+            role.put("title",role.remove("categoriesName"));
+            role.put("id",role.remove("categoriesId"));
+            role.put("imgurl",role.remove("categoriesImg"));
+        }
         return CommonUtil.successPage(roles);
     }
 }

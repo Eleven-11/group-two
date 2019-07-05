@@ -2,6 +2,7 @@ package com.heeexy.example.service;
 
 import com.alibaba.fastjson.JSONObject;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -50,4 +51,25 @@ public interface WxMyPostService {
      * @return: JSONObject
      */
     JSONObject updateByPostIdMany(Map map);
+    /**
+     * @methodsName: getPostCollectListByUserId
+     * @description: 前台某用户收藏列表
+     * @param:  JSONObject
+     * @return: JSONObject
+     */
+   JSONObject getPostCollectListByUserId(JSONObject jsonObject);
+    /**
+     * @methodsName: countPostCollectByUserId
+     * @description: 某用户收藏帖子数
+     * @param:  JSONObject
+     * @return:  JSONObject
+     */
+    JSONObject countPostCollectByUserId(JSONObject jsonObject);
+    /**
+     * @methodsName: myPost
+     * @description: 我的帖子发布
+     * @param:  JSONObject
+     * @return:  JSONObject
+     */
+    JSONObject myPost(JSONObject jsonObject);
 }

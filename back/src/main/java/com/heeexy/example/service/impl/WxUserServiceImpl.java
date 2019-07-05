@@ -4,9 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.WxUserDao;
 import com.heeexy.example.service.WxUserService;
 import com.heeexy.example.util.CommonUtil;
+import com.heeexy.example.util.emjoy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -22,55 +25,81 @@ public class WxUserServiceImpl implements WxUserService {
     private WxUserDao wxUserDao;
 
     /**
-     *
-     * @param jsonObject
-     * @return
+     * 查找所有用户集合
+     * @param jsonObject (userName,offSet,pageRow)
+     * @return JSONObject
      */
     @Override
     public JSONObject getListUser(JSONObject jsonObject) {
-        //查找所有用户
+
         CommonUtil.fillPageParam(jsonObject);
+        //统计用户数量
         int count = wxUserDao.countUser(jsonObject);
+        //查找所有用户
         List<JSONObject> list = wxUserDao.getListUser(jsonObject);
         return CommonUtil.successPage(jsonObject, list, count);
     }
 
+    /**
+     * 查找出userId最大的用户
+     * @param jsonObject
+     * @return JSONObject
+     */
     @Override
     public JSONObject getMaxNumber(JSONObject jsonObject) {
-        //查找最大id数用户
         JSONObject maxNumber = wxUserDao.getMaxNumber(jsonObject);
         return maxNumber;
     }
 
+    /**
+     * 增加普通用户
+     * @param map (userUuid,userName,userPhoto,userSex)
+     * @return JSONObject
+     */
     @Override
-    public JSONObject addByUser(JSONObject jsonObject) {
+    public JSONObject addByUser(Map map) {
         //增加普通用户
-         wxUserDao.addByUser(jsonObject);
+         wxUserDao.addByUser(map);
         return CommonUtil.successJson();
     }
-
+    /**
+     * 增加游客用户
+     * @param map jsonObject
+     * @return JSONObject
+     */
     @Override
-    public JSONObject addGuestUser(JSONObject jsonObject) {
+    public JSONObject addGuestUser(Map map) {
         //增加游客用户
-        wxUserDao.addGuestUser(jsonObject);
+        wxUserDao.addGuestUser(map);
         return CommonUtil.successJson();
     }
-
+    /**
+     * 修改虚假粉丝数
+     * @param jsonObject (userFansf,userId)
+     * @return SONObject
+     */
     @Override
     public JSONObject updateFansfById(JSONObject jsonObject) {
-
         //修改虚假粉丝数
         wxUserDao.updateFansfById(jsonObject);
         return CommonUtil.successJson();
     }
-
+    /**
+     * 修改用户封禁状态
+     * @param jsonObject (userId,uerState)
+     * @return JSONObject
+     */
     @Override
     public JSONObject updateStateByUserId(JSONObject jsonObject) {
         //修改用户封禁状态
         wxUserDao.updateStateByUserId(jsonObject);
         return CommonUtil.successJson();
     }
-
+    /**
+     * 查找某个用户
+     * @param jsonObject (onUserId)
+     * @return JSONObject
+     */
     @Override
     public JSONObject getUserByUsername(JSONObject jsonObject) {
         //查找用户
@@ -78,36 +107,85 @@ public class WxUserServiceImpl implements WxUserService {
         return userByUsername;
     }
 
-
-    @Override
-    public JSONObject listUserState() {
-        //查找封禁状态集合
-        List<JSONObject> jsonObjects = wxUserDao.listUserState();
-        return CommonUtil.successPage(jsonObjects);
-    }
-
+    /**
+     * 计算用户粉丝数
+     * @param jsonObject (onUserId)
+     * @return JSONObject
+     */
     @Override
     public JSONObject countFansByUserId(JSONObject jsonObject) {
         //计算用户粉丝数
         List<JSONObject> fans = wxUserDao.countFansByUserId(jsonObject);
         return CommonUtil.successPage(fans);
     }
-
-    @Override
-    public JSONObject getDetailUserById(JSONObject jsonObject) {
-
-
-        //用户详情发帖计数和粉丝计数
-
-        List<JSONObject> detailUserById = wxUserDao.getDetailUserById(jsonObject);
-        System.out.println(detailUserById);
-        return CommonUtil.successPage(detailUserById);
-    }
-
+    /**
+     * 修改真实粉丝数
+     * @param map (userId,userFans)
+     * @return JSONObject
+     */
     @Override
     public JSONObject updateFansById(Map map) {
         //修改真实粉丝数
          wxUserDao.updateFansById(map);
         return CommonUtil.successJson();
+    }
+
+    /**
+     * 我的界面信息
+     * @param jsonObject （uid）
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject mySelf(JSONObject jsonObject) {
+        List<JSONObject> mySelf = wxUserDao.mySelf(jsonObject);
+        /*表情昵称处理*/
+     /*   for (JSONObject object : mySelf) {
+            String myname =(String) object.get("myname");
+            String s = emjoy.decodeUnicode(myname);
+            object.put("myname", s);
+        }*/
+        return CommonUtil.successPage(mySelf);
+    }
+    /**
+     * 我的粉丝
+     * @param jsonObject （keyword）
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject mySelfFans(JSONObject jsonObject) {
+        List<JSONObject> list = wxUserDao.mySelfFans(jsonObject);
+   /*     for (JSONObject object : list) {
+            String mySelfFansName =(String) object.get("mySelfFansName");
+            String s = emjoy.decodeUnicode(mySelfFansName);
+            object.put("mySelfFansName", s);
+        }*/
+        return CommonUtil.successPage(list);
+    }
+
+    /**
+     * 根据用户uuid查找信息
+     * @param map (uuid)
+     * @return JSONObject
+     */
+    @Override
+    public JSONObject queryUserByUuId(Map map) {
+        JSONObject jsonObject1 = wxUserDao.queryUserByUuId(map);
+        return jsonObject1;
+    }
+     /**
+          * @methodsName:  checkUser
+          * @description: 检测用户是否封禁
+          * @param: request
+          * @return: String
+          */
+    public  String checkUser(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String onUserId = (String)session.getAttribute("onUserId");
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("onUserId", onUserId);
+        JSONObject userByUsername = wxUserDao.getUserByUsername(jsonObject);
+        String userState =(String) userByUsername.get("userState");
+        String guest =(String) userByUsername.get("guest");
+        return userState;
     }
 }

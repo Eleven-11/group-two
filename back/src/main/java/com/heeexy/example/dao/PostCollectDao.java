@@ -100,7 +100,57 @@ public interface PostCollectDao {
      */
      List<JSONObject> getAllPostCollectByUserId(JSONObject jsonObject);
 
+    /**
+     * 帖子的图片
+     * @param postId
+     * @return
+     */
+    List<JSONObject> getAllPostImgByPostId(Object postId);
 
+    /**
+     * 帖子的点赞
+     * @param postId
+     * @return
+     */
+    List<JSONObject> getAllLikeByPostId(Object postId);
 
+    /**
+     * 返回用户收藏的所有帖子的回复消息
+     * @param  postId
+     * @return
+     */
+    List<JSONObject> getAllCommentByPostId(Object postId);
+
+    /**
+     * 回复消息的回复消息
+     * @param  commentId
+     * @return
+     */
+    List<JSONObject> getAllCommentByToCommentId(Object commentId);
+
+    /**
+     * 通过toCommentId查询用户名
+     * @param
+     * @return
+     */
+    JSONObject gettoCommentId(Object toCommentId);
+    /**
+     * 通过userId和postId查询点赞状态
+     * @param
+     * @return
+     */
+    String getlikeByUP(JSONObject jsonObject);
+    /**
+     * 通过userId和postId收藏状态
+     * @param
+     * @return
+     */
+    String getPsotCollectByUP(JSONObject jsonObject);
+    /**
+     * 通过postId查询浏览数
+     * @param
+     * @return
+     */
+    String getBrowseByP(Object postId);
 
 }

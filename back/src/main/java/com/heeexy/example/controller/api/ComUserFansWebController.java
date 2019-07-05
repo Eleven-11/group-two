@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Version: 1.0
  */
 @RestController
-@RequestMapping("/comUserFansWeb")
+@RequestMapping("/api/comUserFansWeb")
 public class ComUserFansWebController {
     @Autowired
     private WxFansService wxFansService;
@@ -60,5 +60,13 @@ public class ComUserFansWebController {
     public JSONObject selectFans(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "onUserId,userId");
         return wxFansService.getUserFans(requestJson);
+    }
+    /**
+     *我的关注
+     */
+    @GetMapping("/searchfans")
+    public JSONObject myfans(HttpServletRequest request) {
+
+        return wxFansService.myFans(CommonUtil.request2Json(request));
     }
 }

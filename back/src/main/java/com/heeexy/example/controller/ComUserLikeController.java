@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Map;
 
 
 /**
@@ -98,4 +100,18 @@ public class ComUserLikeController {
         CommonUtil.hasAllRequired(requestJson, "onUserId,userId,postId");
         return wxLikeService.getLikeUserPost(requestJson);
     }*/
+    @GetMapping("/getMoreLikesList")
+    public JSONObject getMoreLikesList(HttpServletRequest request ) {
+
+        return wxLikeService.getListMoreLikesById(CommonUtil.request2Json(request));
+    }
+    @PostMapping("/addMoreLike")
+    public JSONObject addMoreFans(@RequestBody JSONObject requestJson) {
+        ArrayList<Map<String,String>> likes = (ArrayList<Map<String,String>>)requestJson.get("likeId");
+        for (Map<String, String> likeId : likes) {
+
+            wxLikeService.addMoreLikes(likeId);
+        }
+        return CommonUtil.successJson();
+    }
 }

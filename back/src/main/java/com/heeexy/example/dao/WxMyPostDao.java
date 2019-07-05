@@ -1,8 +1,7 @@
 package com.heeexy.example.dao;
 
 import com.alibaba.fastjson.JSONObject;
-
-
+import javax.swing.*;
 import java.util.List;
 import java.util.Map;
 
@@ -57,4 +56,25 @@ public interface WxMyPostDao {
           * @return: int
           */
     int updateByPostIdMany(Map map);
+     /**
+          * @methodsName: getPostCollectListByUserId
+          * @description: 前台某用户收藏列表
+          * @param:  JSONObject
+          * @return: List<JSONObject>
+          */
+    List<JSONObject> getPostCollectListByUserId(JSONObject jsonObject);
+     /**
+          * @methodsName: countPostCollectByUserId
+          * @description: 某用户收藏帖子数
+          * @param:  JSONObject
+          * @return:  List<JSONObject>
+          */
+    List<JSONObject> countPostCollectByUserId(JSONObject jsonObject);
+     /**
+          * @methodsName: myPost
+          * @description: 我的帖子发布
+          * @param:  JSONObject
+          * @return:  List<JSONObject>
+          */
+    List<JSONObject> myPost(JSONObject jsonObject);
 }

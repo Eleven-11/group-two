@@ -2,13 +2,15 @@ package com.heeexy.example.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.PostCollectDao;
-import com.heeexy.example.service.PostCategorieService;
 import com.heeexy.example.service.PostCollectService;
+import com.heeexy.example.util.Calculating;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -70,7 +72,16 @@ public class PostCollectServiceImpl implements PostCollectService {
 //        postCollectDao.updatePostCollect( jsonObject );
 //        return CommonUtil.successJson();
 //    }
-
+    /**
+     * 查询所有的帖子收藏
+     * 在添加/修改帖子收藏的时候要使用此方法
+     * @return
+     */
+    @Override
+    public JSONObject getAllPostCollect() {
+        List<JSONObject> roles = postCollectDao.getAllPostCollect();
+        return CommonUtil.successJson(roles);
+    }
     /**
      * 查询帖子收藏列表
      * @param jsonObject
@@ -84,16 +95,6 @@ public class PostCollectServiceImpl implements PostCollectService {
         return CommonUtil.successPage( jsonObject,list,count );
     }
 
-    /**
-     * 查询所有的帖子收藏
-     * 在添加/修改帖子收藏的时候要使用此方法
-     * @return
-     */
-    @Override
-    public JSONObject getAllPostCollect() {
-        List<JSONObject> roles = postCollectDao.getAllPostCollect();
-        return CommonUtil.successJson(roles);
-    }
 
     //   ************************ 小程序前台************************
 
@@ -104,10 +105,97 @@ public class PostCollectServiceImpl implements PostCollectService {
      */
     @Override
     public JSONObject getAllPostCollectByUserId(JSONObject jsonObject) {
-        List<JSONObject> roles = postCollectDao.getAllPostCollectByUserId( jsonObject );
+        Object userId = jsonObject.get( "userId" );
+        List<JSONObject> roles = postCollectDao.getAllPostCollectByUserId(jsonObject);
+        for (JSONObject role : roles) {
+            role.put( "userIds", userId);
+            Object postId = role.get("postId");
+            List<JSONObject> allCommentByPostId = postCollectDao.getAllCommentByPostId(postId);
+            List<JSONObject> allCommentByToCommentId = postCollectDao.getAllCommentByToCommentId(postId);
+            for (JSONObject object : allCommentByPostId) {
+                for (JSONObject jsonObject1 : allCommentByToCommentId) {
+                    if(object.get("userName").equals( jsonObject1.get( "userName" ) )){
+                        Object toCommentId = jsonObject1.get("toCommentId");
+                        JSONObject jsonObject2 = postCollectDao.gettoCommentId( toCommentId );
+                        Object userName1 = jsonObject2.get( "userName" );
+                        String userName= userName1.toString();
+                        userName=jsonObject1.get("userName").toString()+": @"+userName;
+                        object.put("userName",userName);
+                    }
+                }
+                object.put("Commentsid",object.remove("commentId"));
+                object.put("commentsuserid",object.remove("fromUserId"));
+                object.put("commentsimg",object.remove("userPhoto"));
+                object.put("commentsname",object.remove("userName"));
+                object.put("commentstext",object.remove("commentContent"));
+            }
+            List<Object> imgUrl = new ArrayList<>();
+            List<Object> good = new ArrayList<>();
+            List<JSONObject> allPostImgByPostId = postCollectDao.getAllPostImgByPostId(postId);
+            for (JSONObject object : allPostImgByPostId) {
+                Object img = object.get("img");
+                imgUrl.add( img );
+            }
+//            for (Object o : imgUrl) {
+//                System.out.println(o);
+//            }
+            List<JSONObject> allLikeByPostId = postCollectDao.getAllLikeByPostId(postId);
+            for (JSONObject object : allLikeByPostId) {
+                Object name = object.get("userName");
+                good.add(name);
+            }
+//            for (Object o : good) {
+//                System.out.println(o);
+//            }
+            role.put( "comments",allCommentByPostId);
+            role.put( "imgUrl",imgUrl);
+            role.put( "good",good);
+//            imgUrl.clear();
+//            good.clear();
+            String likestate = postCollectDao.getlikeByUP(role);
+            int likestates;
+            if(likestate==null){
+                likestates=0;
+            }else {
+                likestates=Integer.valueOf(likestate);
+            }
+            if(likestates==1){
+                role.put( "likestate",true );
+            }else {
+                role.put( "likestate",false );
+            }
+            String collectionstate = postCollectDao.getPsotCollectByUP(role);
+            int collectionstates;
+            if(collectionstate==null){
+                collectionstates=0;
+            }else {
+                collectionstates=Integer.valueOf(collectionstate);
+            }
+            if(collectionstates==1){
+                role.put("collectionstate",true);
+            }else{
+                role.put("collectionstate",false);
+            }
+            role.remove( "userIds" );
+            String seepeople = postCollectDao.getBrowseByP(postId);
+            role.put( "seepeople",seepeople );
+
+            role.put("uid",role.remove("userId"));
+            role.put("tid",role.remove("postId"));
+            role.put("avatarUrl",role.remove("userPhoto"));
+            role.put("username",role.remove("userName"));
+            role.put("types",role.remove("categoriesName"));
+            role.put("desc",role.remove("postContent"));
+            role.put("address",role.remove("postLocation"));
+            role.put("time",role.remove("postTime"));
+
+            Date postTime = role.getDate( "time" );
+            Calculating calculating = new Calculating();
+            String time = calculating.differentDaysByMillisecond( postTime );
+            role.put( "time" ,time);
+        }
         return CommonUtil.successJson(roles);
     }
-
     /**
      * 修改帖子收藏状态值
      * @param jsonObject  postId(帖子id),userId(用户id)
@@ -128,7 +216,7 @@ public class PostCollectServiceImpl implements PostCollectService {
                         postCollectDao.updatePostCollectDisplay( jsonObject );
                     }
                 }else {
-                    postCollectDao.addPostCollect( jsonObject );
+                    postCollectDao.addPostCollect(jsonObject);
                 }
             }
         }

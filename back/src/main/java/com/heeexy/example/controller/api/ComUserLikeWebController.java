@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  * @ Version: 1.0
  */
 @RestController
-@RequestMapping("/comUserLikeWeb")
+@RequestMapping("/api/comUserLikeWeb")
 public class ComUserLikeWebController {
     @Autowired
     private WxLikeService wxLikeService;
@@ -45,7 +45,7 @@ public class ComUserLikeWebController {
      */
     @PostMapping("/addLikesByUser")
     public JSONObject addLikeByUser(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "onUserId,likeId,postId");
+        CommonUtil.hasAllRequired(requestJson, "onUserId,likeId,postId,userId");
        JSONObject userByUsername = wxUserService.getUserByUsername(requestJson);
         String userState = userByUsername.getString("userState");
         if (userState =="1"){
@@ -69,5 +69,13 @@ public class ComUserLikeWebController {
     public JSONObject selectLike(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "onUserId,userId,postId");
         return wxLikeService.getLikeUserPost(requestJson);
+    }
+    /**
+     * 我的点赞列表
+     */
+    @GetMapping("/searchlike")
+    public JSONObject searchlike(HttpServletRequest request) {
+
+        return wxLikeService.myLike(CommonUtil.request2Json(request));
     }
 }

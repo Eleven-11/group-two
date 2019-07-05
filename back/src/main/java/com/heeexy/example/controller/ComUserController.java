@@ -32,6 +32,9 @@ public class ComUserController {
     private WxMyPostService wxMyPostService;
     @Autowired
     private WxMyCommentService wxMyCommentService;
+    //cqy
+    @Autowired
+    private ModuleService moduleService;
     /**
      * 展示用户列表
      */
@@ -134,15 +137,17 @@ public class ComUserController {
     @PostMapping("/updateUserState")
     public JSONObject updateUserState(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, " userId,userState");
-        return wxUserService.updateStateByUserId(requestJson);
+
+        JSONObject jsonObject = wxUserService.updateStateByUserId( requestJson );
+        //cqy操作
+        Object userState = requestJson.get("userState");
+        Integer userStates = Integer.valueOf(userState.toString());
+        if(userStates==0){
+            moduleService.addMessageF(requestJson);
+        }
+        return jsonObject;
     }
-    /**
-     * 用户状态列表
-     */
-    @GetMapping("/getAllState")
-    public JSONObject listRole() {
-        return wxUserService.listUserState();
-    }
+
 
     /**
      * 计算用户粉丝数
