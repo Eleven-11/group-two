@@ -1,6 +1,7 @@
 package com.heeexy.example.service;
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -34,4 +35,11 @@ public interface WxMyCommentService {
           * @return:  SONObject
           */
     JSONObject myselfComment(JSONObject jsonObject);
+    /**
+     * @methodsName: selectUserName
+     * @description: 根据被评论idtoComnetId查找用户名
+     * @param:  Integer
+     * @return: String
+     */
+    String selectUserName(@Param("toComentId") String toComentId);
 }

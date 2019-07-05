@@ -1,5 +1,6 @@
 package com.heeexy.example.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.WxMyPostDao;
 import com.heeexy.example.service.WxMyPostService;
@@ -113,10 +114,28 @@ public class WxMyPostServiceImpl implements WxMyPostService {
     @Override
     public JSONObject myPost(JSONObject jsonObject) {
         List<JSONObject> list = wxMyPostDao.myPost(jsonObject);
-        for (JSONObject ments : list) {
-            String time = ments.getString("time");
+        for (JSONObject object : list) {
+            String time = object.getString("time");
             String times = emjoy.getTimes(time);
-            ments.put("time", times);
+            object.put("time", times);
+            /*System.out.println(object);*/
+            JSONArray lcments = object.getJSONArray("lcments");
+            for (Object lcment : lcments) {
+                JSONObject lcment1=(JSONObject) lcment;
+                System.out.println(lcment1.get("toComentName"));
+                String toComentName = (String)lcment1.get("toComentName");
+
+                String commentstext = (String)lcment1.get("commentstext");
+                String commentsname = (String)lcment1.get("commentsname");
+
+                if (toComentName !=null){
+                    lcment1.put("commentstext", commentsname+"回复"+toComentName+":"+commentstext);
+
+                }else{
+                    lcment1.put("commentstext", commentsname+":"+commentstext);
+                }
+                lcment1.remove("toComentName");
+            }
         }
         return CommonUtil.successPage(list);
     }

@@ -1,6 +1,9 @@
 package com.heeexy.example.util;
 
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.text.ParseException;
 import java.util.Date;
 
 import static org.apache.commons.lang.time.DateUtils.parseDate;
@@ -45,8 +48,13 @@ public class emjoy {
     public static String getTimes(Object str){
         String resultTimes = "";
         Date now = new Date();
-        /*Date date=parseDate("22222554444",new String[]{"yyyy-MM-dd HH:mm:ss".intern()});*/
-        Date date=(Date) str;
+        Date date= null;
+        try {
+            date = parseDate((String) str,new String[]{"yyyy-MM-dd HH:mm:ss".intern()});
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        /*Date date=parseDate（str）;*/
         long times = now.getTime() - date.getTime();
         long day = times / (24 * 60 * 60 * 1000);
         long hour = (times / (60 * 60 * 1000) - day * 24);

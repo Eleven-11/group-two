@@ -6,6 +6,7 @@ import com.heeexy.example.util.CommonUtil;
 import com.heeexy.example.util.HttpRequest;
 import com.alibaba.fastjson.JSONObject;
 /*import net.sf.json.JSONObject;*/
+import com.heeexy.example.util.emjoy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -85,6 +86,11 @@ public class ComUserWebController {
                 net.sf.json.JSONObject userInfoJSON = net.sf.json.JSONObject.fromObject(result);
                 Map userInfo = new HashMap();
                 userInfo.put("openId", userInfoJSON.get("openId"));
+                String username=(String) userInfoJSON.get("nickName");
+                /*进行表情昵称处理*/
+                String unicode = emjoy.unicode(username);
+                userInfoJSON.put("nickName", unicode);
+                /*=============*/
                 userInfo.put("nickName", userInfoJSON.get("nickName"));
                 userInfo.put("gender", userInfoJSON.get("gender"));
                 userInfo.put("city", userInfoJSON.get("city"));

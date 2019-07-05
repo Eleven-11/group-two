@@ -1,14 +1,17 @@
 package com.heeexy.example.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.WxMyCommentDao;
 import com.heeexy.example.service.WxMyCommentService;
 import com.heeexy.example.util.CommonUtil;
 import com.heeexy.example.util.emjoy;
+import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ Author     ：良优
@@ -59,6 +62,39 @@ public class WxMyCommentServiceImpl implements WxMyCommentService {
     @Override
     public JSONObject myselfComment(JSONObject jsonObject) {
         List<JSONObject> list = wxMyCommentDao.myselfComment(jsonObject);
+      for (JSONObject object : list) {
+          String time = object.getString("time");
+          String times = emjoy.getTimes(time);
+          object.put("time", times);
+          /*System.out.println(object);*/
+          JSONArray lcments = object.getJSONArray("lcments");
+          for (Object lcment : lcments) {
+              JSONObject lcment1=(JSONObject) lcment;
+              System.out.println(lcment1.get("toComentName"));
+              String toComentName = (String)lcment1.get("toComentName");
+              String commentstext = (String)lcment1.get("commentstext");
+              String commentsname = (String)lcment1.get("commentsname");
+              lcment1.remove("toComentName");
+              if (toComentName !=null){
+                   lcment1.put("commentstext", commentsname+"回复"+toComentName+":"+commentstext);
+            }else{
+                   lcment1.put("commentstext", commentsname+":"+commentstext);
+            }
+          }
+        }
+
+
         return  CommonUtil.successPage(list);
+    }
+
+    /**
+     * 根据被评论idtoComnetId查找用户名
+     * @param toComentId
+     * @return String
+     */
+    @Override
+    public String selectUserName(String toComentId) {
+        String name = wxMyCommentDao.selectUserName(toComentId);
+        return name;
     }
 }
