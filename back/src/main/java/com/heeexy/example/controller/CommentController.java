@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * @Author : 林成
@@ -72,7 +71,7 @@ public class CommentController {
      */
     @PostMapping("updateComment")
     public JSONObject updateComment(@RequestBody JSONObject requestJson){
-        CommonUtil.hasAllRequired(requestJson, "id,status");
+        CommonUtil.hasAllRequired(requestJson, "cid,status");
         JSONObject jsonObject = commentService.updateComment( requestJson );
         //cqy写
         Object id = requestJson.get( "uid" );
