@@ -14,13 +14,13 @@
     </select>
     <!--增加普通用户-->
     <insert id="addByUser" parameterType="java.util.Map">
-    insert  into  fly_user (user_uuid userUuid,user_name, user_photo, user_sex, user_fans, user_fans_f, guest, user_state)
-    values (#{userUuid},#{userName},#{userPhoto},#{userSex},0,0,0,0);
+    insert  into  fly_user (user_id,user_uuid userUuid,user_name, user_photo, user_sex, user_fans, user_fans_f, guest, user_state)
+    values (#{userId},#{userUuid},#{userName},#{userPhoto},#{userSex},0,0,0,0);
     </insert>
     <!--增加游客用户-->
     <insert id="addGuestUser" parameterType="java.util.Map">
-    insert  into  fly_user (user_uuid userUuid,user_name, user_photo, user_sex, user_fans, user_fans_f, guest, user_state)
-    values (0,'游客','http://img.duoziwang.com/2018/17/05282053226540.jpg','男',0,0,1,0);
+    insert  into  fly_user (user_id,user_uuid,user_name, user_photo, user_sex, user_fans, user_fans_f, guest, user_state)
+    values (#{userId},0,'游客','http://img.duoziwang.com/2018/17/05282053226540.jpg','男',0,0,1,0);
     </insert>
     <!--修改真实粉丝数-->
     <update id="updateFansById" parameterType="java.util.Map" >
