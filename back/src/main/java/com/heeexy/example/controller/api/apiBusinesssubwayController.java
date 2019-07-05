@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author: chenqiangyong
  * @description: 帖子标签的小程序访问接口
  * @date: 2019/7/2 22:18
- * @vevsion
+ * @vevsion 1.0
  */
 @RestController
 @RequestMapping("/api/frontBusinesssubway")
