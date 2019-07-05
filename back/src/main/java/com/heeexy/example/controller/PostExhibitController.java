@@ -53,22 +53,39 @@ public class PostExhibitController {
 //            "pageNum":1
 //    }
 
-    @PostMapping("/searchpost")
-    public JSONObject searchpost(@RequestBody JSONObject requestJson){
+    @PostMapping("/searchPost")
+    public JSONObject searchPost(@RequestBody JSONObject requestJson){
 
         return postExhibitService.getThePost(requestJson);
     }
 
 //    {
-//        "type":"转租",
+//            "type":2,
+//            "uid":1,
+//            "pageNum":1
+//
+//    }
+    @PostMapping("/sortPost")
+    public JSONObject sortPost(@RequestBody JSONObject requestJson){
+        return postExhibitService.getSortPost(requestJson);
+    }
+
+//    {
+//           "type":"转租",
 //            "userid":1,
-//            "content":"caonima",
+//            "content":"ssssssssssssssssssssss",
 //            "address":"990909",
 //            "telephone":1,
 //            "pricelow":100,
 //            "pricehigh":null,
 //            "startdate":null,
-//            "enddate":null
+//            "enddate":null,
+//            "imglist":["88888888888888",
+//            "777777777777777"
+//            		  ],
+//        "taglist":[{"smalltag":666,"bigtag":999},
+//        {"smalltag":999,"bigtag":6666}
+//            	      ]
 //    }
     @PostMapping("/addPost")
     public JSONObject addPost(@RequestBody JSONObject requestJson){
