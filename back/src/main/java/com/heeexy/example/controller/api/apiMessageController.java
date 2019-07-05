@@ -14,19 +14,19 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version : 1.0
  **/
 @RestController
-@RequestMapping("/messageApi")
+@RequestMapping("api/messageApi")
 public class apiMessageController {
     @Autowired
     private MessageService messageService;
 
-    @GetMapping("/getChat")
+    @GetMapping("getChat")
     public JSONObject getChatByUserId(int uid){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("uid", uid);
         return messageService.getChatByUserId(jsonObject);
     }
 
-    @GetMapping("/getMessage")
+    @GetMapping("getMessage")
     public JSONObject getMessageByChatId(int cid, int uid){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("uid", uid);
