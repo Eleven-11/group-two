@@ -20,10 +20,9 @@ public class PostController {
     @Autowired
     private PostService postService;
     /**
-     * @Author lover_tyn
-     * @Description //TODO
+     * @Description //删除帖子
      * @Date  2019/7/1 11:06
-     * @Param [request]
+     * @Param [request]:theStart,theEnd,theOwnerName,theOthers
      * @return com.alibaba.fastjson.JSONObject
      */
     @GetMapping("/list")
@@ -32,10 +31,9 @@ public class PostController {
     }
 
     /**
-     * @Author lover_tyn
      * @Description //TODO
      * @Date  2019/7/1 15:11
-     * @Param [requestJson]
+     * @Param [requestJson]:postId,deleteState
      * @return com.alibaba.fastjson.JSONObject
      */
     @PostMapping("/updatePostState")
@@ -46,9 +44,9 @@ public class PostController {
 
     /**
      * @Author lover_tyn
-     * @Description //TODO
+     * @Description //查询帖子详情
      * @Date  2019/7/1 15:11
-     * @Param [requestJson]
+     * @Param [requestJson]:postId
      * @return com.alibaba.fastjson.JSONObject
      */
     @PostMapping("/getOnePost")
@@ -59,9 +57,9 @@ public class PostController {
 
     /**
      * @Author lover_tyn
-     * @Description //TODO
+     * @Description //获取帖子分类列表
      * @Date  2019/7/1 15:12
-     * @Param []
+     * @Param []:null
      * @return com.alibaba.fastjson.JSONObject
      */
     @GetMapping("/getAllSorts")
@@ -71,9 +69,9 @@ public class PostController {
 
     /**
      * @Author lover_tyn
-     * @Description //TODO
+     * @Description //更新帖子信息
      * @Date  2019/7/1 15:13
-     * @Param [requestJson]
+     * @Param [requestJson]:sortId,postContent, likeOff,collectOff,viewOff, postId,deleteTag,newTag,deleteImg
      * @return com.alibaba.fastjson.JSONObject
      */
     @PostMapping("/updatePost")
@@ -85,9 +83,9 @@ public class PostController {
 
     /**
      * @Author lover_tyn
-     * @Description //TODO
+     * @Description //置顶帖子
      * @Date  2019/7/1 15:13
-     * @Param [requestJson]
+     * @Param [requestJson]：postId,is_top
      * @return com.alibaba.fastjson.JSONObject
      */
     @PostMapping("/updatePostTop")
@@ -99,9 +97,9 @@ public class PostController {
 
     /**
      * @Author lover_tyn
-     * @Description //TODO
+     * @Description //获取标签
      * @Date  2019/7/1 15:13
-     * @Param [requestJson]
+     * @Param [requestJson]:need
      * @return com.alibaba.fastjson.JSONObject
      */
     @PostMapping("/getSomeTag")
@@ -113,9 +111,9 @@ public class PostController {
 
     /**
      * @Author lover_tyn
-     * @Description //TODO
+     * @Description //得到第一级别标签
      * @Date  2019/7/1 15:13
-     * @Param []
+     * @Param []:null
      * @return com.alibaba.fastjson.JSONObject
      */
     @GetMapping("/getFirstTag")

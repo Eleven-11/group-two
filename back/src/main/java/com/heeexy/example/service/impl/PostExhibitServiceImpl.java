@@ -6,11 +6,14 @@ import com.heeexy.example.service.PostExhibitService;
 import com.heeexy.example.util.CommonUtil;
 import net.sf.json.processors.JsDateJsonBeanProcessor;
 import org.apache.commons.codec.language.bm.Lang;
+import org.omg.PortableServer.LIFESPAN_POLICY_ID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -65,7 +68,7 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         //处理点赞状态，收藏状态，日期,评论
             int userId = (int) jsonObject.get("uid");
             list = handleList(list,userId);
-        return CommonUtil.successPage(list);
+        return CommonUtil.successList(list);
     }
 
     @Override
@@ -94,7 +97,7 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         List<JSONObject> commentList = (List<JSONObject>)the.get("comments");
         commentList = handleComments(commentList);
         the.put("comments",commentList);
-        return CommonUtil.successJsonOne(the);
+        return CommonUtil.successOne(the);
     }
 
     @Override
@@ -102,7 +105,15 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         List<JSONObject> list = postExhibitDao.getThePost(jsonObject);
         int userId = (int) jsonObject.get("uid");
         list = handleList(list,userId);
-        return CommonUtil.successPage(list);
+        return CommonUtil.successList(list);
+    }
+
+    @Override
+    public JSONObject getSortPost(JSONObject jsonObject) {
+        List<JSONObject> list = postExhibitDao.getSortPost(jsonObject);
+        int userId = (int) jsonObject.get("uid");
+        list = handleList(list,userId);
+        return CommonUtil.successList(list);
     }
 
     @Override
@@ -110,10 +121,32 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         int sortId = postExhibitDao.querySortId(jsonObject);
         jsonObject.put("sortId",sortId);
         Date date = new Date();
-        Timestamp now = new Timestamp(date.getTime());
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String now = df.format(date.getTime());
+        //final Timestamp now = new Timestamp(da);
         jsonObject.put("now",now);
+        System.out.println(now);
         postExhibitDao.addPost(jsonObject);
-
+        int postId = postExhibitDao.queryPostId(jsonObject);
+        List<String> imgList = (List<String>)jsonObject.get("imglist");
+        int i=0;
+        while(i<imgList.size()){
+            JSONObject condition = new JSONObject();
+            condition.put("postId",postId);
+            condition.put("img",imgList.get(i));
+            postExhibitDao.addPostImg(condition);
+            i++;
+        }
+        List<HashMap> tagList = (List<HashMap>)jsonObject.get("taglist");
+        int j=0;
+        while(j<tagList.size()){
+            JSONObject condition = new JSONObject();
+            condition.put("postId",postId);
+            condition.put("tagId",tagList.get(j).get("smalltag"));
+            condition.put("typeId",tagList.get(j).get("bigtag"));
+            j++;
+            postExhibitDao.addPostTag(condition);
+        }
         return null;
     }
 
