@@ -59,9 +59,21 @@ public class PostExhibitController {
         return postExhibitService.getThePost(requestJson);
     }
 
+//    {
+//        "type":"转租",
+//            "userid":1,
+//            "content":"caonima",
+//            "address":"990909",
+//            "telephone":1,
+//            "pricelow":100,
+//            "pricehigh":null,
+//            "startdate":null,
+//            "enddate":null
+//    }
     @PostMapping("/addPost")
-    public JSONObject addPost(@RequestBody JSONObject requesjJson){
-        return  postExhibitService.addPost(requesjJson);
+    public JSONObject addPost(@RequestBody JSONObject requestJson){
+
+        return  postExhibitService.addPost(requestJson);
     }
 
 
