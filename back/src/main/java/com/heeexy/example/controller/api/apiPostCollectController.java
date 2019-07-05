@@ -26,7 +26,7 @@ public class apiPostCollectController {
      * @return
      */
 //    @RequiresPermissions(value = {"user:add", "user:update"}, logical = Logical.OR)
-    @PostMapping("/collection/ getcollection")
+    @PostMapping("/collection/getcollection")
     public JSONObject getAllRoles(@RequestBody  JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "userId");
         return postCollectService.getAllPostCollectByUserId(requestJson);
@@ -37,7 +37,7 @@ public class apiPostCollectController {
      * @return
      */
 //    @RequiresPermissions("role:delete")
-    @PostMapping("/collect/ collect")
+    @PostMapping("/collect/collect")
     public JSONObject updatePostCollectDisplay(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "postId,userId");
         return postCollectService.updatePostCollectDisplays(requestJson);
