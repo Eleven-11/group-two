@@ -66,7 +66,7 @@ public class PostServiceImpl implements PostService {
      * @Author lover_tyn
      * @Description //获取帖子分类列表
      * @Date  2019/7/1 14:55
-     * @Param []
+     * @Param []:null
      * @return com.alibaba.fastjson.JSONObject
      */
     @Override
@@ -155,7 +155,7 @@ public class PostServiceImpl implements PostService {
      * @Author lover_tyn
      * @Description //获取第一级别的标签
      * @Date  2019/7/1 14:54
-     * @Param []
+     * @Param []:null
      * @return com.alibaba.fastjson.JSONObject
      */
     @Override

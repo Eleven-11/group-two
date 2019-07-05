@@ -6,11 +6,16 @@ import com.heeexy.example.service.PostExhibitService;
 import com.heeexy.example.util.CommonUtil;
 import net.sf.json.processors.JsDateJsonBeanProcessor;
 import org.apache.commons.codec.language.bm.Lang;
+import org.omg.PortableServer.LIFESPAN_POLICY_ID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -51,7 +56,7 @@ public class PostExhibitServiceImpl implements PostExhibitService {
             condition.put("tagType", postExhibitDao.queryTagType("地铁周边"));
             list = generateList(condition);
         }else if(test==4){
-            System.out.println("impl"+test);
+
             condition.put("isTop", "%1");
             condition.put("getType", 4);
             list = generateList(condition);
@@ -60,12 +65,10 @@ public class PostExhibitServiceImpl implements PostExhibitService {
             condition.put("getType", 5);
             list = postExhibitDao.getNormalPost(condition);
         }
-        //生成点赞状态，收藏状态，日期
-        for(int i=0;i<list.size();i++){
+        //处理点赞状态，收藏状态，日期,评论
             int userId = (int) jsonObject.get("uid");
             list = handleList(list,userId);
-        }
-        return CommonUtil.successPage(list);
+        return CommonUtil.successList(list);
     }
 
     @Override
@@ -86,11 +89,15 @@ public class PostExhibitServiceImpl implements PostExhibitService {
             the.put("likePeople",the.getInteger("realLike")+the.getInteger("likeOff"));
         }
         the.put("time",handleTime(the.getLong("time")));
+        the.remove("timet");
         the.remove("likeOff");
         the.remove("viewOff");
         the.remove("realLike");
         the.remove("realView");
-        return CommonUtil.successJsonOne(the);
+        List<JSONObject> commentList = (List<JSONObject>)the.get("comments");
+        commentList = handleComments(commentList);
+        the.put("comments",commentList);
+        return CommonUtil.successOne(the);
     }
 
     @Override
@@ -98,14 +105,48 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         List<JSONObject> list = postExhibitDao.getThePost(jsonObject);
         int userId = (int) jsonObject.get("uid");
         list = handleList(list,userId);
-        return CommonUtil.successPage(list);
+        return CommonUtil.successList(list);
+    }
+
+    @Override
+    public JSONObject getSortPost(JSONObject jsonObject) {
+        List<JSONObject> list = postExhibitDao.getSortPost(jsonObject);
+        int userId = (int) jsonObject.get("uid");
+        list = handleList(list,userId);
+        return CommonUtil.successList(list);
     }
 
     @Override
     public JSONObject addPost(JSONObject jsonObject) {
-        int soetId = postExhibitDao.querySortId(jsonObject);
-        jsonObject.put("sortId",soetId);
-
+        int sortId = postExhibitDao.querySortId(jsonObject);
+        jsonObject.put("sortId",sortId);
+        Date date = new Date();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String now = df.format(date.getTime());
+        //final Timestamp now = new Timestamp(da);
+        jsonObject.put("now",now);
+        System.out.println(now);
+        postExhibitDao.addPost(jsonObject);
+        int postId = postExhibitDao.queryPostId(jsonObject);
+        List<String> imgList = (List<String>)jsonObject.get("imglist");
+        int i=0;
+        while(i<imgList.size()){
+            JSONObject condition = new JSONObject();
+            condition.put("postId",postId);
+            condition.put("img",imgList.get(i));
+            postExhibitDao.addPostImg(condition);
+            i++;
+        }
+        List<HashMap> tagList = (List<HashMap>)jsonObject.get("taglist");
+        int j=0;
+        while(j<tagList.size()){
+            JSONObject condition = new JSONObject();
+            condition.put("postId",postId);
+            condition.put("tagId",tagList.get(j).get("smalltag"));
+            condition.put("typeId",tagList.get(j).get("bigtag"));
+            j++;
+            postExhibitDao.addPostTag(condition);
+        }
         return null;
     }
 
@@ -134,6 +175,10 @@ public class PostExhibitServiceImpl implements PostExhibitService {
             list.get(i).put("collectState",postExhibitDao.isCollect(object));
             String time = handleTime(list.get(i).getLong("timet"));
             list.get(i).put("time",time);
+            list.get(i).remove("timet");
+            List<JSONObject> commentList = (List<JSONObject>)list.get(i).get("comments");
+            commentList = handleComments(commentList);
+            list.get(i).put("comments",commentList);
         }
         return list;
     }
@@ -161,6 +206,24 @@ public class PostExhibitServiceImpl implements PostExhibitService {
             result = month +" months ago";
         }
         return result;
+    }
+
+    private List<JSONObject> handleComments(List<JSONObject> commentList){
+        int i=0;
+        while (i<commentList.size()) {
+                int toCommentId = (int) commentList.get(i).get("toCommentId");
+                String commentUser = (String) commentList.get(i).get("commentName");
+                String commentText = (String) commentList.get(i).get("commentText");
+                if (toCommentId == 0) {
+                    commentList.get(i).put("commentText", commentUser + ":" + commentText);
+                } else {
+                    String toCommentUser = postExhibitDao.queryCommentUserName(toCommentId);
+                    commentList.get(i).put("commentText", commentUser + "回复" + toCommentUser + ":" + commentText);
+                }
+                commentList.get(i).remove("toCommentId");
+                i++;
+        }
+        return commentList;
     }
 
 

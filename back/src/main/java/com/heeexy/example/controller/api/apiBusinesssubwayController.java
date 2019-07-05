@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.service.BusinessSubwayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author: chenqiangyong
  * @description: 帖子标签的小程序访问接口
  * @date: 2019/7/2 22:18
- * @vevsion
+ * @vevsion 1.0
  */
 @RestController
 @RequestMapping("/api/frontBusinesssubway")
@@ -23,7 +24,7 @@ public class apiBusinesssubwayController {
      * 查询所有的帖子标签
      * @return
      */
-    @GetMapping("/FgetAllBusinessSubway")
+    @PostMapping("/FgetAllBusinessSubway")
     public JSONObject getAllBusinessSubway() {
         return businessSubwayService.FgetAllBusinessSubway();
     }

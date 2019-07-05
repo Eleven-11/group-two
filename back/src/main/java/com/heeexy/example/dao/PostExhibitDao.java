@@ -2,7 +2,6 @@ package com.heeexy.example.dao;
 
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 
@@ -28,7 +27,22 @@ public interface PostExhibitDao {
 
     List<JSONObject> getThePost(JSONObject jsonObject);
 
+    List<JSONObject> getSortPost(JSONObject jsonObject);
+
     Integer querySortId(JSONObject jsonObject);
+
+    String queryCommentUserName(int con);
+
+    int addPost(JSONObject jsonObject);
+
+    Integer queryPostId(JSONObject jsonObject);
+
+    Integer addPostImg(JSONObject jsonObject);
+
+    Integer addPostTag(JSONObject jsonObject);
+
+
+
 
 
 }

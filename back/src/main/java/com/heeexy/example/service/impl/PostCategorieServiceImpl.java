@@ -105,6 +105,11 @@ public class PostCategorieServiceImpl implements PostCategorieService {
     @Override
     public JSONObject RgetAllPostCategorie() {
         List<JSONObject> roles = postCategorieDao.RgetAllPostCategorie();
+        for (JSONObject role : roles) {
+            role.put("title",role.remove("categoriesName"));
+            role.put("id",role.remove("categoriesId"));
+            role.put("imgurl",role.remove("categoriesImg"));
+        }
         return CommonUtil.successPage(roles);
     }
 }

@@ -10,12 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author: chenqiangyong
- * @description:
- * @date: 2019/6/30
- * @vevsion
+ * @description: 收藏页面的小程序接口
+ * @date: 2019/6/30   10：23
+ * @vevsion 1.0
  */
 @RestController
-@RequestMapping("/api/frontPostCollect")
+@RequestMapping("/api")
 public class apiPostCollectController {
     @Autowired
     private PostCollectService postCollectService;
@@ -26,7 +26,7 @@ public class apiPostCollectController {
      * @return
      */
 //    @RequiresPermissions(value = {"user:add", "user:update"}, logical = Logical.OR)
-    @PostMapping("/getAllPostCollect")
+    @PostMapping("/collection/getcollection")
     public JSONObject getAllRoles(@RequestBody  JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "userId");
         return postCollectService.getAllPostCollectByUserId(requestJson);
@@ -37,7 +37,7 @@ public class apiPostCollectController {
      * @return
      */
 //    @RequiresPermissions("role:delete")
-    @PostMapping("/updatePostCollectDisplay")
+    @PostMapping("/collect/collect")
     public JSONObject updatePostCollectDisplay(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "postId,userId");
         return postCollectService.updatePostCollectDisplays(requestJson);
