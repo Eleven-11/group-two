@@ -328,8 +328,8 @@
 
     <insert id="addPost">
         insert into tyn_post
-        (post_owner,post_time,post_content,post_sort,post_location,post_phone,price_low,price_high,time_start,time_end,is_top,delete_state)
-        values(#{userid},#{now},#{content},#{sortId},#{address},#{telephone},#{pricelow},#{pricehigh},#{startdate},#{enddate},0,1);
+        (post_owner,post_time,post_content,post_sort,post_location,post_phone,price_low,price_high,time_start,time_end,is_top,delete_state,like_offset,collect_offset,view_offset)
+        values(#{userid},#{now},#{content},#{sortId},#{address},#{telephone},#{pricelow},#{pricehigh},#{startdate},#{enddate},0,1,0,0,0);
         commit;
     </insert>
 
