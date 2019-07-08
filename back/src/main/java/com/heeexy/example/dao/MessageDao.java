@@ -30,14 +30,14 @@ public interface MessageDao {
     List<JSONObject> getChatByUserId(JSONObject jsonObject);
 
     /**
+     * 根据聊天id获取消息详情
+     */
+    List<JSONObject> getMessageByChatId(JSONObject jsonObject);
+
+    /**
      * 获取聊天条数
      */
     int countChatByUserId(JSONObject jsonObject);
-
-    /**
-     * 根据用户ID获取消息
-     */
-    List<JSONObject> getMessageByUserId(JSONObject jsonObject);
 
     /**
      * 根据用户ID获取消息条数

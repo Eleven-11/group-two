@@ -59,4 +59,13 @@ public class CommentServiceImpl implements CommentService {
         commentDao.updateComment(jsonObject);
         return CommonUtil.successJson();
     }
+
+    /**
+     * 获取评论列表
+     */
+    @Override
+    public JSONObject getComment2(JSONObject jsonObject) {
+        List<JSONObject> list = commentDao.getComment(jsonObject);
+        return CommonUtil.successJson(list);
+    }
 }

@@ -79,4 +79,11 @@ public class AdsServiceImpl implements AdsService {
         adsDao.removeAdsById(id);
         return CommonUtil.successJson();
     }
+
+    /**
+     * 获取启用的广告
+     */
+    public JSONObject swiper(){
+        return CommonUtil.successJson(adsDao.swiper());
+    }
 }

@@ -269,7 +269,7 @@
         return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
       },
       warn ($index) {
-        this.tempComment.id = this.list[$index].id;
+        this.tempComment.cid = this.list[$index].id;
         this.tempComment.status = -1;
         this.tempComment.uid = this.list[$index].fuid;
         this.tempComment.content = this.list[$index].content;

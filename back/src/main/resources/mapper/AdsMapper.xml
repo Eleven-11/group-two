@@ -56,4 +56,14 @@
         DELETE FROM lc_ads
         WHERE ads_id = #{id}
     </delete>
+
+    <select id="swiper" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        a.ads_id        Id,
+        a.ads_picture   swiperUrl,
+        a.ads_link      link
+        FROM lc_ads a
+        WHERE  a.ads_status = 1
+        ORDER BY a.ads_id
+    </select>
 </mapper>

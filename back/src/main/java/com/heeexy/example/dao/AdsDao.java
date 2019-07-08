@@ -43,4 +43,8 @@ public interface AdsDao {
      */
     int removeAdsById(int id);
 
+    /**
+     * 获取启用的广告
+     */
+    List<JSONObject> swiper();
 }

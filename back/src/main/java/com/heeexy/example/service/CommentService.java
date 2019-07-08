@@ -31,4 +31,9 @@ public interface CommentService {
      * 变更评论显示状态  0：未读 1：已读 -1：删除
      */
     JSONObject updateComment(JSONObject jsonObject);
+
+    /**
+     * 获取评论列表
+     */
+    JSONObject getComment2(JSONObject jsonObject);
 }
