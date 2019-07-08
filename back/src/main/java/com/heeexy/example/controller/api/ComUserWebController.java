@@ -186,7 +186,7 @@ public class ComUserWebController {
     /**
      * 我的粉丝信息
      */
-    @GetMapping("/searchmySelfFans")
+    @GetMapping("/myfans")
     public JSONObject mySelfFans(HttpServletRequest request){
         return wxUserService.mySelfFans(CommonUtil.request2Json(request));
     }

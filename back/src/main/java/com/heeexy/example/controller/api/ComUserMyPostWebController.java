@@ -34,7 +34,7 @@ public class ComUserMyPostWebController {
     /**
      * 前台删除用户帖子(修改帖子隐藏显示状态)
      */
-    @PostMapping("/updatePostByUser")
+    @PostMapping("/deletepost")
     public JSONObject updatePostByUser(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "postId,myPostState");
         return wxMyPostService.updateMyPostById(requestJson);
@@ -79,7 +79,7 @@ public class ComUserMyPostWebController {
     /**
      * 我已发布的帖子列表
      */
-    @GetMapping("/searchpost")
+    @GetMapping("/myrelease")
     public JSONObject mypost(HttpServletRequest request) {
 
         return wxMyPostService.myPost(CommonUtil.request2Json(request));

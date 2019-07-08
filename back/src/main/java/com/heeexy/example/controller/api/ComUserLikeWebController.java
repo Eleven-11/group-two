@@ -43,7 +43,7 @@ public class ComUserLikeWebController {
     /**
      * 前台添加用户帖子点赞
      */
-    @PostMapping("/addLikesByUser")
+    @PostMapping("/postlike")
     public JSONObject addLikeByUser(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "onUserId,likeId,postId,userId");
        JSONObject userByUsername = wxUserService.getUserByUsername(requestJson);
@@ -73,7 +73,7 @@ public class ComUserLikeWebController {
     /**
      * 我的点赞列表
      */
-    @GetMapping("/searchlike")
+    @GetMapping("/mylike")
     public JSONObject searchlike(HttpServletRequest request) {
 
         return wxLikeService.myLike(CommonUtil.request2Json(request));
