@@ -6,8 +6,6 @@ import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @Author : 林成
  * @Description :
@@ -15,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Version : 1.0
  **/
 @RestController
-@RequestMapping("commentApi")
+@RequestMapping("api/commentApi")
 public class apiCommentController {
     @Autowired
     private CommentService commentService;

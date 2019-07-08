@@ -1,4 +1,4 @@
-package com.heeexy.example.controller;
+package com.heeexy.example.controller.api;
 
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.service.PostExhibitService;
@@ -23,8 +23,8 @@ public class PostExhibitController {
 
 //    {
 //        "id":1,
-//            "uid":2,
-//            "pageNum":1
+//        "uid":2,
+//        "pageNum":1
 //    }
 
     @PostMapping("/news")
@@ -34,10 +34,8 @@ public class PostExhibitController {
     }
 
 //    {
-//
 //        "uid":2,
-//            "tid":1
-//
+//        "tid":1
 //    }
 
     @PostMapping("/detail")
@@ -48,9 +46,9 @@ public class PostExhibitController {
 
 
 //    {
-//        "uid":2,
-//            "keyword":"菜",
-//            "pageNum":1
+//          "uid":2,
+//         "keyword":"菜",
+//         "pageNum":1
 //    }
 
     @PostMapping("/searchPost")
@@ -63,8 +61,8 @@ public class PostExhibitController {
 //            "type":2,
 //            "uid":1,
 //            "pageNum":1
-//
 //    }
+
     @PostMapping("/sortPost")
     public JSONObject sortPost(@RequestBody JSONObject requestJson){
         return postExhibitService.getSortPost(requestJson);
@@ -81,15 +79,13 @@ public class PostExhibitController {
 //            "startdate":null,
 //            "enddate":null,
 //            "imglist":["88888888888888",
-//            "777777777777777"
-//            		  ],
+//            "777777777777777"],
 //        "taglist":[{"smalltag":666,"bigtag":999},
-//        {"smalltag":999,"bigtag":6666}
-//            	      ]
+//        {"smalltag":999,"bigtag":6666}]
 //    }
+
     @PostMapping("/addPost")
     public JSONObject addPost(@RequestBody JSONObject requestJson){
-
         return  postExhibitService.addPost(requestJson);
     }
 
