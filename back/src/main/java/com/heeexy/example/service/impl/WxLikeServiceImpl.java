@@ -1,9 +1,11 @@
 package com.heeexy.example.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.WxLikeDao;
 import com.heeexy.example.service.WxLikeService;
 import com.heeexy.example.util.CommonUtil;
+import com.heeexy.example.util.emjoy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -134,6 +136,25 @@ public class WxLikeServiceImpl implements WxLikeService {
     @Override
     public JSONObject myLike(JSONObject jsonObject) {
         List<JSONObject> list = wxLikeDao.myLike(jsonObject);
+        for (JSONObject object : list) {
+            String time = object.getString("time");
+            String times = emjoy.getTimes(time);
+            object.put("time", times);
+            JSONArray lcments = object.getJSONArray("lcments");
+            for (Object lcment : lcments) {
+                JSONObject lcment1=(JSONObject) lcment;
+                System.out.println(lcment1.get("toComentName"));
+                String toComentName = (String)lcment1.get("toComentName");
+                String commentstext = (String)lcment1.get("commentstext");
+                String commentsname = (String)lcment1.get("commentsname");
+                lcment1.remove("toComentName");
+                if (toComentName !=null){
+                    lcment1.put("commentstext", commentsname+"回复"+toComentName+":"+commentstext);
+                }else{
+                    lcment1.put("commentstext", commentsname+":"+commentstext);
+                }
+            }
+        }
         return CommonUtil.successPage(list);
     }
 }

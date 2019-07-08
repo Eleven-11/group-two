@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author: chenqiangyong
- * @description:
- * @date: 2019/6/30
- * @vevsion
+ * @description: 收藏页面的小程序接口
+ * @date: 2019/6/30   10：23
+ * @vevsion 1.0
  */
 @RestController
 @RequestMapping("/api")

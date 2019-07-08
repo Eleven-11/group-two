@@ -30,7 +30,7 @@ public class One2Many extends JSONObject {
 	private Set<String> imgList;
 	private Set<String> imgUrls;
 	private Set<String> goods;
+	private  List<JSONObject> lcments;
 	private List<JSONObject> comments;
 	private List<JSONObject> goodsDetail;
-	private  List<Map> lcments;
   }

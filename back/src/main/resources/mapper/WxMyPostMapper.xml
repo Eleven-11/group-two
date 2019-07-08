@@ -84,11 +84,13 @@
         <collection property="goods" ofType="String">
             <id column="good" property="good"/>
         </collection>
-        <collection property="lcments" ofType="java.util.Map">
-            <id column="commentsid" property="commentsId"/>
-            <id column="commentsimg" property="commentUserId"/>
-            <id column="commentstext" property="commentsText"/>
-            <id column="commentsname" property="commentsName"/>
+        <collection property="lcments" ofType="com.alibaba.fastjson.JSONObject">
+            <id column="commentsid" property="commentsid"/>
+            <id column="commentsimg" property="commentsimg"/>
+            <id column="commentstext" property="commentstext"/>
+            <id column="commentsname" property="commentsname"/>
+            <id column="toComentName" property="toComentName"/>
+            <id column="commentid" property="commentid"/>
         </collection>
     </resultMap>
     <!--uid:  //帖子对应用户的id
@@ -102,41 +104,37 @@ address:’’ //用户所在的地，collectionstate:boolen //收藏状态，ti
     <!--我已发布的帖子-->
     <select id="myPost" resultMap="postMap">
       select
-          N.* ,z.commentsid,z.commentsimg,z.commentsname,z.commentstext,
+          N.* ,z.commentsid,z.commentsimg,z.commentsname,z.commentstext,z.commentid,
+          (select lu.user_name  from fly_user lu,lc_comment l
+        where lu.user_id=l.from_user_id and  l.comment_id =z.to_comment_id) toComentName,
           (select count(0) from fly_browse b where b.post_id=N.tId) seepeople
       from
         (select
             p.id tId,u.user_id uid,u.user_photo  avatarUrl,u.user_name username,ptg.business_subway_name types,
             p.post_content descrb, like2.usersPhoto good,l.like_state likestate,c.display collectionstate,
-            pmg.img imgUrl,p.post_location address,DATE_FORMAT(p.post_time, '%Y.%m.%d %T')  time1
+            pmg.img imgUrl,p.post_location address,DATE_FORMAT(p.post_time, '%Y-%m-%d %T')  time1
         from fly_user u
           left join tyn_post p on u.user_id =p.post_owner and p.delete_state =1
           left join  (select pt.post_id,cqy.business_subway_name from cqy_business_subway cqy,tyn_post_tag  pt
         where cqy.business_subway_id = pt.tag_type )  ptg on p.id = ptg.post_id
-          left join cqy_post_collect c on c.post_id =ptg.post_id
-          left join fly_like l on l.post_id =c.post_id
-          left  join (select users.user_photo usersPhoto,likes.post_id
+        right  join (select users.user_photo usersPhoto,likes.post_id
         from fly_like likes,fly_user users
-        where users.user_id= likes.onuser_id and likes.like_state =1) like2 on l.post_id =like2.post_id
+        where users.user_id= likes.onuser_id and likes.like_state =1) like2 on p.id =like2.post_id
+          left join cqy_post_collect c on c.post_id =like2.post_id
+          left join fly_like l on l.post_id =c.post_id
+         /* left  join (select users.user_photo usersPhoto,likes.post_id
+        from fly_like likes,fly_user users
+        where users.user_id= likes.onuser_id and likes.like_state =1) like2 on l.post_id =like2.post_id*/
           left join   (select post.id,pig.img
         from tyn_post_img pig,tyn_post post
-        where post.id= pig.post_id and post.delete_state = 1) pmg  on pmg.id =like2.post_id
+        where post.id= pig.post_id and post.delete_state = 1) pmg  on pmg.id =l.post_id
         ) N,
-        /*(select
-          lc.post_id,lc.from_user_id commentsid,uu.user_name commentsname,
-          uu.user_photo commentsimg,lc.comment_content commentstext
-         from lc_comment lc ,fly_user uu
-         where uu.user_id=lc.from_user_id and lc.comment_status in (0,1)) m*/
-          (select  m.post_id,m.commentsid,m.commentsname,m.commentsimg,
-        concat(concat(m.commentsname,user1.user_name),m.commentstext) commentstext
-        from
         (select
         lc.post_id,lc.from_user_id commentsid,uu.user_name commentsname,lc.to_comment_id ,
-        uu.user_photo commentsimg,lc.comment_content commentstext
-        from lc_comment lc ,fly_user uu,lc_comment cl
-        where uu.user_id=lc.from_user_id and lc.comment_status !=-1 order by lc.comment_time desc ) m,lc_comment cl,fly_user user1
-        where cl.comment_id =m.to_comment_id and user1.user_id = cl.from_user_id
-        ) z
+        uu.user_photo commentsimg,lc.comment_content commentstext,lc.comment_id commentid
+        from lc_comment lc ,fly_user uu
+        where uu.user_id=lc.from_user_id and lc.comment_status !=-1 ) z
+
       where  z.post_id =N.tId and N.uid =#{uid}
     </select>
 </mapper>

@@ -24,7 +24,7 @@ public interface MessageService {
     /**
      * 根据用户ID获取消息列表
      */
-    JSONObject getMessageByUserId(JSONObject jsonObject);
+    JSONObject getMessageByChatId(JSONObject jsonObject);
 
     /**
      * 根据消息ID获取消息

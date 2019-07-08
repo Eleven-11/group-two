@@ -4,9 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.WxUserDao;
 import com.heeexy.example.service.WxUserService;
 import com.heeexy.example.util.CommonUtil;
+import com.heeexy.example.util.emjoy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -135,6 +138,12 @@ public class WxUserServiceImpl implements WxUserService {
     @Override
     public JSONObject mySelf(JSONObject jsonObject) {
         List<JSONObject> mySelf = wxUserDao.mySelf(jsonObject);
+        /*表情昵称处理*/
+     /*   for (JSONObject object : mySelf) {
+            String myname =(String) object.get("myname");
+            String s = emjoy.decodeUnicode(myname);
+            object.put("myname", s);
+        }*/
         return CommonUtil.successPage(mySelf);
     }
     /**
@@ -145,6 +154,11 @@ public class WxUserServiceImpl implements WxUserService {
     @Override
     public JSONObject mySelfFans(JSONObject jsonObject) {
         List<JSONObject> list = wxUserDao.mySelfFans(jsonObject);
+   /*     for (JSONObject object : list) {
+            String mySelfFansName =(String) object.get("mySelfFansName");
+            String s = emjoy.decodeUnicode(mySelfFansName);
+            object.put("mySelfFansName", s);
+        }*/
         return CommonUtil.successPage(list);
     }
 
@@ -158,5 +172,20 @@ public class WxUserServiceImpl implements WxUserService {
         JSONObject jsonObject1 = wxUserDao.queryUserByUuId(map);
         return jsonObject1;
     }
-
+     /**
+          * @methodsName:  checkUser
+          * @description: 检测用户是否封禁
+          * @param: request
+          * @return: String
+          */
+    public  String checkUser(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String onUserId = (String)session.getAttribute("onUserId");
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("onUserId", onUserId);
+        JSONObject userByUsername = wxUserDao.getUserByUsername(jsonObject);
+        String userState =(String) userByUsername.get("userState");
+        String guest =(String) userByUsername.get("guest");
+        return userState;
+    }
 }
