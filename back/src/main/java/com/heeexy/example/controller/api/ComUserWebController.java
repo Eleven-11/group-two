@@ -88,10 +88,10 @@ public class ComUserWebController {
                 net.sf.json.JSONObject userInfoJSON = net.sf.json.JSONObject.fromObject(result);
                 Map userInfo = new HashMap();
                 userInfo.put("openId", userInfoJSON.get("openId"));
-                String username=(String) userInfoJSON.get("nickName");
+//                String username=(String) userInfoJSON.get("nickName");
                 /*进行表情昵称处理*/
-                String unicode = emjoy.unicode(username);
-                userInfoJSON.put("nickName", unicode);
+            /*    String unicode = emjoy.unicode(username);
+                userInfoJSON.put("nickName", unicode);*/
                 /*=============*/
                 userInfo.put("nickName", userInfoJSON.get("nickName"));
                 userInfo.put("gender", userInfoJSON.get("gender"));
@@ -123,8 +123,10 @@ public class ComUserWebController {
         String gender = (String)session.getAttribute("gender");
         /*根据当前时间随机生成用户Id*/
         Date now = new Date();
-        long time = now.getTime()/10000;
-        UUID userId = UUID.fromString(String.valueOf(time));
+        long time = now.getTime()/1000000;
+        String s = Long.toString(time);
+        UUID random = UUID.randomUUID();
+        String userId=random+s;
         map.put("userId", userId);
         map.put("userUuid", userUuid);
         map.put("userName", nickName);
@@ -151,7 +153,7 @@ public class ComUserWebController {
                 return CommonUtil.successJson("success") ;
 
             }else {
-                String uuid = jsonObject.getString("uuid");
+//                String uuid = jsonObject.getString("uuid");
                 session.setAttribute("onUserId", jsonObject.getString("userId"));
                 return CommonUtil.successJson("success");
             }
