@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @ Author     ：良优
@@ -86,10 +88,10 @@ public class ComUserWebController {
                 net.sf.json.JSONObject userInfoJSON = net.sf.json.JSONObject.fromObject(result);
                 Map userInfo = new HashMap();
                 userInfo.put("openId", userInfoJSON.get("openId"));
-                String username=(String) userInfoJSON.get("nickName");
+//                String username=(String) userInfoJSON.get("nickName");
                 /*进行表情昵称处理*/
-                String unicode = emjoy.unicode(username);
-                userInfoJSON.put("nickName", unicode);
+            /*    String unicode = emjoy.unicode(username);
+                userInfoJSON.put("nickName", unicode);*/
                 /*=============*/
                 userInfo.put("nickName", userInfoJSON.get("nickName"));
                 userInfo.put("gender", userInfoJSON.get("gender"));
@@ -119,6 +121,13 @@ public class ComUserWebController {
         String nickName = (String)session.getAttribute("nickName");
         String avatarUrl = (String)session.getAttribute("avatarUrl");
         String gender = (String)session.getAttribute("gender");
+        /*根据当前时间随机生成用户Id*/
+        Date now = new Date();
+        long time = now.getTime()/1000000;
+        String s = Long.toString(time);
+        UUID random = UUID.randomUUID();
+        String userId=random+s;
+        map.put("userId", userId);
         map.put("userUuid", userUuid);
         map.put("userName", nickName);
         map.put("userPhoto", avatarUrl);
@@ -127,10 +136,10 @@ public class ComUserWebController {
 //        String userUuid = requestJson.getString("uuid");
         //判断uuid，是否为空，空为游客，未授权，有值为授权
         if (userUuid ==null){
-                wxUserService.addGuestUser(map);
-            JSONObject maxNumber = wxUserService.getMaxNumber(requestJson);
-            session.setAttribute("onUserId", maxNumber.getString("userId"));
-            return maxNumber ;
+            wxUserService.addGuestUser(map);
+//            JSONObject maxNumber = wxUserService.getMaxNumber(requestJson);
+            session.setAttribute("onUserId",userId);
+            return CommonUtil.successJson("success") ;
         }else {
             //先查看是否之前已授权过该小程序，空为首次登入
             JSONObject jsonObject = wxUserService.queryUserByUuId(map);
@@ -138,15 +147,15 @@ public class ComUserWebController {
                 wxUserService.addByUser(map);
                 //存入session中
                 JSONObject maxNumber = wxUserService.getMaxNumber(requestJson);
-                session.setAttribute("onUserId", maxNumber.getString("userId"));
+                session.setAttribute("onUserId", userId);
                 //cqy改(未测试)
                 moduleService.addMessageH(maxNumber);
-                return maxNumber ;
+                return CommonUtil.successJson("success") ;
 
             }else {
-                String uuid = jsonObject.getString("uuid");
+//                String uuid = jsonObject.getString("uuid");
                 session.setAttribute("onUserId", jsonObject.getString("userId"));
-                return jsonObject;
+                return CommonUtil.successJson("success");
             }
 
         }
