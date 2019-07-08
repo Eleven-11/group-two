@@ -34,11 +34,6 @@ public class WxMyCommentServiceImpl implements WxMyCommentService {
         //后台网页显示
         CommonUtil.fillPageParam(jsonObject);
         List<JSONObject> list = wxMyCommentDao.getMyCommentList(jsonObject);
-        for (JSONObject ments : list) {
-            String time = ments.getString("time");
-            String times = emjoy.getTimes(time);
-            ments.put("time", times);
-        }
         int count = wxMyCommentDao.countMyComment(jsonObject);
         return CommonUtil.successPage(jsonObject, list, count);
     }
