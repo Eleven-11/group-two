@@ -50,7 +50,7 @@ public class ComUserFansWebController {
      */
     @PostMapping("/updateFansByUser")
     public JSONObject updateFans1(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "state,fansId");
+        CommonUtil.hasAllRequired(requestJson, "onUserId,userId");
         return wxFansService.updateFansByUserId(requestJson);
     }
     /**
@@ -64,7 +64,7 @@ public class ComUserFansWebController {
     /**
      *我的关注
      */
-    @PostMapping("/myattention")
+    @GetMapping("/myattention")
     public JSONObject myfans(HttpServletRequest request) {
 
         return wxFansService.myFans(CommonUtil.request2Json(request));

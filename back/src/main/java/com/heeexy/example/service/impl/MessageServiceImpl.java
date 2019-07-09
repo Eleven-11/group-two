@@ -47,6 +47,13 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public JSONObject getMessageByChatId(JSONObject jsonObject) {
         List<JSONObject> list = messageDao.getMessageByChatId(jsonObject);
+        for (JSONObject object : list) {
+            if(jsonObject.get("uid").equals(object.get("sender"))){
+                object.put("flag", 0);
+            }else {
+                object.put("flag", 1);
+            }
+        }
         return CommonUtil.successJson(list);
     }
 

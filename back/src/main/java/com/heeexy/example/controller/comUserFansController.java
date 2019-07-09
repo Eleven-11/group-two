@@ -47,7 +47,7 @@ public class comUserFansController {
     @RequiresPermissions("comuserfans:delete")
     @PostMapping("/updateUserFans")
     public JSONObject updateFans(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "state,fansId");
+        CommonUtil.hasAllRequired(requestJson, "onUserId,userId");
         return wxFansService.updateFansByUserId(requestJson);
     }
     /**

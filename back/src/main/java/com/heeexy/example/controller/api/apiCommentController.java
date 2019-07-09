@@ -2,7 +2,6 @@ package com.heeexy.example.controller.api;
 
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.service.CommentService;
-import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +34,7 @@ public class apiCommentController {
     @GetMapping("getCommentByPostId")
     public JSONObject getCommentByPostId(int pid){
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("uid", pid);
+        jsonObject.put("pid", pid);
         return commentService.getComment2(jsonObject);
     }
 
@@ -51,18 +50,19 @@ public class apiCommentController {
      * 添加一条评论
      */
     @PostMapping("addComment")
-    public JSONObject addComment(@RequestBody JSONObject requestJson){
-        CommonUtil.hasAllRequired(requestJson, "uid,pid,content");
-        return commentService.addComment(requestJson);
+    public JSONObject addComment(@RequestBody JSONObject jsonObject){
+        System.out.println(jsonObject.get("content"));
+        return commentService.addComment(jsonObject);
     }
 
     /**
      * 删除评论
      */
     @PostMapping("updateComment")
-    public JSONObject updateComment(@RequestBody JSONObject requestJson){
-        CommonUtil.hasAllRequired(requestJson, "cid");
-        requestJson.put("status", -1);
-        return commentService.updateComment(requestJson);
+    public JSONObject updateComment(int cid){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("cid", cid);
+        jsonObject.put("status", -1);
+        return commentService.updateComment(jsonObject);
     }
 }
