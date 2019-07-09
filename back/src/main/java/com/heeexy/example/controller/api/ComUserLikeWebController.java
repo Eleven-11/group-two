@@ -45,7 +45,7 @@ public class ComUserLikeWebController {
      */
     @PostMapping("/postlike")
     public JSONObject addLikeByUser(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "onUserId,likeId,postId,userId");
+        CommonUtil.hasAllRequired(requestJson, "onUserId,postId");
        JSONObject userByUsername = wxUserService.getUserByUsername(requestJson);
         String userState = userByUsername.getString("userState");
         if (userState =="1"){
@@ -59,7 +59,7 @@ public class ComUserLikeWebController {
      */
     @PostMapping("/updateLikeByUser")
     public JSONObject updateLikeByUser(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "likeId,onUserId");
+        CommonUtil.hasAllRequired(requestJson, "postId,onUserId");
         return wxLikeService.updateLikeByUserId(requestJson);
     }
     /**

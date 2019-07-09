@@ -100,4 +100,11 @@ public interface WxLikeDao {
      * @return:  List<JSONObject>
      */
     List<JSONObject> myLike(JSONObject jsonObject);
+     /**
+          * @methodsName: selectPostUserId
+          * @description: 根据帖子Id查找用户
+          * @param:   JSONObject
+          * @return: JSONObject
+          */
+JSONObject selectPostUserId(JSONObject jsonObject);
 }
