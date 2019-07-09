@@ -186,7 +186,7 @@
             lc_comment L,
             fly_user F
         where
-            L.comment_status=1 and
+            L.comment_status!=-1 and
             L.from_user_id = F.user_id and
             L.post_id = #{postId}
         ORDER BY L.comment_time asc
