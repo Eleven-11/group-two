@@ -131,6 +131,7 @@
             fly_user F
         where
             C.display=1 and
+            T.delete_state=1 and
             C.post_id=T.id and
             Q.categories_id = T.post_sort and
             T.post_owner = F.user_id and
@@ -185,7 +186,7 @@
             lc_comment L,
             fly_user F
         where
-            L.comment_status=1 and
+            L.comment_status!=-1 and
             L.from_user_id = F.user_id and
             L.post_id = #{postId}
         ORDER BY L.comment_time asc

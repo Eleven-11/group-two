@@ -36,7 +36,8 @@
         <template slot-scope="scope">
          <!-- <el-button type="primary" icon="delete"  @click="addUserfans(scope.row.onUserId)">添加关注</el-button>-->
           <el-button type="primary" icon="delete" v-if="scope.row.state=='0'" @click="addfans(scope.$index)">关注</el-button>
-          <el-button type="danger" icon="delete" v-if="scope.row.state=='1'" @click="removeUser(scope.$index)">取消</el-button>
+          <el-button type="danger" icon="delete" v-if="scope.row.state=='1'" @click="addfans(scope.$index)">取消</el-button>
+          <!--<el-button type="danger" icon="delete" v-if="scope.row.state=='1'" @click="removeUser(scope.$index)">取消</el-button>-->
         </template>
       </el-table-column>
     </el-table>

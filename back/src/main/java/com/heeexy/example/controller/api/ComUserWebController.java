@@ -179,14 +179,14 @@ public class ComUserWebController {
     /**
      * 我的界面信息
      */
-    @PostMapping("/myself")
+    @GetMapping("/myself")
     public JSONObject myself(HttpServletRequest request){
         return wxUserService.mySelf(CommonUtil.request2Json(request));
     }
     /**
      * 我的粉丝信息
      */
-    @PostMapping("/myfans")
+    @GetMapping("/myfans")
     public JSONObject mySelfFans(HttpServletRequest request){
         return wxUserService.mySelfFans(CommonUtil.request2Json(request));
     }

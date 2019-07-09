@@ -23,6 +23,7 @@ public class apiAdsController {
      */
     @GetMapping("getAds")
     public JSONObject getAllAds(){
-        return adsService.swiper();
+        JSONObject jsonObject = adsService.swiper();
+        return jsonObject;
     }
 }

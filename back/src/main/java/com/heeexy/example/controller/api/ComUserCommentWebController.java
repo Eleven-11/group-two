@@ -31,7 +31,7 @@ public class ComUserCommentWebController {
     /**
      *我的评论
      */
-    @PostMapping("/mycomments")
+    @GetMapping("/mycomments")
     public JSONObject myselfComment(HttpServletRequest request) {
 
         return wxMyCommentService.myselfComment(CommonUtil.request2Json(request));

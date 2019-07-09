@@ -136,9 +136,9 @@
 
     <insert id="addPicture">
         INSERT INTO lc_message_pic
-        (message_id, picture_path)
+        (message_id, user_id, picture_path)
         VALUES
-        (#{mid}, #{path})
+        (#{mid}, #{fuid}, #{path})
     </insert>
     
     <update id="updateMessage">
