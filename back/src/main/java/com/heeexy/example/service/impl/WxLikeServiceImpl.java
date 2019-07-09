@@ -33,6 +33,8 @@ public class WxLikeServiceImpl implements WxLikeService {
         if (likeUserPost.isEmpty()){
             wxLikeDao.addLike(jsonObject);
         }else {
+            JSONObject jsonObject1 = wxLikeDao.selectPostUserId(jsonObject);
+            jsonObject.put("userId", jsonObject1.get("userId").toString());
             wxLikeDao.addLikeByUserId(jsonObject);
         }
         return CommonUtil.successJson();

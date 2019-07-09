@@ -6,7 +6,9 @@
     <insert id="addLike" parameterType="com.alibaba.fastjson.JSONObject">
         insert  into  fly_like (onuser_id, post_id, user_id, like_state) values (#{onUserId},#{postId},#{userId},1);
     </insert>
-
+<select id="selectPostUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+    select post_owner userId from tyn_post p where p.id =#{postId}
+</select>
     <!--网页查找单个用户点赞帖子列表-->
     <select id="getLikeByUserId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
        select
@@ -52,11 +54,11 @@
     </select>
     <!--取消帖子用户点赞状态-->
     <update id="updateLikeByUserId" parameterType="com.alibaba.fastjson.JSONObject">
-            update fly_like set like_state = 0 where like_id = #{likeId};
+            update fly_like set like_state = 0 where onuser_id =#{onUserId} and post_id=#{postId};
     </update>
     <!--添加帖子用户点赞状态-->
     <update id="addLikeByUserId" parameterType="com.alibaba.fastjson.JSONObject">
-            update fly_like set like_state = 1 where like_id = #{likeId} and onuser_id =#{onUserId};
+            update fly_like set like_state = 1 where post_id =#{postId} and onuser_id =#{onUserId};
     </update>
     <!--查找用户未关注的-->
     <select id="getListMoreLikesById" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">

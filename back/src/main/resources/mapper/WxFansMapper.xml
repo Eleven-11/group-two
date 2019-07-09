@@ -29,11 +29,13 @@
     </select>
     <!--修改关注用户状态取消-->
     <update id="updateFansByUserId" parameterType="com.alibaba.fastjson.JSONObject">
-    update fly_fans set state = 0  where fans_id =#{fansId}
+  /*  update fly_fans set state = 0  where fans_id =#{fansId}*/
+  update fly_fans set state = 0  where onuser_id =#{onUserId} and user_id =#{userId}
     </update>
     <!--添加关注用户状态-->
     <update id="updateFansStateByUserId" parameterType="com.alibaba.fastjson.JSONObject">
-    update fly_fans set state = 1  where fans_id =#{fansId}
+    /*update fly_fans set state = 1  where fans_id =#{fansId}*/
+    update fly_fans set state = 1  where onuser_id =#{onUserId} and user_id =#{userId}
     </update>
     <!--查找所有用户粉丝关注表（后台显示）-->
     <select id="getListFans" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
