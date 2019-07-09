@@ -2,9 +2,11 @@ package com.heeexy.example.controller.api;
 
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.service.MessageService;
-import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @Author : 林成
@@ -34,14 +36,19 @@ public class apiMessageController {
     }
 
     @PostMapping("addMessage")
-    public JSONObject addMessage(@RequestBody JSONObject jsonObject){
-        CommonUtil.hasAllRequired(jsonObject, "cid,fuid,tuid");
+    public JSONObject addMessage(int fuid, int tuid, String content){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("fuid", fuid);
+        jsonObject.put("tuid", tuid);
+        jsonObject.put("content", content);
         return messageService.addMessage(jsonObject);
     }
 
     @PostMapping("updateMessage")
-    public JSONObject updateMessage(@RequestBody JSONObject jsonObject){
-        CommonUtil.hasAllRequired(jsonObject, "mid,status");
+    public JSONObject updateMessage(int mid, int status){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("mid", mid);
+        jsonObject.put("status", status);
         return messageService.updateMessage(jsonObject);
     }
 }
