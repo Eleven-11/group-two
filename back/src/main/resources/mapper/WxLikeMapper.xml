@@ -30,7 +30,7 @@
           DATE_FORMAT(like1.update_time, '%Y.%m.%d %T')  updateTime
       from fly_like like1,fly_user u, fly_user uu ,tyn_post p
       <where>
-            like1.onuser_id =u.user_id and like1.user_id = uu.user_id and p.id =like1.post_id and like1.like_state =1
+            like1.onuser_id =u.user_id and like1.user_id = uu.user_id and p.id =like1.post_id
             <if test="userName != null and userName != ''">
                 and  u.user_name LIKE CONCAT(CONCAT('%',#{userName}),'%')
             </if>
@@ -58,6 +58,7 @@
     </update>
     <!--添加帖子用户点赞状态-->
     <update id="addLikeByUserId" parameterType="com.alibaba.fastjson.JSONObject">
+
             update fly_like set like_state = 1 where post_id =#{postId} and onuser_id =#{onUserId};
     </update>
     <!--查找用户未关注的-->
