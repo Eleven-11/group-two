@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,5 +33,22 @@ public class apiMessageController {
         jsonObject.put("uid", uid);
         jsonObject.put("cid", cid);
         return messageService.getMessageByChatId(jsonObject);
+    }
+
+    @PostMapping("addMessage")
+    public JSONObject addMessage(int fuid, int tuid, String content){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("fuid", fuid);
+        jsonObject.put("tuid", tuid);
+        jsonObject.put("content", content);
+        return messageService.addMessage(jsonObject);
+    }
+
+    @PostMapping("updateMessage")
+    public JSONObject updateMessage(int mid, int status){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("mid", mid);
+        jsonObject.put("status", status);
+        return messageService.updateMessage(jsonObject);
     }
 }
