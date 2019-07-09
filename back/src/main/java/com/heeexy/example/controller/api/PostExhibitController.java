@@ -46,9 +46,7 @@ public class PostExhibitController {
 
 
 //    {
-//          "uid":2,
-//         "keyword":"菜",
-//         "pageNum":1
+//         "keyword":"菜"
 //    }
 
     @PostMapping("/searchPost")

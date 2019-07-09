@@ -77,8 +77,8 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         condition.put("postId",requestJson.get("tid"));
         condition.put("userId",requestJson.get("uid"));
         JSONObject the = postExhibitDao.queryThePost(requestJson);
-        the.put("likeState",postExhibitDao.isLike(condition));
-        the.put("collectState",postExhibitDao.isCollect(condition));
+        the.put("likeState",(postExhibitDao.isLike(condition)==1)?true:false);
+        the.put("collectState",(postExhibitDao.isCollect(condition)==1)?true:false);
         int i =  requestJson.getInteger("uid");
         int j = the.getInteger("uId");
         if(i==j){
@@ -103,7 +103,7 @@ public class PostExhibitServiceImpl implements PostExhibitService {
     @Override
     public JSONObject getThePost(JSONObject jsonObject) {
         List<JSONObject> list = postExhibitDao.getThePost(jsonObject);
-        int userId = (int) jsonObject.get("uid");
+        int userId = 1;
         list = handleList(list,userId);
         return CommonUtil.successList(list);
     }
@@ -123,7 +123,6 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         Date date = new Date();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String now = df.format(date.getTime());
-        //final Timestamp now = new Timestamp(da);
         jsonObject.put("now",now);
         System.out.println(now);
         postExhibitDao.addPost(jsonObject);
@@ -171,8 +170,8 @@ public class PostExhibitServiceImpl implements PostExhibitService {
             JSONObject object = new JSONObject();
             object.put("userId",userId);
             object.put("postId",postId);
-            list.get(i).put("likeState",postExhibitDao.isLike(object));
-            list.get(i).put("collectState",postExhibitDao.isCollect(object));
+            list.get(i).put("likeState",(postExhibitDao.isLike(object)==1)?true:false);
+            list.get(i).put("collectState",(postExhibitDao.isCollect(object)==1)?true:false);
             String time = handleTime(list.get(i).getLong("timet"));
             list.get(i).put("time",time);
             list.get(i).remove("timet");
@@ -212,13 +211,12 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         int i=0;
         while (i<commentList.size()) {
                 int toCommentId = (int) commentList.get(i).get("toCommentId");
-
-                String commentText = (String) commentList.get(i).get("commentText");
+                String commentUser = (String) commentList.get(i).get("commentName");
                 if (toCommentId == 0) {
-                    commentList.get(i).put("commentText", ":" + commentText);
+                    commentList.get(i).put("commentUser", commentUser);
                 } else {
                     String toCommentUser = postExhibitDao.queryCommentUserName(toCommentId);
-                    commentList.get(i).put("commentText", "回复" + toCommentUser + ":" + commentText);
+                    commentList.get(i).put("commentUser", commentUser+"回复" + toCommentUser);
                 }
                 commentList.get(i).remove("toCommentId");
                 i++;

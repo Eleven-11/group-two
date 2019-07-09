@@ -146,7 +146,7 @@
         <result column="telephone" property="telephone"/>
         <result column="time" property="time"/>
         <result column="types" property="types"/>
-        <result column="desc" property="desc"/>
+        <result column="descr" property="descr"/>
         <result column="address" property="address"/>
         <result column="priceLow" property="priceLow"/>
         <result column="priceHigh" property="priceHigh"/>
@@ -170,6 +170,7 @@
         <collection property="comments" ofType="com.alibaba.fastjson.JSONObject">
             <id column="commentId" property="commentId"/>
             <result column="commentUserId" property="commentUserId"/>
+            <result column="commentPhoto" property="commentPhoto"/>
             <result column="toCommentId" property="toCommentId"/>
             <result column="commentText" property="commentText"/>
             <result column="commentName" property="commentName"/>
@@ -182,7 +183,8 @@
         from_user_id            commentUserId,
         to_comment_id           toCommentId,
         comment_content         commentText,
-        user_name               commentName
+        user_name               commentName,
+        user_photo              commentPhoto
         from(
         SELECT
         op.*,
@@ -260,7 +262,7 @@
         where
             delete_state =1 and user_id=post_owner and categories_id=post_sort
         ORDER BY post_time Desc
-        LIMIT #{pageNum}, 10
+
         ) op
         left join tyn_post_img tpi on tId=tpi.post_id
         left join fly_like fl on tId=fl.post_id and like_state=1
