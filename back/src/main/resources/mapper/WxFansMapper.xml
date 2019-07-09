@@ -29,13 +29,12 @@
     </select>
     <!--修改关注用户状态取消-->
     <update id="updateFansByUserId" parameterType="com.alibaba.fastjson.JSONObject">
-  /*  update fly_fans set state = 0  where fans_id =#{fansId}*/
-  update fly_fans set state = 0  where onuser_id =#{onUserId} and user_id =#{userId}
+   update fly_fans set state = 0  where fans_id =#{fansId}
     </update>
     <!--添加关注用户状态-->
     <update id="updateFansStateByUserId" parameterType="com.alibaba.fastjson.JSONObject">
-    /*update fly_fans set state = 1  where fans_id =#{fansId}*/
-    update fly_fans set state = 1  where onuser_id =#{onUserId} and user_id =#{userId}
+            update fly_fans set state = 1  where onuser_id =#{onUserId} and user_id =#{userId}
+
     </update>
     <!--查找所有用户粉丝关注表（后台显示）-->
     <select id="getListFans" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
@@ -46,7 +45,7 @@
             DATE_FORMAT(fans.update_time, '%Y.%m.%d %T') updateTime
        from  fly_fans fans,fly_user users,fly_user u
         <where>
-            users.user_id =fans.onuser_id and  u.user_id =fans.user_id and fans.state =1
+            users.user_id =fans.onuser_id and  u.user_id =fans.user_id
               <if test="userName != null and userName != ''">
                 and  users.user_name LIKE CONCAT(CONCAT('%',#{userName}),'%')
               </if>

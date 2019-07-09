@@ -96,16 +96,28 @@ public class WxFansServiceImpl implements WxFansService {
     public JSONObject addByFans(JSONObject jsonObject) {
         //     添加粉丝关注用户
         JSONObject userFans = wxFansDao.getUserFans(jsonObject);
+        int count = wxUserDao.getFansByUserId(jsonObject);
+        Map<String,Object> map=new HashMap<>();
         if (userFans.isEmpty()){
             wxFansDao.addByFans(jsonObject);
         }else {
-            wxFansDao.updateFansStateByUserId(jsonObject);
+            String state = userFans.get("state").toString();
+            jsonObject.put("state", state);
 
+            if ("0".equals(state)){
+                wxFansDao.updateFansStateByUserId(jsonObject);
+                map.put("userFans", count+1);
+            }else{
+                wxFansDao.updateFansByUserId(jsonObject);
+                if (count > 0){
+                    count--;
+                }else {
+                    count =0;
+                }
+                map.put("userFans", count);
+            }
         }
-        int count = wxUserDao.getFansByUserId(jsonObject);
         String userId = jsonObject.getString("userId");
-        Map<String,Object> map=new HashMap<>();
-        map.put("userFans", count+1);
         map.put("userId", userId);
         //修改用户真实粉丝数量
         wxUserDao.updateFansById(map);
