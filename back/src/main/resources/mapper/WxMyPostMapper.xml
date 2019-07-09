@@ -111,13 +111,13 @@ address:’’ //用户所在的地，collectionstate:boolen //收藏状态，ti
       from
         (select
             p.id tId,u.user_id uid,u.user_photo  avatarUrl,u.user_name username,ptg.business_subway_name types,
-            p.post_content descrb, like2.usersPhoto good,l.like_state likestate,c.display collectionstate,
+            p.post_content descrb, like2.likeUserName good,l.like_state likestate,c.display collectionstate,
             pmg.img imgUrl,p.post_location address,DATE_FORMAT(p.post_time, '%Y-%m-%d %T')  time1
         from fly_user u
           left join tyn_post p on u.user_id =p.post_owner and p.delete_state =1
           left join  (select pt.post_id,cqy.business_subway_name from cqy_business_subway cqy,tyn_post_tag  pt
         where cqy.business_subway_id = pt.tag_type )  ptg on p.id = ptg.post_id
-        right  join (select users.user_photo usersPhoto,likes.post_id
+        right  join (select users.user_photo usersPhoto,users.user_name likeUserName,likes.post_id
         from fly_like likes,fly_user users
         where users.user_id= likes.onuser_id and likes.like_state =1) like2 on p.id =like2.post_id
           left join cqy_post_collect c on c.post_id =like2.post_id

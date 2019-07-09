@@ -131,6 +131,7 @@
             fly_user F
         where
             C.display=1 and
+            T.delete_state=1 and
             C.post_id=T.id and
             Q.categories_id = T.post_sort and
             T.post_owner = F.user_id and

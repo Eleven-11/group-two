@@ -64,7 +64,7 @@ public class ComUserMyPostController {
             System.out.println(post);
             wxMyPostService.updateByPostIdMany(post);
         }
-        return CommonUtil.successJson();
+        return CommonUtil.successJson("success");
     }
     /**
      * 前台删除用户帖子(批量修改帖子隐藏显示状态)

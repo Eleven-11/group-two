@@ -62,7 +62,12 @@ public class WxFansServiceImpl implements WxFansService {
         int count = wxUserDao.getFansByUserId(jsonObject);
         String userId = jsonObject.getString("userId");
         Map<String,Object> map=new HashMap<>();
-        map.put("userFans", count-1);
+        if (count > 0){
+            count--;
+        }else {
+            count =0;
+        }
+        map.put("userFans", count);
         map.put("userId", userId);
         //修改用户真实粉丝数量
         wxUserDao.updateFansById(map);

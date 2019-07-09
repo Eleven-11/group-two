@@ -55,7 +55,7 @@
         <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
        <el-button type="primary" icon="danger"  v-if="scope.row.userState=='1'" @click="updateState(scope.$index)">恢复</el-button>
         <el-button type="danger" icon="danger" v-if="scope.row.userState=='0'" @click="updateState(scope.$index)">封禁</el-button>
-        <el-button type="primary" icon="info"  @click="jump(scope.$index)">查看</el-button>
+       <!-- <el-button type="primary" icon="info"  @click="jump(scope.$index)">查看</el-button>-->
 
       </template>
     </el-table-column>
@@ -153,6 +153,7 @@
       this.getList();
     },
     computed: {
+      // 使用对象展开运算符将 getter 混入 computed 对象中
       ...mapGetters([
         'userId'
       ]),
