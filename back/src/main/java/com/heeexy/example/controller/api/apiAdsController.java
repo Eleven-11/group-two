@@ -24,7 +24,6 @@ public class apiAdsController {
     @GetMapping("getAds")
     public JSONObject getAllAds(){
         JSONObject jsonObject = adsService.swiper();
-        jsonObject.remove("title");
         return jsonObject;
     }
 }

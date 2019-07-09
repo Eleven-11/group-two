@@ -68,9 +68,9 @@
 
     <insert id="addComment" parameterType="com.alibaba.fastjson.JSONObject">
       INSERT INTO lc_comment
-      (post_id, from_user_id, to_comment_id, comment_content)
+      (post_id, from_user_id, comment_content)
       VALUES
-      (#{pid}, #{fuid}, #{tcid}, #{content})
+      (#{pid}, #{uid}, #{content})
     </insert>
 
     <update id="updateComment" parameterType="com.alibaba.fastjson.JSONObject">

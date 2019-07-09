@@ -51,4 +51,13 @@ public class apiMessageController {
         jsonObject.put("status", status);
         return messageService.updateMessage(jsonObject);
     }
+
+    @PostMapping("deleteMessage")
+    public JSONObject deleteMessage(int mid, int status, int uid){
+        JSONObject jsonObject = new JSONObject();
+        status = status >= 0?-uid:status-uid;
+        jsonObject.put("mid", mid);
+        jsonObject.put("status", status);
+        return messageService.updateMessage(jsonObject);
+    }
 }

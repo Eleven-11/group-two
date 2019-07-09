@@ -50,11 +50,8 @@ public class apiCommentController {
      * 添加一条评论
      */
     @PostMapping("addComment")
-    public JSONObject addComment(int uid, int pid, String content){
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("uid", uid);
-        jsonObject.put("pid", pid);
-        jsonObject.put("content", content);
+    public JSONObject addComment(@RequestBody JSONObject jsonObject){
+        System.out.println(jsonObject.get("content"));
         return commentService.addComment(jsonObject);
     }
 
