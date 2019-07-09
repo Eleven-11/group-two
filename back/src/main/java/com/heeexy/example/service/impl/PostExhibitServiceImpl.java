@@ -212,13 +212,13 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         int i=0;
         while (i<commentList.size()) {
                 int toCommentId = (int) commentList.get(i).get("toCommentId");
-                String commentUser = (String) commentList.get(i).get("commentName");
+
                 String commentText = (String) commentList.get(i).get("commentText");
                 if (toCommentId == 0) {
-                    commentList.get(i).put("commentText", commentUser + ":" + commentText);
+                    commentList.get(i).put("commentText", ":" + commentText);
                 } else {
                     String toCommentUser = postExhibitDao.queryCommentUserName(toCommentId);
-                    commentList.get(i).put("commentText", commentUser + "回复" + toCommentUser + ":" + commentText);
+                    commentList.get(i).put("commentText", "回复" + toCommentUser + ":" + commentText);
                 }
                 commentList.get(i).remove("toCommentId");
                 i++;
