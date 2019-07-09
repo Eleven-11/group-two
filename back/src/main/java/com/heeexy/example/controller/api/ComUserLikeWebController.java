@@ -73,7 +73,7 @@ public class ComUserLikeWebController {
     /**
      * 我的点赞列表
      */
-    @PostMapping("/mylike")
+    @GetMapping("/mylike")
     public JSONObject searchlike(HttpServletRequest request) {
 
         return wxLikeService.myLike(CommonUtil.request2Json(request));

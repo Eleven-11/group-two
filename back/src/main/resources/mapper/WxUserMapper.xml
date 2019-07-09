@@ -93,10 +93,14 @@
     <!--我的界面-->
     <select id="mySelf" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
         select u.user_id onUserId,u.user_name myname,u.user_photo myavatar,p.postNumber myrelease,
-        f.fansNumber myattention,u.user_fans_f+u.user_fans myfans,l.likeNumber mygood,pc.collectNumber mycollention
+        f.fansNumber myattention,u.user_fans_f+u.user_fans myfans,
+        l.likeNumber mygood,pc.collectNumber mycollention,
+        c.commentNumber mycommentcount
+
         from fly_user u ,
+        (select count(0) commentNumber from lc_comment lc where lc.from_user_id =#{uid} and lc.comment_status !=-1) c,
         (select count(0) postNumber,tyn_post.post_owner userId from tyn_post
-        where post_owner =#{uid} and delete_state =0) p,
+        where post_owner =#{uid} and delete_state =1) p,
         (select  count(onuser_id) fansNumber
         from fly_fans where state =1 and onuser_id =#{uid}) f,
         (select count(0) likeNumber,onuser_id onUserId from fly_like
