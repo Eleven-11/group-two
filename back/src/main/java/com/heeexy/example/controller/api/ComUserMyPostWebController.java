@@ -79,7 +79,7 @@ public class ComUserMyPostWebController {
     /**
      * 我已发布的帖子列表
      */
-    @GetMapping("/myrelease")
+    @PostMapping("/myrelease")
     public JSONObject mypost(HttpServletRequest request) {
 
         return wxMyPostService.myPost(CommonUtil.request2Json(request));
