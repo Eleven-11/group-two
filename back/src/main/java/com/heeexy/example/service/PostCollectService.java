@@ -24,12 +24,12 @@ public interface PostCollectService {
      * @return
      */
     JSONObject updatePostCollectDisplay(JSONObject jsonObject);
-//    /**
-//     * 修改收藏
-//     * @param jsonObject  postCollectId(收藏id),display(状态值)
-//     * @return
-//     */
-//    JSONObject updatePostCollect(JSONObject jsonObject);
+    /**
+     * 修改收藏
+     * @param jsonObject  postCollectId(收藏id),display(状态值)
+     * @return
+     */
+    JSONObject updatePostCollect(JSONObject jsonObject);
     /**
      * 查询收藏列表
      * @param jsonObject

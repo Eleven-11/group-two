@@ -64,14 +64,14 @@ public class PostCollectServiceImpl implements PostCollectService {
         return  CommonUtil.successJson();
     }
 
-//    /**
-//     * 修改帖子收藏
-//     */
-//    @Override
-//    public JSONObject updatePostCollect(JSONObject jsonObject) {
-//        postCollectDao.updatePostCollect( jsonObject );
-//        return CommonUtil.successJson();
-//    }
+    /**
+     * 修改帖子收藏
+     */
+    @Override
+    public JSONObject updatePostCollect(JSONObject jsonObject) {
+        postCollectDao.updatePostCollect( jsonObject );
+        return CommonUtil.successJson();
+    }
     /**
      * 查询所有的帖子收藏
      * 在添加/修改帖子收藏的时候要使用此方法

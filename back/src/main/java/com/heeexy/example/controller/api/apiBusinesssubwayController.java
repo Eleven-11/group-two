@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @vevsion 1.0
  */
 @RestController
-@RequestMapping("/api/frontBusinesssubway")
+@RequestMapping("/api")
 public class apiBusinesssubwayController {
     @Autowired
     private BusinessSubwayService businessSubwayService;
@@ -24,7 +24,7 @@ public class apiBusinesssubwayController {
      * 查询所有的帖子标签
      * @return
      */
-    @PostMapping("/FgetAllBusinessSubway")
+    @PostMapping("/tag/getTags")
     public JSONObject getAllBusinessSubway() {
         return businessSubwayService.FgetAllBusinessSubway();
     }

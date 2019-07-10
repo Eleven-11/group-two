@@ -59,7 +59,7 @@ public class PostCollectController {
 //    @RequiresPermissions("role:delete")
     @PostMapping("//updatePostCollectDisplay")
     public JSONObject updatePostCollectDisplay(@RequestBody JSONObject requestJson) {
-        return postCollectService.updatePostCollectDisplay(requestJson);
+        return postCollectService.updatePostCollect(requestJson);
     }
 
     /**
