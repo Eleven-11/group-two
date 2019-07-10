@@ -28,8 +28,8 @@ public class One2Many extends JSONObject {
 	private List<JSONObject> permissions;
 	private Set<String> tagList;
 	private Set<String> imgList;
-	private Set<String> imgUrls;
-	private Set<String> goods;
+	private Set<String> imgUrl;
+	private Set<String> good;
 	private  List<JSONObject> lcments;
 	private List<JSONObject> comments;
 	private List<JSONObject> goodsDetail;

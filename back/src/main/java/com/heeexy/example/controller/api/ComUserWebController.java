@@ -179,15 +179,17 @@ public class ComUserWebController {
     /**
      * 我的界面信息
      */
-    @GetMapping("/myself")
-    public JSONObject myself(HttpServletRequest request){
-        return wxUserService.mySelf(CommonUtil.request2Json(request));
+    @PostMapping("/myself")
+    public JSONObject myself(@RequestBody JSONObject requestJson){
+        CommonUtil.hasAllRequired(requestJson, "uid");
+        return wxUserService.mySelf(requestJson);
     }
     /**
      * 我的粉丝信息
      */
-    @GetMapping("/myfans")
-    public JSONObject mySelfFans(HttpServletRequest request){
-        return wxUserService.mySelfFans(CommonUtil.request2Json(request));
+    @PostMapping("/myfans")
+    public JSONObject mySelfFans(@RequestBody JSONObject requestJson){
+        CommonUtil.hasAllRequired(requestJson, "uid");
+        return wxUserService.mySelfFans(requestJson);
     }
 }

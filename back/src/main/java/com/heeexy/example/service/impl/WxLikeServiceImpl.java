@@ -95,7 +95,7 @@ public class WxLikeServiceImpl implements WxLikeService {
     }
     /**
      * 取消帖子的点赞状态
-     * @param jsonObject (likeId)
+     * @param jsonObject (postId,onUserId)
      * @return JSONObject
      */
     @Override
@@ -141,28 +141,28 @@ public class WxLikeServiceImpl implements WxLikeService {
 
     /**
      *  我的点赞
-     * @param jsonObject （keyword）
+     * @param jsonObject （uid）
      * @return JSONObject
      */
     @Override
     public JSONObject myLike(JSONObject jsonObject) {
-        List<JSONObject> list = wxLikeDao.myLike(jsonObject);
-        for (JSONObject object : list) {
+        List<JSONObject> info = wxLikeDao.myLike(jsonObject);
+        for (JSONObject object : info) {
             String time = object.getString("time");
             String times = emjoy.getTimes(time);
             object.put("time", times);
             Object likestate = object.get("likestate");
-            Object collectionstate = object.get("collectionstate");
+            Object collectionstate = object.get("collectionState");
             if (String.valueOf(likestate)==null){
                 object.put("likestate", 0);
             }
             if (String.valueOf(collectionstate)==null){
-                object.put("collectionstate", 0);
+                object.put("collectionState", 0);
             }
-            JSONArray lcments = object.getJSONArray("lcments");
+            JSONArray lcments = object.getJSONArray("comments");
             for (Object lcment : lcments) {
                 JSONObject lcment1=(JSONObject) lcment;
-                System.out.println(lcment1.get("toComentName"));
+                
                 String toComentName = (String)lcment1.get("toComentName");
 //                String commentstext = (String)lcment1.get("commentstext");
                 String commentsname = (String)lcment1.get("commentsname");
@@ -174,6 +174,6 @@ public class WxLikeServiceImpl implements WxLikeService {
                 }
             }
         }
-        return CommonUtil.successPage(list);
+        return CommonUtil.successPage(info);
     }
 }

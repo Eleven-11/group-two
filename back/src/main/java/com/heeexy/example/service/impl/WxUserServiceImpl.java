@@ -33,6 +33,13 @@ public class WxUserServiceImpl implements WxUserService {
     public JSONObject getListUser(JSONObject jsonObject) {
 
         CommonUtil.fillPageParam(jsonObject);
+      /*  String userName = jsonObject.getString("userName");
+        String reg = "[^\\w\\u4E00-\\u9FA5]";
+        if (reg.matches(userName)){
+
+        }else{
+
+        }*/
         //统计用户数量
         int count = wxUserDao.countUser(jsonObject);
         //查找所有用户
@@ -148,7 +155,7 @@ public class WxUserServiceImpl implements WxUserService {
     }
     /**
      * 我的粉丝
-     * @param jsonObject （keyword）
+     * @param jsonObject （uid）
      * @return JSONObject
      */
     @Override

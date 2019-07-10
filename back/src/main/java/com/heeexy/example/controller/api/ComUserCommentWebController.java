@@ -31,10 +31,10 @@ public class ComUserCommentWebController {
     /**
      *我的评论
      */
-    @GetMapping("/mycomments")
-    public JSONObject myselfComment(HttpServletRequest request) {
-
-        return wxMyCommentService.myselfComment(CommonUtil.request2Json(request));
+    @PostMapping("/mycomments")
+    public JSONObject myselfComment(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "uid");
+        return wxMyCommentService.myselfComment(requestJson);
 
     }
 }

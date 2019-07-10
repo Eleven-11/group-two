@@ -64,9 +64,9 @@ public class ComUserFansWebController {
     /**
      *我的关注
      */
-    @GetMapping("/myattention")
-    public JSONObject myfans(HttpServletRequest request) {
-
-        return wxFansService.myFans(CommonUtil.request2Json(request));
+    @PostMapping("/myattention")
+    public JSONObject myfans(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "uid");
+        return wxFansService.myFans(requestJson);
     }
 }

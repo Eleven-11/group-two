@@ -41,10 +41,10 @@ public class ComUserBrowseWebController {
     /**
      * 前台展示用户浏览记录列表
      */
-    @GetMapping("/myhistory")
-    public JSONObject searchbrowse(HttpServletRequest request) {
-
-        return wxBrowserService.myBrowse(CommonUtil.request2Json(request));
+    @PostMapping("/myhistory")
+    public JSONObject searchbrowse(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "uid");
+        return wxBrowserService.myBrowse(requestJson);
 
     }
 

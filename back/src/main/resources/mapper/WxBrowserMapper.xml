@@ -38,28 +38,28 @@
     <resultMap id="postMap" type="com.heeexy.example.util.model.One2Many">
         <id column="tId" property="tId"/>
         <result column="uid" property="uid"/>
-        <result column="avatarUrl" property="avatarUrl"/>
+        <result column="avatarUrl" property="avatarurl"/>
         <result column="username" property="username"/>
         <result column="types" property="types"/>
         <result column="time1" property="time"/>
         <result column="address" property="address"/>
         <result column="descrb" property="desc"/>
         <result column="likestate" property="likestate"/>
-        <result column="collectionstate" property="collectionstate"/>
+        <result column="collectionstate" property="collectionState"/>
         <result column="seepeople" property="seepeople"/>
-        <collection property="imgUrls" ofType="String">
+        <collection property="imgUrl" ofType="String">
             <id column="imgUrl" property="imgUrl"/>
         </collection>
         <collection property="goods" ofType="String">
             <id column="good" property="good"/>
         </collection>
-        <collection property="lcments" ofType="com.alibaba.fastjson.JSONObject">
-            <id column="commentsid" property="commentsid"/>
+        <collection property="comments" ofType="com.alibaba.fastjson.JSONObject">
+            <id column="commentsid" property="commentsuserid"/>
             <id column="commentsimg" property="commentsimg"/>
             <id column="commentstext" property="commentstext"/>
             <id column="commentsname" property="commentsname"/>
             <id column="toComentName" property="toComentName"/>
-            <id column="commentid" property="commentid"/>
+            <id column="commentid" property="commentsid"/>
         </collection>
     </resultMap>
     <!--我的足迹-->
