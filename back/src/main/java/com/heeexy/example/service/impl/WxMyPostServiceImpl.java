@@ -113,23 +113,23 @@ public class WxMyPostServiceImpl implements WxMyPostService {
      */
     @Override
     public JSONObject myPost(JSONObject jsonObject) {
-        List<JSONObject> list = wxMyPostDao.myPost(jsonObject);
-        for (JSONObject object : list) {
+        List<JSONObject> info = wxMyPostDao.myPost(jsonObject);
+        for (JSONObject object : info) {
             String time = object.getString("time");
             String times = emjoy.getTimes(time);
             object.put("time", times);
             Object likestate = object.get("likestate");
-            Object collectionstate = object.get("collectionstate");
+            Object collectionstate = object.get("collectionState");
             if (String.valueOf(likestate)==null){
                 object.put("likestate", 0);
             }
             if (String.valueOf(collectionstate)==null){
-                object.put("collectionstate", 0);
+                object.put("collectionState", 0);
             }
-            JSONArray lcments = object.getJSONArray("lcments");
+            JSONArray lcments = object.getJSONArray("comments");
             for (Object lcment : lcments) {
                 JSONObject lcment1=(JSONObject) lcment;
-                System.out.println(lcment1.get("toComentName"));
+
                 String toComentName = (String)lcment1.get("toComentName");
 
 //                String commentstext = (String)lcment1.get("commentstext");
@@ -144,7 +144,7 @@ public class WxMyPostServiceImpl implements WxMyPostService {
                 lcment1.remove("toComentName");
             }
         }
-        return CommonUtil.successPage(list);
+        return CommonUtil.successPage(info);
     }
 
 

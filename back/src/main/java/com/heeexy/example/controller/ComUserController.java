@@ -128,6 +128,13 @@ public class ComUserController {
     @PostMapping("/updateUserFans")
     public JSONObject updateUserFans(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, " userId,userFansf");
+       /* String userFansf = requestJson.getString("userFansf");
+        String reg="^[\\d]";
+        if (reg.matches(userFansf)){
+
+        }else {
+
+        }*/
         return wxUserService.updateFansfById(requestJson);
     }
     /**
@@ -145,7 +152,7 @@ public class ComUserController {
         if(userStates==0){
             moduleService.addMessageF(requestJson);
         }
-        return jsonObject;
+        return CommonUtil.successJson("success");
     }
 
 

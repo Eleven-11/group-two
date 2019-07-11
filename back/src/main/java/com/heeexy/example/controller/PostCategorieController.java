@@ -31,10 +31,10 @@ public class PostCategorieController {
 //    List<String> list = new ArrayList<>();
     String string=new String();
 
-    public static String ENDPOINT = "http://oss-cn-shenzhen.aliyuncs.com";
-    public static String ACCESSKEYID = "LTAIwBZ9y0vYYX7f";
-    public static String ACCESSKEYSECRET = "ch00fGXs3NoO7fdcPpZ7Ko60fPp4eg";
-    public static String BUCKETNAME = "group-one";
+    public static String ENDPOINT = "http://oss-cn-beijing.aliyuncs.com";
+    public static String ACCESSKEYID = "LTAIISwZlAcCDC2o";
+    public static String ACCESSKEYSECRET = "UwkX7E7VwpnuyJVFU7zkygVa9AbmIE";
+    public static String BUCKETNAME = "antpp";
     public static String KEY = "images/";
 
     @ResponseBody
@@ -67,8 +67,8 @@ public class PostCategorieController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        string="http://group-one.oss-cn-shenzhen.aliyuncs.com/images/" + key + fileNames;
-        ret.put("url","http://group-one.oss-cn-shenzhen.aliyuncs.com/images/" + key + fileNames);
+        string="http://antpp.oss-cn-beijing.aliyuncs.com/images/" + key + fileNames;
+        ret.put("url","http://antpp.oss-cn-beijing.aliyuncs.com/images/" + key + fileNames);
         return ret;
     }
 

@@ -176,8 +176,8 @@ public class WxFansServiceImpl implements WxFansService {
     }
 
     /**
-     *
-     * @param jsonObject （keyword）
+     * 我的关注
+     * @param jsonObject （uid）
      * @return JSONObject
      */
     @Override

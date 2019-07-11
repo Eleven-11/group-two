@@ -36,7 +36,7 @@ public class ComUserMyPostWebController {
      */
     @PostMapping("/deletepost")
     public JSONObject updatePostByUser(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "postId,myPostState");
+        CommonUtil.hasAllRequired(requestJson, "postId");
         return wxMyPostService.updateMyPostById(requestJson);
     }
     /**
@@ -79,10 +79,10 @@ public class ComUserMyPostWebController {
     /**
      * 我已发布的帖子列表
      */
-    @GetMapping("/myrelease")
-    public JSONObject mypost(HttpServletRequest request) {
-
-        return wxMyPostService.myPost(CommonUtil.request2Json(request));
+    @PostMapping("/myrelease")
+    public JSONObject mypost(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "userId");
+        return wxMyPostService.myPost(requestJson);
 
     }
 }

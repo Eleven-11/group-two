@@ -85,15 +85,15 @@
         <el-input type="text" :disabled="true" v-model="tempUser.userSex">
         </el-input>
       </el-form-item>-->
-      <el-form-item label="真实粉丝数" required >
-        <el-input id="fans" type="text" :disabled="true" v-model="tempUser.userFans" >
+      <el-form-item label="真实粉丝数"  >
+        <el-input id="fans" type="text" :disabled="true"  v-model="tempUser.userFans" >
         </el-input>
       </el-form-item>
       <el-form-item label="虚拟粉丝数" required >
         <el-input type="number"  id="fansf" oninput="javascript:this.value=this.value.replace(/[^\d]/g,'')"  v-model="tempUser.userFansf" >
         </el-input>
       </el-form-item>
-      <el-form-item label="总粉丝数" required >
+      <el-form-item label="总粉丝数"  >
         <el-input type="text"  v-model="sumFans" :disabled="true">
         </el-input>
       </el-form-item>
@@ -206,21 +206,19 @@
       },
       showUpdate($index) {
         let user = this.list[$index];
-        this.tempUser.userName = user.userName;
+        /*this.tempUser.userName = user.userName;
         this.tempUser.userPhoto = user.userPhoto;
-        this.tempUser.userSex = user.userSex;
-        this.tempUser.userFans = user.userFans;
+        this.tempUser.userSex = user.userSex;*/
+        this.tempUser.userFans = user.userFans.toString();
         this.tempUser.userFansf= user.userFansf;
         this.tempUser.userId= user.userId;
-        this.tempUser.guest = user.guest;
-        this.tempUser.userState = user.userState;
+     /*   this.tempUser.guest = user.guest;
+        this.tempUser.userState = user.userState;*/
         this.dialogStatus = "update"
         this.dialogFormVisible = true
       },
       updateUser() {
         //修改用户信息
-        console.log(this.tempUser.userFans);
-        console.log(this.tempUser.userFansf);
         let _vue = this;
         this.api({
           url: "/comUser/updateUserFans",

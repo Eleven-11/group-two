@@ -69,8 +69,8 @@
      </update>
     <!--我的关注-->
     <select id="myFans" resultType="com.alibaba.fastjson.JSONObject" parameterType="com.alibaba.fastjson.JSONObject">
-        select f.fans_id fansId,u.user_id fansUserId,u.user_name fansName,u.user_photo fansImg
+        select f.fans_id fansId,u.user_id attentionid,u.user_name attentionname,u.user_photo attentionavatar
         from fly_fans f,fly_user u
-        where u.user_id= f.user_id and f.onuser_id =#{uid} and f.state =1
+        where u.user_id= f.user_id and f.onuser_id =#{userId} and f.state =1
     </select>
 </mapper>
