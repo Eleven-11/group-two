@@ -98,22 +98,22 @@
         c.commentNumber mycommentcount
 
         from fly_user u ,
-        (select count(0) commentNumber from lc_comment lc where lc.from_user_id =#{uid} and lc.comment_status !=-1) c,
-        (select count(0) postNumber,tyn_post.post_owner userId from tyn_post
-        where post_owner =#{uid} and delete_state =1) p,
+        (select count(0) commentNumber from lc_comment lc where lc.from_user_id =#{userId} and lc.comment_status !=-1) c,
+        (select count(0) postNumber from tyn_post
+        where post_owner =#{userId} and delete_state =1) p,
         (select  count(onuser_id) fansNumber
-        from fly_fans where state =1 and onuser_id =#{uid}) f,
+        from fly_fans where state =1 and onuser_id =#{userId}) f,
         (select count(0) likeNumber,onuser_id onUserId from fly_like
-        where onuser_id = #{uid} and like_state = 1) l,
+        where onuser_id = #{userId} and like_state = 1) l,
         (select count(0) collectNumber from cqy_post_collect c
-         where c.user_id =#{uid} and c.display =0) pc
-        where u.user_id =#{uid}
+         where c.user_id =#{userId} and c.display =0) pc
+        where u.user_id =#{userId}
     </select>
     <!--我的粉丝-->
     <select id="mySelfFans" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
-        select u.user_name mySelfFansName ,u.user_photo mySelfFansImg,u.user_id mySelfFansId
+        select u.user_name fansname ,u.user_photo fansavatar,u.user_id fansid
         from fly_user u,fly_fans f
-        where   u.user_id =f.onuser_id  and f.state =1 and f.user_id = #{uid}
+        where   u.user_id =f.onuser_id  and f.state =1 and f.user_id = #{userId}
     </select>
     <!--根据uuid查找用户-->
     <select id="queryUserByUuId" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">

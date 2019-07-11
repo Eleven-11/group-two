@@ -37,7 +37,7 @@ public class PostExhibitServiceImpl implements PostExhibitService {
  */
     @Override
     public JSONObject getIndexPost(JSONObject jsonObject) {
-        int test = (int) jsonObject.get("id");
+        int test = (int) jsonObject.get("stickId");
         JSONObject condition = new JSONObject();
         condition.put("getType", null);
         condition.put("tagType", null);
@@ -66,26 +66,26 @@ public class PostExhibitServiceImpl implements PostExhibitService {
             list = postExhibitDao.getNormalPost(condition);
         }
         //处理点赞状态，收藏状态，日期,评论
-            int userId = (int) jsonObject.get("uid");
+            int userId = (int) jsonObject.get("userId");
             list = handleList(list,userId);
-        return CommonUtil.successList(list);
+        return CommonUtil.successPage(list);
     }
 
     @Override
     public JSONObject queryThePost(JSONObject requestJson) {
         JSONObject condition = new JSONObject();
         condition.put("postId",requestJson.get("tid"));
-        condition.put("userId",requestJson.get("uid"));
+        condition.put("userId",requestJson.get("userId"));
         JSONObject the = postExhibitDao.queryThePost(requestJson);
-        the.put("likeState",postExhibitDao.isLike(condition));
-        the.put("collectState",postExhibitDao.isCollect(condition));
+        the.put("likestate",(postExhibitDao.isLike(condition)==1)?true:false);
+        the.put("collectionState",(postExhibitDao.isCollect(condition)==1)?true:false);
         int i =  requestJson.getInteger("uid");
         int j = the.getInteger("uId");
         if(i==j){
-            the.put("seePeople",the.get("realView"));
+            the.put("seepeople",the.get("realView"));
             the.put("likePeople",the.get("realLike"));
         }else {
-            the.put("seePeople",the.getInteger("realView")+the.getInteger("viewOff"));
+            the.put("seepeople",the.getInteger("realView")+the.getInteger("viewOff"));
             the.put("likePeople",the.getInteger("realLike")+the.getInteger("likeOff"));
         }
         the.put("time",handleTime(the.getLong("time")));
@@ -97,33 +97,31 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         List<JSONObject> commentList = (List<JSONObject>)the.get("comments");
         commentList = handleComments(commentList);
         the.put("comments",commentList);
-        return CommonUtil.successOne(the);
+        return CommonUtil.successJsonOne(the);
     }
 
     @Override
     public JSONObject getThePost(JSONObject jsonObject) {
         List<JSONObject> list = postExhibitDao.getThePost(jsonObject);
-        int userId = (int) jsonObject.get("uid");
+        int userId = (int)jsonObject.get("userId");
         list = handleList(list,userId);
-        return CommonUtil.successList(list);
+        return CommonUtil.successPage(list);
     }
 
     @Override
     public JSONObject getSortPost(JSONObject jsonObject) {
         List<JSONObject> list = postExhibitDao.getSortPost(jsonObject);
-        int userId = (int) jsonObject.get("uid");
+        int userId = (int) jsonObject.get("userId");
         list = handleList(list,userId);
-        return CommonUtil.successList(list);
+        return CommonUtil.successPage(list);
     }
 
     @Override
     public JSONObject addPost(JSONObject jsonObject) {
-        int sortId = postExhibitDao.querySortId(jsonObject);
-        jsonObject.put("sortId",sortId);
+
         Date date = new Date();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String now = df.format(date.getTime());
-        //final Timestamp now = new Timestamp(da);
         jsonObject.put("now",now);
         System.out.println(now);
         postExhibitDao.addPost(jsonObject);
@@ -142,12 +140,12 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         while(j<tagList.size()){
             JSONObject condition = new JSONObject();
             condition.put("postId",postId);
-            condition.put("tagId",tagList.get(j).get("smalltag"));
-            condition.put("typeId",tagList.get(j).get("bigtag"));
+            condition.put("id",tagList.get(j).get("smalltag"));
+            condition.put("parentId",tagList.get(j).get("bigtag"));
             j++;
             postExhibitDao.addPostTag(condition);
         }
-        return null;
+        return CommonUtil.successJsonOne(null);
     }
 
 
@@ -155,11 +153,11 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         List<JSONObject> list = postExhibitDao.getTopPost(jsonObject);
         //设置帖子的置顶状态
         for(int i=0;i<list.size();i++){
-            list.get(i).put("isTop",1);
+            list.get(i).put("top",true);
         }
         List<JSONObject> normalPost = postExhibitDao.getNormalPost(jsonObject);
         for(int i=0;i<normalPost.size();i++){
-            normalPost.get(i).put("isTop",0);
+            normalPost.get(i).put("top",false);
             list.add(normalPost.get(i));
         }
         return list;
@@ -167,12 +165,12 @@ public class PostExhibitServiceImpl implements PostExhibitService {
 
     private List<JSONObject> handleList(List<JSONObject> list,int userId){
         for(int i=0;i<list.size();i++){
-            int postId = (int)list.get(i).get("tId");
+            int postId = (int)list.get(i).get("postId");
             JSONObject object = new JSONObject();
             object.put("userId",userId);
             object.put("postId",postId);
-            list.get(i).put("likeState",postExhibitDao.isLike(object));
-            list.get(i).put("collectState",postExhibitDao.isCollect(object));
+            list.get(i).put("likestate",(postExhibitDao.isLike(object)==1)?true:false);
+            list.get(i).put("collectionState",(postExhibitDao.isCollect(object)==1)?true:false);
             String time = handleTime(list.get(i).getLong("timet"));
             list.get(i).put("time",time);
             list.get(i).remove("timet");
@@ -212,13 +210,12 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         int i=0;
         while (i<commentList.size()) {
                 int toCommentId = (int) commentList.get(i).get("toCommentId");
-
-                String commentText = (String) commentList.get(i).get("commentText");
+                String commentUser = (String) commentList.get(i).get("commentsname");
                 if (toCommentId == 0) {
-                    commentList.get(i).put("commentText", ":" + commentText);
+                    commentList.get(i).put("commentsname", commentUser);
                 } else {
                     String toCommentUser = postExhibitDao.queryCommentUserName(toCommentId);
-                    commentList.get(i).put("commentText", "回复" + toCommentUser + ":" + commentText);
+                    commentList.get(i).put("commentsname", commentUser+"@" + toCommentUser);
                 }
                 commentList.get(i).remove("toCommentId");
                 i++;

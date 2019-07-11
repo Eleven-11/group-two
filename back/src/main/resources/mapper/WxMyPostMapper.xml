@@ -23,7 +23,6 @@
     </select>
     <!--修改自己帖子隐藏状态-->
     <update id="updateMyPostById" parameterType="com.alibaba.fastjson.JSONObject">
-
             update  tyn_post  set delete_state = 0 where id = #{postId} ;
 
     <!--    <if test="myPostState == 0">
@@ -67,30 +66,30 @@
         select count(0) collectNumber from cqy_post_collect c  where c.user_id =#{onUserId} and c.display =1
     </select>
     <resultMap id="postMap" type="com.heeexy.example.util.model.One2Many">
-        <id column="tId" property="tId"/>
+        <id column="tId" property="tid"/>
         <result column="uid" property="uid"/>
-        <result column="avatarUrl" property="avatarUrl"/>
+        <result column="avatarUrl" property="avatarurl"/>
         <result column="username" property="username"/>
         <result column="types" property="types"/>
         <result column="time1" property="time"/>
         <result column="address" property="address"/>
         <result column="descrb" property="desc"/>
         <result column="likestate" property="likestate"/>
-        <result column="collectionstate" property="collectionstate"/>
+        <result column="collectionstate" property="collectionsSate"/>
         <result column="seepeople" property="seepeople"/>
-        <collection property="imgUrls" ofType="String">
+        <collection property="imgUrl" ofType="String">
             <id column="imgUrl" property="imgUrl"/>
         </collection>
-        <collection property="goods" ofType="String">
+        <collection property="good" ofType="String">
             <id column="good" property="good"/>
         </collection>
-        <collection property="lcments" ofType="com.alibaba.fastjson.JSONObject">
+        <collection property="comments" ofType="com.alibaba.fastjson.JSONObject">
             <id column="commentsid" property="commentsid"/>
             <id column="commentsimg" property="commentsimg"/>
             <id column="commentstext" property="commentstext"/>
-            <id column="commentsname" property="commentsname"/>
+            <id column="commentsname" property="commentsUserName"/>
             <id column="toComentName" property="toComentName"/>
-            <id column="commentid" property="commentid"/>
+            <id column="commentid" property="commentsidid"/>
         </collection>
     </resultMap>
     <!--uid:  //帖子对应用户的id
@@ -136,6 +135,6 @@ address:’’ //用户所在的地，collectionstate:boolen //收藏状态，ti
         from lc_comment lc ,fly_user uu
         where uu.user_id=lc.from_user_id and lc.comment_status !=-1 ) z
 
-      where  z.post_id =N.tId and N.uid =#{uid}
+      where  z.post_id =N.tId and N.uid =#{userId}
     </select>
 </mapper>
