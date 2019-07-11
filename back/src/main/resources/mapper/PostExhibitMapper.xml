@@ -4,26 +4,28 @@
 <mapper namespace="com.heeexy.example.dao.PostExhibitDao">
 
     <resultMap id="postMap" type="com.heeexy.example.util.model.One2Many">
-        <id column="tId" property="tId"/>
-        <result column="uId" property="uId"/>
+        <id column="tId" property="postId"/>
+        <result column="uId" property="uid"/>
         <result column="username" property="username"/>
+        <result column="avatarUrl" property="avatarurl"/>
         <result column="time" property="timet"/>
         <result column="address" property="address"/>
         <result column="descr" property="desc"/>
         <result column="types" property="types"/>
         <result column="seepeople" property="seepeople"/>
-        <collection property="imgUrls" ofType="String">
+        <collection property="imgUrl" ofType="String">
             <id column="imgUrl" property="imgUrl"/>
         </collection>
-        <collection property="goods" ofType="String">
+        <collection property="good" ofType="String">
             <id column="good" property="good"/>
         </collection>
         <collection property="comments" ofType="com.alibaba.fastjson.JSONObject">
-            <id column="commentId" property="commentId"/>
-            <result column="commentUserId" property="commentUserId"/>
+            <id column="commentId" property="commentsid"/>
+            <result column="commentUserId" property="commentsuserid"/>
+            <result column="commentPhoto" property="commentsimg"/>
             <result column="toCommentId" property="toCommentId"/>
-            <result column="commentText" property="commentText"/>
-            <result column="commentName" property="commentName"/>
+            <result column="commentText" property="commentstext"/>
+            <result column="commentName" property="commentsname"/>
         </collection>
     </resultMap>
     <select id="getTopPost" resultMap="postMap">
@@ -81,7 +83,8 @@
     from_user_id            commentUserId,
     to_comment_id           toCommentId,
     comment_content         commentText,
-    user_name               commentName
+    user_name               commentName,
+        user_photo              commentPhoto
     from(
         SELECT
         op.*,
@@ -146,7 +149,7 @@
         <result column="telephone" property="telephone"/>
         <result column="time" property="time"/>
         <result column="types" property="types"/>
-        <result column="descr" property="descr"/>
+        <result column="descr" property="desc"/>
         <result column="address" property="address"/>
         <result column="priceLow" property="priceLow"/>
         <result column="priceHigh" property="priceHigh"/>
@@ -159,13 +162,13 @@
         <collection property="tagList" ofType="String">
             <id column="tagName" property="tagName"/>
         </collection>
-        <collection property="imgUrls" ofType="String">
+        <collection property="imgUrl" ofType="String">
             <id column="imgUrl" property="imgUrl"/>
         </collection>
-        <collection property="goodsDetail" ofType="com.alibaba.fastjson.JSONObject">
-            <id column="likeId" property="likeId"/>
-            <result column="likeImg" property="likeImg"/>
-            <result column="likeName" property="likeName"/>
+        <collection property="likelist" ofType="com.alibaba.fastjson.JSONObject">
+            <id column="likeId" property="likeid"/>
+            <result column="likeImg" property="likeimg"/>
+            <result column="likeName" property="likename"/>
         </collection>
         <collection property="comments" ofType="com.alibaba.fastjson.JSONObject">
             <id column="commentId" property="commentId"/>
@@ -239,7 +242,8 @@
         from_user_id            commentUserId,
         to_comment_id           toCommentId,
         comment_content         commentText,
-        user_name               commentName
+        user_name               commentName,
+        user_photo              commentPhoto
         from(
         SELECT
         op.*,
@@ -274,7 +278,7 @@
         left join fly_user on from_user_id = user_id
         <where>
         <if test="keyword!=null and keyword!='' ">
-            descr like '%${keyword}%' or tagName like  '%${keyword}%'
+            descr like '%${queryText}%' or tagName like  '%${queryText}%'
         </if>
     </where>
         ORDER BY time Desc
@@ -288,7 +292,8 @@
         from_user_id            commentUserId,
         to_comment_id           toCommentId,
         comment_content         commentText,
-        user_name               commentName
+        user_name               commentName,
+        user_photo              commentPhoto
         from(
         SELECT
         op.*,
@@ -309,9 +314,9 @@
         view_offset         viewOff
         FROM tyn_post,fly_user,cqy_post_categories
         where
-        delete_state =1 and user_id=post_owner and categories_id=post_sort and post_sort=#{type}
+        delete_state =1 and user_id=post_owner and categories_id=post_sort and post_sort=#{typeId}
         ORDER BY post_time Desc
-        LIMIT #{pageNum}, 10
+
         ) op
         left join tyn_post_img tpi on tId=tpi.post_id
         left join fly_like fl on tId=fl.post_id and like_state=1
@@ -331,7 +336,7 @@
     <insert id="addPost">
         insert into tyn_post
         (post_owner,post_time,post_content,post_sort,post_location,post_phone,price_low,price_high,time_start,time_end,is_top,delete_state,like_offset,collect_offset,view_offset)
-        values(#{userid},#{now},#{content},#{sortId},#{address},#{telephone},#{pricelow},#{pricehigh},#{startdate},#{enddate},0,1,0,0,0);
+        values(#{uuid},#{now},#{content},#{typeid},#{address},#{telephone},#{lowprice},#{highprice},#{startdate},#{enddate},0,1,0,0,0);
         commit;
     </insert>
 
