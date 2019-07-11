@@ -129,7 +129,7 @@ public class ComUserWebController {
         String gender = (String)session.getAttribute("gender");
         /*根据当前时间随机生成用户Id*/
         Date now = new Date();
-        long time = now.getTime()/1000000;
+        long time = now.getTime()/(1000*60*60);
         String s = Long.toString(time);
         UUID random = UUID.randomUUID();
         String userId=random+s;
