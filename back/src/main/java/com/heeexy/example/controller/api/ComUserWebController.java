@@ -24,13 +24,19 @@ import java.util.UUID;
  * @ Version: 1.0
  */
 @RestController
-@RequestMapping("/api/comUserWeb")
+@RequestMapping("/api/my")
 public class ComUserWebController {
     @Autowired
     private WxUserService wxUserService;
+    @Autowired
+    private WxLikeService wxLikeService;
     //cqy
     @Autowired
     private ModuleService moduleService;
+    @Autowired
+    private WxMyPostService wxMyPostService;
+    @Autowired
+    private WxBrowserService wxBrowserService;
     /**
      * 查找用户
      */
@@ -181,7 +187,7 @@ public class ComUserWebController {
      */
     @PostMapping("/myself")
     public JSONObject myself(@RequestBody JSONObject requestJson){
-        CommonUtil.hasAllRequired(requestJson, "uid");
+        CommonUtil.hasAllRequired(requestJson, "userId");
         return wxUserService.mySelf(requestJson);
     }
     /**
@@ -189,7 +195,33 @@ public class ComUserWebController {
      */
     @PostMapping("/myfans")
     public JSONObject mySelfFans(@RequestBody JSONObject requestJson){
-        CommonUtil.hasAllRequired(requestJson, "uid");
+        CommonUtil.hasAllRequired(requestJson, "userId");
         return wxUserService.mySelfFans(requestJson);
+    }
+    /**
+     * 我的点赞列表
+     */
+    @PostMapping("/mylikes")
+    public JSONObject searchlike(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "userId");
+        return wxLikeService.myLike(requestJson);
+    }
+    /**
+     * 我已发布的帖子列表
+     */
+    @PostMapping("/myposts")
+    public JSONObject mypost(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "userId");
+        return wxMyPostService.myPost(requestJson);
+
+    }
+    /**
+     * 前台展示用户浏览记录列表
+     */
+    @PostMapping("/myrecords")
+    public JSONObject searchbrowse(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "userId");
+        return wxBrowserService.myBrowse(requestJson);
+
     }
 }

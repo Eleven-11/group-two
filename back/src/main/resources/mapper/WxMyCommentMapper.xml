@@ -57,12 +57,12 @@
             <id column="good" property="good"/>
         </collection>
         <collection property="comments" ofType="com.alibaba.fastjson.JSONObject">
-            <id column="commentsid" property="commentsuserid"/>
+            <id column="commentsid" property="commentsid"/>
             <id column="commentsimg" property="commentsimg"/>
             <id column="commentstext" property="commentstext"/>
-            <id column="commentsname" property="commentsname"/>
+            <id column="commentsname" property="commentsUserName"/>
             <id column="toComentName" property="toComentName"/>
-            <id column="commentid" property="commentsid"/>
+            <id column="commentid" property="commentsidid"/>
         </collection>
     </resultMap>
     <!--我的评论-->
@@ -100,7 +100,7 @@
         uu.user_photo commentsimg,lc.comment_content commentstext,lc.comment_id commentid
         from lc_comment lc ,fly_user uu
         where uu.user_id=lc.from_user_id and lc.comment_status !=-1) m
-      where  m.post_id=N.tId and m.commentsid =#{uid}
+      where  m.post_id=N.tId and m.commentsid =#{userId}
 
     </select>
     <select id="selectUserName" parameterType="java.lang.String" resultType="java.lang.String">

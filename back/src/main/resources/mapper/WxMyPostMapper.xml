@@ -84,12 +84,12 @@
             <id column="good" property="good"/>
         </collection>
         <collection property="comments" ofType="com.alibaba.fastjson.JSONObject">
-            <id column="commentsid" property="commentsuserid"/>
+            <id column="commentsid" property="commentsid"/>
             <id column="commentsimg" property="commentsimg"/>
             <id column="commentstext" property="commentstext"/>
-            <id column="commentsname" property="commentsname"/>
+            <id column="commentsname" property="commentsUserName"/>
             <id column="toComentName" property="toComentName"/>
-            <id column="commentid" property="commentsid"/>
+            <id column="commentid" property="commentsidid"/>
         </collection>
     </resultMap>
     <!--uid:  //帖子对应用户的id
@@ -135,6 +135,6 @@ address:’’ //用户所在的地，collectionstate:boolen //收藏状态，ti
         from lc_comment lc ,fly_user uu
         where uu.user_id=lc.from_user_id and lc.comment_status !=-1 ) z
 
-      where  z.post_id =N.tId and N.uid =#{uid}
+      where  z.post_id =N.tId and N.uid =#{userId}
     </select>
 </mapper>

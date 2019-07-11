@@ -33,7 +33,7 @@ public class ComUserCommentWebController {
      */
     @PostMapping("/mycomments")
     public JSONObject myselfComment(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "uid");
+        CommonUtil.hasAllRequired(requestJson, "userId");
         return wxMyCommentService.myselfComment(requestJson);
 
     }

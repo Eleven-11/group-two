@@ -2,6 +2,7 @@ package com.heeexy.example.controller.api;
 
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.service.WxFansService;
+import com.heeexy.example.service.WxUserService;
 import com.heeexy.example.util.CommonUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,12 @@ import javax.servlet.http.HttpServletRequest;
  * @Version: 1.0
  */
 @RestController
-@RequestMapping("/api/comUserFansWeb")
+@RequestMapping("/api/attention")
 public class ComUserFansWebController {
     @Autowired
     private WxFansService wxFansService;
+    @Autowired
+    private WxUserService wxUserService;
     /**
     *前台展示用户关注列表
     */
@@ -64,9 +67,17 @@ public class ComUserFansWebController {
     /**
      *我的关注
      */
-    @PostMapping("/myattention")
+    @PostMapping("/myidols")
     public JSONObject myfans(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "uid");
+        CommonUtil.hasAllRequired(requestJson, "userId");
         return wxFansService.myFans(requestJson);
+    }
+    /**
+     * 我的粉丝信息
+     */
+    @PostMapping("/myfans")
+    public JSONObject mySelfFans(@RequestBody JSONObject requestJson){
+        CommonUtil.hasAllRequired(requestJson, "userId");
+        return wxUserService.mySelfFans(requestJson);
     }
 }

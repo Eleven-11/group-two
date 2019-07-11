@@ -75,7 +75,7 @@ public class ComUserLikeWebController {
      */
     @PostMapping("/mylike")
     public JSONObject searchlike(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "uid");
+        CommonUtil.hasAllRequired(requestJson, "userId");
         return wxLikeService.myLike(requestJson);
     }
 }

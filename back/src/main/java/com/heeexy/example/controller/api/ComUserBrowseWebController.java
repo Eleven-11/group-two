@@ -43,7 +43,7 @@ public class ComUserBrowseWebController {
      */
     @PostMapping("/myhistory")
     public JSONObject searchbrowse(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "uid");
+        CommonUtil.hasAllRequired(requestJson, "userId");
         return wxBrowserService.myBrowse(requestJson);
 
     }

@@ -72,7 +72,7 @@
         update fly_like set like_state =1 where like_id =#{likeId}
      </update>
     <resultMap id="postMap" type="com.heeexy.example.util.model.One2Many">
-        <id column="tId" property="tId"/>
+        <id column="tId" property="tid"/>
         <result column="uid" property="uid"/>
         <result column="avatarUrl" property="avatarurl"/>
         <result column="username" property="username"/>
@@ -90,12 +90,12 @@
             <id column="good" property="good"/>
         </collection>
         <collection property="comments" ofType="com.alibaba.fastjson.JSONObject">
-            <id column="commentsid" property="commentsuserid"/>
+            <id column="commentsid" property="commentsid"/>
             <id column="commentsimg" property="commentsimg"/>
             <id column="commentstext" property="commentstext"/>
-            <id column="commentsname" property="commentsname"/>
+            <id column="commentsname" property="commentsUserName"/>
             <id column="toComentName" property="toComentName"/>
-            <id column="commentid" property="commentsid"/>
+            <id column="commentid" property="commentsidid"/>
         </collection>
     </resultMap>
     <!--我的点赞-->
@@ -136,6 +136,6 @@
             where uu.user_id=lc.from_user_id and lc.comment_status !=-1)
              z on z.post_id =f.post_id) g
 
-      where  g.post_id =N.tId and g.onuser_id=#{uid} and g.likestate=1
+      where  g.post_id =N.tId and g.onuser_id=#{userId} and g.likestate=1
     </select>
 </mapper>

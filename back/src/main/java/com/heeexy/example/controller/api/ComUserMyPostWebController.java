@@ -81,7 +81,7 @@ public class ComUserMyPostWebController {
      */
     @PostMapping("/myrelease")
     public JSONObject mypost(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "uid");
+        CommonUtil.hasAllRequired(requestJson, "userId");
         return wxMyPostService.myPost(requestJson);
 
     }
