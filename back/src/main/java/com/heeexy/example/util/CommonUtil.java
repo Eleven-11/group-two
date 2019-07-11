@@ -191,6 +191,7 @@ public class CommonUtil {
 		JSONObject info = new JSONObject();
 		info.put("thePost", thePost);
 		result.put("info", info);
+		result.put("code",100);
 		return result;
 	}
 	

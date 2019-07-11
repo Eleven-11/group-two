@@ -68,7 +68,7 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         //处理点赞状态，收藏状态，日期,评论
             int userId = (int) jsonObject.get("userId");
             list = handleList(list,userId);
-        return CommonUtil.successList(list);
+        return CommonUtil.successPage(list);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         List<JSONObject> commentList = (List<JSONObject>)the.get("comments");
         commentList = handleComments(commentList);
         the.put("comments",commentList);
-        return CommonUtil.successOne(the);
+        return CommonUtil.successJsonOne(the);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         List<JSONObject> list = postExhibitDao.getThePost(jsonObject);
         int userId = (int)jsonObject.get("userId");
         list = handleList(list,userId);
-        return CommonUtil.successList(list);
+        return CommonUtil.successPage(list);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class PostExhibitServiceImpl implements PostExhibitService {
         List<JSONObject> list = postExhibitDao.getSortPost(jsonObject);
         int userId = (int) jsonObject.get("userId");
         list = handleList(list,userId);
-        return CommonUtil.successList(list);
+        return CommonUtil.successPage(list);
     }
 
     @Override
@@ -145,7 +145,7 @@ public class PostExhibitServiceImpl implements PostExhibitService {
             j++;
             postExhibitDao.addPostTag(condition);
         }
-        return null;
+        return CommonUtil.successJsonOne(null);
     }
 
 
