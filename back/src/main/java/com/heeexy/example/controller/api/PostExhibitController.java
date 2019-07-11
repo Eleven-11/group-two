@@ -40,7 +40,7 @@ public class PostExhibitController {
 
 
 
-    @PostMapping("/searchPost")
+    @PostMapping("/search/searchpost")
     public JSONObject searchPost(@RequestBody JSONObject requestJson){
 
         return postExhibitService.getThePost(requestJson);
