@@ -23,12 +23,14 @@
     </select>
     <!--修改自己帖子隐藏状态-->
     <update id="updateMyPostById" parameterType="com.alibaba.fastjson.JSONObject">
-            update  tyn_post  set delete_state = 0 where id = #{postId} ;
+        <!-- update  tyn_post  set delete_state = 0 where id = #{postId} ;-->
 
-    <!--    <if test="myPostState == 0">
+     <if test="myPostState == 0">
             update  tyn_post  set delete_state = 1 where id = #{postId} ;
-        </if>-->
-
+        </if>
+        <if test="myPostState == 1">
+            update  tyn_post  set delete_state = 0 where id = #{postId} ;
+        </if>
     </update>
     <!--前台用户自己的帖子记录-->
     <select id="getMyPostListById" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
@@ -136,5 +138,10 @@ address:’’ //用户所在的地，collectionstate:boolen //收藏状态，ti
         where uu.user_id=lc.from_user_id and lc.comment_status !=-1 ) z
 
       where  z.post_id =N.tId and N.uid =#{userId}
+    </select>
+
+    <!--查找帖子状态-->
+    <select id="selectPostState" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select delete_state  myPostState from tyn_post where id =#{postId}
     </select>
 </mapper>
