@@ -43,7 +43,7 @@
       <el-table-column align="center" label="上级的编号" prop="superiorId" style="width: 60px;">
         <template slot-scope="scope">
           <el-tag  v-if="scope.row.superiorId==0" style="margin-right: 3px;" type="danger">无上级</el-tag>
-          <div v-if="scope.row.superiorId!=1" v-for="tags in list" style="text-align: center">
+          <div v-if="scope.row.superiorId!=0" v-for="tags in list" style="text-align: center">
             <el-tag  v-if="scope.row.superiorId == tags.businessSubwayId" style="margin-right: 3px;" type="success" v-text="tags.businessSubwayName"></el-tag>
           </div>
         </template>

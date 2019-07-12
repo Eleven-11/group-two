@@ -32,5 +32,5 @@ public class One2Many extends JSONObject {
 	private Set<String> good;
 	private  List<JSONObject> lcments;
 	private List<JSONObject> comments;
-	private List<JSONObject> goodsDetail;
+	private List<JSONObject> likelist;
   }

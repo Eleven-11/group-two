@@ -64,14 +64,14 @@ public class PostCollectServiceImpl implements PostCollectService {
         return  CommonUtil.successJson();
     }
 
-//    /**
-//     * 修改帖子收藏
-//     */
-//    @Override
-//    public JSONObject updatePostCollect(JSONObject jsonObject) {
-//        postCollectDao.updatePostCollect( jsonObject );
-//        return CommonUtil.successJson();
-//    }
+    /**
+     * 修改帖子收藏
+     */
+    @Override
+    public JSONObject updatePostCollect(JSONObject jsonObject) {
+        postCollectDao.updatePostCollect( jsonObject );
+        return CommonUtil.successJson();
+    }
     /**
      * 查询所有的帖子收藏
      * 在添加/修改帖子收藏的时候要使用此方法
@@ -136,17 +136,11 @@ public class PostCollectServiceImpl implements PostCollectService {
                 Object img = object.get("img");
                 imgUrl.add( img );
             }
-//            for (Object o : imgUrl) {
-//                System.out.println(o);
-//            }
             List<JSONObject> allLikeByPostId = postCollectDao.getAllLikeByPostId(postId);
             for (JSONObject object : allLikeByPostId) {
                 Object name = object.get("userName");
                 good.add(name);
             }
-//            for (Object o : good) {
-//                System.out.println(o);
-//            }
             role.put( "comments",allCommentByPostId);
             role.put( "imgUrl",imgUrl);
             role.put( "good",good);
@@ -179,7 +173,6 @@ public class PostCollectServiceImpl implements PostCollectService {
             role.remove( "userIds" );
             String seepeople = postCollectDao.getBrowseByP(postId);
             role.put( "seepeople",seepeople );
-
             role.put("uid",role.remove("userId"));
             role.put("tid",role.remove("postId"));
             role.put("avatarUrl",role.remove("userPhoto"));
@@ -187,13 +180,13 @@ public class PostCollectServiceImpl implements PostCollectService {
             role.put("types",role.remove("categoriesName"));
             role.put("desc",role.remove("postContent"));
             role.put("address",role.remove("postLocation"));
-            role.put("time",role.remove("postTime"));
-
+            role.put("time",role.remove("postTsime"));
             Date postTime = role.getDate( "time" );
             Calculating calculating = new Calculating();
             String time = calculating.differentDaysByMillisecond( postTime );
             role.put( "time" ,time);
         }
+
         return CommonUtil.successJson(roles);
     }
     /**

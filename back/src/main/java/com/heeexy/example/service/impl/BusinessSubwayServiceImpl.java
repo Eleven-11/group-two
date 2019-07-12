@@ -281,6 +281,11 @@ public class BusinessSubwayServiceImpl implements BusinessSubwayService {
     @Override
     public JSONObject FgetAllBusinessSubway() {
         List<JSONObject> roles = businessSubwayDao.FgetAllBusinessSubway();
+        for (JSONObject role : roles) {
+            role.put("name",role.remove("businessSubwayName"));
+            role.put("id",role.remove("businessSubwayId"));
+            role.put("parentId",role.remove("superiorId"));
+        }
         return CommonUtil.successJson(roles);
     }
 

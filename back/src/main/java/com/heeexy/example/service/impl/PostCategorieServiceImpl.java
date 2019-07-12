@@ -108,7 +108,7 @@ public class PostCategorieServiceImpl implements PostCategorieService {
         for (JSONObject role : roles) {
             role.put("title",role.remove("categoriesName"));
             role.put("id",role.remove("categoriesId"));
-            role.put("imgurl",role.remove("categoriesImg"));
+            role.put("imgUrl",role.remove("categoriesImg"));
         }
         return CommonUtil.successPage(roles);
     }
