@@ -12,13 +12,13 @@
 <el-row>
   <el-col>
     <el-button type="primary" icon="delete" :disabled="this.checkBoxData.length===0"
-               @click="deletePost(checkBoxData)">选择修改
+               @click="deletePost(checkBoxData)" v-if="hasPerm('comuserpost:update')">选择修改
     </el-button>
   </el-col>
 </el-row>
     <el-table :data="list" v-loading.body="listLoading"  @selection-change="changeFun" element-loading-text="拼命加载中" border fit
               highlight-current-row >
-      <el-table-column type="selection"></el-table-column>
+      <el-table-column type="selection" v-if="hasPerm('comuserpost:update')"></el-table-column>
       <el-table-column align="center" label="序号"  style="width: 60px;">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index)"> </span>
@@ -29,7 +29,7 @@
       <el-table-column align="center" v-if="false" label="帖子ID" prop="postId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="帖子内容" prop="postContent" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="帖子状态" prop="myPostState" style="width: 60px;">
-        <template slot-scope="scope">
+        <template slot-scope="scope" >
           <p v-if="scope.row.myPostState=='0'">
             未删除
           </p>
@@ -39,8 +39,8 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="管理" width="220">
-        <template slot-scope="scope">
+      <el-table-column align="center" label="管理" width="220" v-if="hasPerm('comuserpost:update')">
+        <template slot-scope="scope" >
           <el-button type="danger"  v-if="scope.row.myPostState=='0'" icon="delete"@click="removeUser(scope.$index)">删除</el-button>
           <el-button type="primary"  v-if="scope.row.myPostState=='1'" icon="delete"@click="removeUser(scope.$index)">取消</el-button>
         </template>
@@ -93,6 +93,9 @@
     },
     created() {
       this.getList();
+      if (this.hasPerm('user:add') || this.hasPerm('user:update')||this.hasPerm('comuserpost:update')||this.hasPerm('comuserfans:add')||this.hasPerm('comuserlike:add')||this.hasPerm('comuser:updatestate')||this.hasPerm('comuser:updatefans')) {
+        this.getAllRoles();
+      }
     },
     computed: {
       ...mapGetters([
@@ -100,6 +103,14 @@
       ])
     },
     methods: {
+      getAllRoles() {
+        this.api({
+          url: "/user/getAllRoles",
+          method: "get"
+        }).then(data => {
+          this.roles = data.list;
+        })
+      },
       getList() {
         //查询列表
         this.listQuery.userName = this.userName;

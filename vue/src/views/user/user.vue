@@ -113,7 +113,7 @@
     },
     created() {
       this.getList();
-      if (this.hasPerm('user:add') || this.hasPerm('user:update')) {
+      if (this.hasPerm('user:add') || this.hasPerm('user:update')||this.hasPerm('comuserpost:update')||this.hasPerm('comuserfans:add')||this.hasPerm('comuserlike:add')||this.hasPerm('comuser:updatestate')||this.hasPerm('comuser:updatefans')) {
         this.getAllRoles();
       }
     },

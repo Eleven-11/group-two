@@ -50,11 +50,11 @@
     </el-table-column>
     <el-table-column align="center" label="授权时间" prop="firstTime" style="width: 60px;"></el-table-column>
     <el-table-column align="center" label="更新时间" prop="updateTime" style="width: 60px;"></el-table-column>
-    <el-table-column align="center" label="管理" width="300">
-      <template slot-scope="scope">
-        <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
-       <el-button type="primary" icon="danger"  v-if="scope.row.userState=='1'" @click="updateState(scope.$index)">恢复</el-button>
-        <el-button type="danger" icon="danger" v-if="scope.row.userState=='0'" @click="updateState(scope.$index)">封禁</el-button>
+    <el-table-column align="center" label="管理" width="300" v-if="hasPerm('comuser:updatestate')||hasPerm('comuser:updatefans')">
+      <template slot-scope="scope" >
+        <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)" v-if="hasPerm('comuser:updatefans')">修改</el-button>
+       <el-button type="primary" icon="danger"  v-if="scope.row.userState=='1' && hasPerm('comuser:updatestate')" @click="updateState(scope.$index)">恢复</el-button>
+        <el-button type="danger" icon="danger" v-if="scope.row.userState=='0' && hasPerm('comuser:updatestate')"  @click="updateState(scope.$index)">封禁</el-button>
        <!-- <el-button type="primary" icon="info"  @click="jump(scope.$index)">查看</el-button>-->
 
       </template>
@@ -151,6 +151,9 @@
     },
     created() {
       this.getList();
+      if (this.hasPerm('user:add') || this.hasPerm('user:update')||this.hasPerm('comuserpost:update')||this.hasPerm('comuserfans:add')||this.hasPerm('comuserlike:add')||this.hasPerm('comuser:updatestate')||this.hasPerm('comuser:updatefans')) {
+        this.getAllRoles();
+      }
     },
     computed: {
       // 使用对象展开运算符将 getter 混入 computed 对象中
@@ -162,6 +165,14 @@
       }
     },
     methods: {
+      getAllRoles() {
+        this.api({
+          url: "/user/getAllRoles",
+          method: "get"
+        }).then(data => {
+          this.roles = data.list;
+        })
+      },
         jump($index){
           let user = this.list[$index];
           //this.$router.push("/cart")
