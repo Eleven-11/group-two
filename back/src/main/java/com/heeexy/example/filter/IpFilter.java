@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.heeexy.example.util.emjoy;
 /**
  * 自定义过滤器，用来判断IP访问次数是否超限
- * 如果前台用户访问网站的频率过快（达到超过50次/秒），则判定该ip恶意刷新操作，
- * 限制该IP的访问，1小时后自己解除限制
+ * 如果前台用户访问网站的频率过快（达到超过5次/秒），则判定该ip恶意刷新操作，
+ * 限制该IP的访问，半小时后自己解除限制
  * 
  * @author wukaikai
  *
@@ -31,7 +31,7 @@ public class IpFilter implements Filter{
     /** 
      * 默认限制时间（单位：ms） 
      */  
-    private static final long LIMITED_TIME_MILLIS = 60 * 60 * 1000;  
+    private static final long LIMITED_TIME_MILLIS = 60 * 1000*30;
   
     /** 
      * 用户连续访问最高阀值，超过该值则认定为恶意操作的IP，进行限制 
@@ -77,7 +77,7 @@ public class IpFilter implements Filter{
 //            response.reset();
 //            response.setCharacterEncoding("utf-8");    //设置输出内容编码格式
 //            PrintWriter out = response.getWriter();
-//            out.println("<b>由于您访问过于频繁，被系统自动认定为机器人。1个小时自动解除</b>");、
+//            out.println("<b>由于您访问过于频繁，被系统自动认定为机器人。1个小时自动解除</b>");
             return;
         }  
         // 获取IP存储器  
@@ -149,7 +149,7 @@ public class IpFilter implements Filter{
         Iterator<String> keyIt = keys.iterator();  
         while (keyIt.hasNext()) {  
             String key = keyIt.next();  
-            if (key.equals(ip)) {  
+            if (key.equals(ip)) {
                 // 被限制的IP  
                 return true;  
             }  
