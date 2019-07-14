@@ -45,6 +45,9 @@ public class WxMyPostServiceImpl implements WxMyPostService {
     @Override
     public JSONObject updateMyPostById(JSONObject jsonObject) {
         //用户修改帖子状态
+
+        JSONObject jsonObject1 = wxMyPostDao.selectPostState(jsonObject);
+        jsonObject.put("myPostState", jsonObject1.getString("myPostState"));
         wxMyPostDao.updateMyPostById(jsonObject);
         return CommonUtil.successJson();
     }

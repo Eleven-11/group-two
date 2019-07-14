@@ -77,4 +77,11 @@ public interface WxMyPostDao {
           * @return:  List<JSONObject>
           */
     List<JSONObject> myPost(JSONObject jsonObject);
+     /**
+          * @methodsName: selectPostState
+          * @description: 帖子状态
+          * @param:  JSONObject
+          * @return: JSONObject
+          */
+    JSONObject selectPostState(JSONObject jsonObject);
 }

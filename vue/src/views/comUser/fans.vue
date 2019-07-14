@@ -32,8 +32,8 @@
       </el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="更新时间" prop="updateTime" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="管理" width="220">
-        <template slot-scope="scope">
+      <el-table-column align="center" label="管理" width="220" v-if="hasPerm('comuserfans:add')">
+        <template slot-scope="scope" >
          <!-- <el-button type="primary" icon="delete"  @click="addUserfans(scope.row.onUserId)">添加关注</el-button>-->
           <el-button type="primary" icon="delete" v-if="scope.row.state=='0'" @click="addfans(scope.$index)">关注</el-button>
           <el-button type="danger" icon="delete" v-if="scope.row.state=='1'" @click="addfans(scope.$index)">取消</el-button>
@@ -141,6 +141,9 @@
     },
     created() {
       this.getList();
+      if (this.hasPerm('user:add') || this.hasPerm('user:update')||this.hasPerm('comuserpost:update')||this.hasPerm('comuserfans:add')||this.hasPerm('comuserlike:add')||this.hasPerm('comuser:updatestate')||this.hasPerm('comuser:updatefans')) {
+        this.getAllRoles();
+      }
     },
     computed: {
       ...mapGetters([
@@ -148,6 +151,14 @@
       ])
     },
     methods: {
+      getAllRoles() {
+        this.api({
+          url: "/user/getAllRoles",
+          method: "get"
+        }).then(data => {
+          this.roles = data.list;
+        })
+      },
       changeFun(val) {
         console.log("changeFun",val)
         this.checkBoxData = val;

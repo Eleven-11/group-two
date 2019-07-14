@@ -23,7 +23,7 @@
       <el-table-column align="center" label="帖子内容" prop="postContent" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="发帖用户名"  prop="userName" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="点赞状态:1"  prop="likeState" style="width: 60px;">
-        <template slot-scope="scope">
+        <template slot-scope="scope" >
           <p v-if="scope.row.likeState=='1'">
             已点赞
           </p>
@@ -34,7 +34,7 @@
       </el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="更新时间" prop="updateTime" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="管理" width="220">
+      <el-table-column align="center" label="管理" width="220" v-if="hasPerm('comuserlike:add')">
         <template slot-scope="scope">
           <el-button type="danger" icon="edit" v-if="scope.row.likeState=='1'" @click="addlikes(scope.$index)">取消</el-button>
           <el-button type="primary" icon="edit" v-if="scope.row.likeState=='0'" @click="addlikes(scope.$index)">点赞</el-button>
@@ -148,6 +148,9 @@
     },
     created() {
       this.getList();
+      if (this.hasPerm('user:add') || this.hasPerm('user:update')||this.hasPerm('comuserpost:update')||this.hasPerm('comuserfans:add')||this.hasPerm('comuserlike:add')||this.hasPerm('comuser:updatestate')||this.hasPerm('comuser:updatefans')) {
+        this.getAllRoles();
+      }
     },
     computed: {
       ...mapGetters([
@@ -155,6 +158,14 @@
       ])
     },
     methods: {
+      getAllRoles() {
+        this.api({
+          url: "/user/getAllRoles",
+          method: "get"
+        }).then(data => {
+          this.roles = data.list;
+        })
+      },
       changeFun(val) {
         console.log("changeFun",val)
         this.checkBoxData = val;
