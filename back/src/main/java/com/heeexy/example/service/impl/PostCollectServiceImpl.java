@@ -180,7 +180,7 @@ public class PostCollectServiceImpl implements PostCollectService {
             role.put("types",role.remove("categoriesName"));
             role.put("desc",role.remove("postContent"));
             role.put("address",role.remove("postLocation"));
-            role.put("time",role.remove("postTsime"));
+            role.put("time",role.remove("postTime"));
             Date postTime = role.getDate( "time" );
             Calculating calculating = new Calculating();
             String time = calculating.differentDaysByMillisecond( postTime );
